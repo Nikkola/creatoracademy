@@ -1,0 +1,169 @@
+.fixed {
+  position: fixed;
+  right: 5px;
+  top: 38%;
+  -webkit-transform: translateY(-38%);
+  -ms-transform: translateY(-38%);
+  transform: translateY(-38%);
+  z-index: 1000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .fixed {
+    top: 31%;
+    gap: 22px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .fixed {
+    top: 38.5%;
+    right: 19px;
+    gap: 28px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .fixed {
+    right: 30px;
+  }
+}
+
+.fixed .fixed__btn {
+  width: 45px;
+  height: 45px;
+}
+
+.fixed .fixed__btn svg {
+  -webkit-transform: none;
+  -ms-transform: none;
+  transform: none;
+  width: 18px;
+  height: 18px;
+}
+
+@media (min-width: 768px) {
+  .fixed .fixed__btn {
+    font-size: 6px;
+    width: 31px;
+    height: 31px;
+  }
+
+  .fixed .fixed__btn svg {
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .fixed .fixed__btn {
+    font-size: 8px;
+    width: 43px;
+    height: 43px;
+  }
+
+  .fixed .fixed__btn svg {
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .fixed .fixed__btn {
+    width: 70px;
+    height: 70px;
+  }
+
+  .fixed .fixed__btn svg {
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.fixed .auth__btn {
+  background-color: #fff;
+  color: #1e1e1e;
+  font-weight: 600;
+  font-size: 10px;
+  -webkit-transition: 0.6s;
+  -o-transition: 0.6s;
+  transition: 0.6s;
+}
+
+.fixed .play-btn svg {
+  width: 16px;
+  height: 16px;
+  -webkit-transform: translateX(2px);
+  -ms-transform: translateX(2px);
+  transform: translateX(2px);
+}
+
+@media (min-width: 768px) {
+  .fixed .play-btn {
+    display: none;
+  }
+}
+
+.fixed .auth__btn:hover {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: transparent;
+}
+
+@media (min-width: 768px) {
+  .fixed .auth__btn {
+    font-size: 6px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .fixed .auth__btn {
+    font-size: 8px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .fixed .auth__btn {
+    font-size: 13px;
+  }
+}
+
+.fixed__socials-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .fixed__socials-list {
+    gap: 5px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .fixed__socials-list {
+    gap: 10px;
+  }
+}

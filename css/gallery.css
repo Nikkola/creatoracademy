@@ -1,0 +1,122 @@
+.gallery__list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 50px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .gallery__list {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: unset;
+    -ms-flex-pack: unset;
+    justify-content: unset;
+    -webkit-box-align: unset;
+    -ms-flex-align: unset;
+    align-items: unset;
+    gap: 5px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gallery__list {
+    gap: 10px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .gallery__list {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery__item {
+    width: 33.33%;
+  }
+}
+
+.gallery__subtitle {
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+@media (min-width: 1920px) {
+  .gallery__subtitle {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+}
+
+.gallery__description {
+  width: 85%;
+}
+
+.gallery__picture {
+  margin-bottom: 13px;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (min-width: 1200px) {
+  .gallery__picture {
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .gallery__picture {
+    margin-bottom: 20px;
+  }
+}
+
+.gallery__button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.gallery__title-mobile {
+  width: 90%;
+}
+
+@media (min-width: 768px) {
+  .gallery__title-mobile {
+    display: none;
+  }
+}
+
+.gallery__title {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .gallery__title {
+    display: block;
+    width: 84%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gallery__title {
+    display: block;
+    width: 80%;
+  }
+}

@@ -1,0 +1,231 @@
+.subscription {
+  gap: 0 !important;
+}
+
+.subscription ::-webkit-input-placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.subscription ::-moz-placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.subscription :-ms-input-placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.subscription ::-ms-input-placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.subscription ::placeholder {
+  color: #fff;
+  opacity: 1;
+}
+
+.subscription .rectangle__button {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .subscription .rectangle__button {
+    width: 32%;
+  }
+}
+
+.subscription .subscription__title {
+  z-index: 1;
+}
+
+.subscription .subscription__block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__block {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    gap: 10px;
+    position: relative;
+    top: -20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .subscription .subscription__block {
+    gap: 15px;
+    top: -35px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .subscription .subscription__block {
+    gap: 30px;
+  }
+}
+
+.subscription .subscription__left {
+  padding: 48px 0px 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__left {
+    width: 54%;
+    gap: 43px;
+    padding: 55px 0px 0px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .subscription .subscription__left {
+    padding: 65px 0px 0px;
+    gap: 58px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .subscription .subscription__left {
+    width: 50%;
+    gap: 100px;
+    padding: 85px 0px 0px;
+  }
+}
+
+.subscription .subscription__right {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__right {
+    display: block;
+    width: 46%;
+  }
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__mobile-img {
+    display: none;
+  }
+}
+
+.subscription .subscription__input-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 5px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__input-block {
+    gap: 17px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .subscription .subscription__input-block {
+    gap: 40px;
+  }
+}
+
+.subscription .subscription__input {
+  padding: 0 15px;
+  width: 40%;
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: none;
+  border-right: none;
+  outline: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: unset;
+}
+
+.subscription .subscription__input:focus-visible {
+  outline: none;
+}
+
+.subscription .subscription__input:focus-within {
+  outline: none;
+}
+
+.subscription .subscription__input:active {
+  outline: none;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__input {
+    width: 68%;
+    font-size: 9px;
+    padding: 0 25px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .subscription .subscription__input {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .subscription .subscription__input {
+    font-size: 18px;
+    width: 63%;
+    padding: 0 45px;
+  }
+}
+
+.subscription .subscription__button {
+  width: 60%;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__button {
+    font-size: 9px;
+    width: 32%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .subscription .subscription__button {
+    font-size: 13px;
+  }
+}
+
+.subscription .subscription__text p {
+  letter-spacing: -0.6px;
+}
+
+@media (min-width: 768px) {
+  .subscription .subscription__text p {
+    width: 60%;
+  }
+}

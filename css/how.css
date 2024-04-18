@@ -1,0 +1,156 @@
+.section.how {
+  gap: 15px;
+}
+
+.how__top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 48px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.how__block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.how__list {
+  gap: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.how__item {
+  -ms-flex-preferred-size: 45%;
+  flex-basis: 45%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.how__bottom {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.how__img-container {
+  width: 100%;
+}
+
+.how__img-container:last-child {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .section.how {
+    gap: 33px;
+  }
+
+  .how__title {
+    width: 51%;
+    letter-spacing: -2.95px;
+  }
+
+  .how__top {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    gap: 30px;
+  }
+
+  .how__block {
+    gap: 58px;
+    width: 50%;
+  }
+
+  .how__list {
+    width: 55%;
+    gap: 10px;
+  }
+
+  .how__list:first-child {
+    width: 46%;
+  }
+
+  .how__bottom {
+    gap: 10px;
+  }
+
+  .how__img-container:first-child {
+    width: 71%;
+  }
+
+  .how__img-container:last-child {
+    display: block;
+    width: 30%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section.how {
+    gap: 50px;
+  }
+
+  .how__title {
+    width: 45%;
+  }
+
+  .how__top {
+    gap: 100px;
+  }
+
+  .how__block {
+    width: 50%;
+    gap: 60px;
+  }
+
+  .how__list {
+    gap: 15px;
+  }
+
+  .how__list:first-child {
+    width: 100%;
+  }
+
+  .how__list:nth-child(2) {
+    width: 100%;
+  }
+
+  .how__img-container:first-child {
+    width: 67%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .how__block {
+    width: 49%;
+    gap: 60px;
+  }
+
+  .how__list:nth-child(2) {
+    padding-left: 75px;
+  }
+}
