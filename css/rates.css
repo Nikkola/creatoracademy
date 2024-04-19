@@ -94,7 +94,7 @@
   gap: 10px;
 }
 
-.rates .individual .rate_text {
+.rates .individual .rate__item p.rate_text {
   opacity: 100%;
   color: #fff;
 }
