@@ -94,7 +94,12 @@
   gap: 10px;
 }
 
-.rates .individual .rate__item p.rate_text {
+.rates .individual .rate__item:last-child p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .individual .rate__item:nth-child(5) p {
   opacity: 100%;
   color: #fff;
 }
