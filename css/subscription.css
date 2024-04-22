@@ -226,6 +226,6 @@
 
 @media (min-width: 768px) {
   .subscription .subscription__text p {
-    width: 60%;
+    width: 50%;
   }
 }

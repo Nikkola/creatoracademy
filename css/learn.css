@@ -58,6 +58,12 @@
   }
 }
 
+@media (min-width: 1920px) {
+  .learn__item .learn__description {
+    width: 74%;
+  }
+}
+
 @media (min-width: 768px) {
   .learn__item {
     min-width: unset;
@@ -193,6 +199,14 @@
 
   .learn__item:nth-child(3) .learn__description {
     width: 40%;
+  }
+
+  .learn__item:nth-child(5) .learn__description {
+    width: 85%;
+  }
+
+  .learn__item:nth-child(7) .learn__description {
+    width: 85%;
   }
 
   .learn__item:nth-child(n + 3) {

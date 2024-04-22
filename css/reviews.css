@@ -112,7 +112,7 @@
 
 @media (min-width: 1200px) {
   .reviews__item {
-    min-width: 400px;
+    min-width: 315px;
     gap: 30px;
   }
 }
@@ -120,6 +120,7 @@
 @media (min-width: 1920px) {
   .reviews__item {
     gap: 90px;
+    min-width: 477px;
   }
 }
 

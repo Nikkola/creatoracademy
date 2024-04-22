@@ -79,6 +79,7 @@
     -ms-flex-direction: row;
     flex-direction: row;
     gap: 30px;
+    align-items: center;
   }
 
   .how__block {
@@ -152,5 +153,18 @@
 
   .how__list:nth-child(2) {
     padding-left: 75px;
+  }
+}
+@media (min-width: 1200px) {
+  .how__description {
+    max-width: 215px;
+    width: 215px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .how__description {
+    max-width: 345px;
+    width: 345px;
   }
 }

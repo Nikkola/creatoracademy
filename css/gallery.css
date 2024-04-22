@@ -64,6 +64,13 @@
 
 .gallery__description {
   width: 85%;
+  max-width: 287px;
+}
+
+@media (min-width: 1920px) {
+  .gallery__description {
+    max-width: 370px;
+  }
 }
 
 .gallery__picture {

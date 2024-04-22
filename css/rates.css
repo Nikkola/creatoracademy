@@ -218,3 +218,8 @@
     justify-content: center;
   }
 }
+@media (min-width: 768px) {
+  .rates__block .rectangle__button {
+    margin-top: 0;
+  }
+}

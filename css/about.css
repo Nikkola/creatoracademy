@@ -53,7 +53,7 @@
 
 @media (min-width: 1920px) {
   .about__block:first-child .about__text-right {
-    text-align: end;
+    text-align: justify;
   }
 }
 
