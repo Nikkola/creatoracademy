@@ -81,30 +81,32 @@ let isDown = false;
 let startX;
 let scrollLeft;
 
-box.addEventListener("mousedown", (e) => {
-  isDown = true;
-  startX = e.pageX - box.offsetLeft;
-  scrollLeft = box.scrollLeft;
-  box.style.cursor = "grabbing";
-});
+if (box) {
+  box.addEventListener("mousedown", (e) => {
+    isDown = true;
+    startX = e.pageX - box.offsetLeft;
+    scrollLeft = box.scrollLeft;
+    box.style.cursor = "grabbing";
+  });
 
-box.addEventListener("mouseleave", () => {
-  isDown = false;
-  box.style.cursor = "grab";
-});
+  box.addEventListener("mouseleave", () => {
+    isDown = false;
+    box.style.cursor = "grab";
+  });
 
-box.addEventListener("mouseup", () => {
-  isDown = false;
-  box.style.cursor = "grab";
-});
+  box.addEventListener("mouseup", () => {
+    isDown = false;
+    box.style.cursor = "grab";
+  });
 
-document.addEventListener("mousemove", (e) => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - box.offsetLeft;
-  const walkX = x - startX;
-  box.scrollLeft = scrollLeft - walkX;
-});
+  document.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - box.offsetLeft;
+    const walkX = x - startX;
+    box.scrollLeft = scrollLeft - walkX;
+  });
+}
 
 // Скролл "Вы научитесь"
 
