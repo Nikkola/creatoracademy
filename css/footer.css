@@ -138,7 +138,8 @@
   height: 45px !important;
 }
 
-.footer .footer__btn svg {
+.footer .footer__btn svg,
+.menu .footer__btn svg {
   width: 18px !important;
   height: 18px !important;
   -webkit-transform: none !important;
@@ -152,7 +153,8 @@
     height: 21px !important;
   }
 
-  .footer .footer__btn svg {
+  .footer .footer__btn svg,
+  .menu .footer__btn svg {
     width: 9px !important;
     height: 9px !important;
     -webkit-transform: none !important;
@@ -168,7 +170,8 @@
     height: 43px !important;
   }
 
-  .footer .footer__btn svg {
+  .footer .footer__btn svg,
+  .menu .footer__btn svg {
     -webkit-transform: none;
     -ms-transform: none;
     transform: none;
@@ -183,7 +186,8 @@
     height: 50px !important;
   }
 
-  .footer .footer__btn svg {
+  .footer .footer__btn svg,
+  .menu .footer__btn svg {
     width: 20px !important;
     height: 20px !important;
     -webkit-transform: none !important;

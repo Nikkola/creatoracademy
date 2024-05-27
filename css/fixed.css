@@ -6,9 +6,7 @@
   -ms-transform: translateY(-38%);
   transform: translateY(-38%);
   z-index: 1000;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: none;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
@@ -18,6 +16,9 @@
 
 @media (min-width: 768px) {
   .fixed {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     top: 31%;
     gap: 22px;
   }

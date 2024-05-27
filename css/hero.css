@@ -48,6 +48,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .hero {
+    margin-top: 60px;
+  }
+}
+
 .hero .hero__title {
   position: relative;
   display: -webkit-box;
