@@ -325,10 +325,9 @@
 }
 
 .video-left__icon {
-  align-self: self-end;
-  -ms-flex-item-align: self-end;
-  -ms-grid-row-align: self-end;
-  align-self: self-end;
+  align-self: flex-end;
+  -ms-flex-item-align: end;
+  align-self: flex-end;
 }
 
 .ham-menu__video__left {
