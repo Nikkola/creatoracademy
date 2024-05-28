@@ -279,6 +279,7 @@
   display: flex;
   margin-top: 57px;
   gap: 5px;
+  justify-content: space-between;
 }
 
 .menu .menu__item {
