@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   header {
     background: #0e0e0e;
     z-index: 1000;
@@ -206,13 +206,18 @@
 .hamburger-header {
   background: #0e0e0e;
   z-index: 1000;
-  display: flex;
+  display: none;
   justify-content: space-between;
   padding: 0 20px;
   height: 60px;
   position: fixed;
   right: 0;
   left: 0;
+}
+@media (max-width: 767px) {
+  .hamburger-header {
+    display: flex;
+  }
 }
 
 .ham-menu__list .menu__item {
@@ -241,7 +246,7 @@
   background: #0e0e0e;
   color: white;
   list-style: none;
-  padding: 40px 20px;
+  padding: 67px 20px 20px;
 }
 
 .showMenu {
@@ -264,14 +269,69 @@
   background-size: cover;
   width: 171px;
   height: 171px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ham-menu__video {
   display: flex;
-  margin-top: 20px;
+  margin-top: 57px;
   gap: 5px;
 }
 
 .menu .menu__item {
   padding: 10px 0;
+}
+
+.menu .fixed__auth {
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+}
+
+.menu .round__btn {
+  border: 1px solid #fff;
+}
+
+.hamburger-header .logo {
+  font-size: 23.43px;
+  letter-spacing: -0.7px;
+}
+
+.menu .menuItem {
+  font-size: 18px;
+  letter-spacing: -0.1px;
+  padding: 11px 0;
+  font-weight: 500;
+}
+
+.ham-menu__socials {
+  margin-top: 46px;
+}
+
+.ham-menu__socials .footer__socials-list {
+  margin-top: 29px;
+  gap: 10px;
+}
+
+.video-left__text {
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.video-left__icon {
+  align-self: self-end;
+}
+
+.ham-menu__video__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.ham-menu__video__right {
+  padding: 5px 0px;
 }
