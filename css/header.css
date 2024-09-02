@@ -96,6 +96,7 @@
 }
 
 .header-fixed {
+  background-color: #0e0e0e;
   position: fixed;
   top: 0;
   left: 0;
