@@ -28,7 +28,12 @@
     -ms-flex-align: unset;
     align-items: unset;
     gap: 5px;
+    width: 100vw !important;
   }
+}
+
+.gallery__block {
+  overflow: hidden;
 }
 
 @media (min-width: 1200px) {
@@ -45,7 +50,7 @@
 
 @media (min-width: 768px) {
   .gallery__item {
-    width: 33.33%;
+    width: 100%;
   }
 }
 

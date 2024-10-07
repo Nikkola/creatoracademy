@@ -54,24 +54,30 @@ const scrollContainer = document.getElementById("clients-scroll");
 const scrollContainerScnd = document.getElementById("clients-scroll-scnd");
 const page = document.querySelector(".page");
 
-var owl = $(".owl-carousel");
-owl.owlCarousel({
-  loop: true,
-  margin: 0,
-  nav: true,
-  navText: [
-    "<i class='fa fa-caret-left'></i>",
-    "<i class='fa fa-caret-right'></i>",
-  ],
-  touchDrag: true,
-  autoplay: 0.5,
-  autoplayHoverPause: true,
-  responsive: {
-    0: {
-      items: 3,
-    },
-  },
-});
+try {
+  $(document).ready(function () {
+    const owl = $(".clients__list-mobile-carousel");
+    owl.owlCarousel({
+      loop: true,
+      margin: 0,
+      nav: true,
+      navText: [
+        "<i class='fa fa-caret-left'></i>",
+        "<i class='fa fa-caret-right'></i>",
+      ],
+      touchDrag: true,
+      autoplay: 0.5,
+      autoplayHoverPause: true,
+      responsive: {
+        0: {
+          items: 3,
+        },
+      },
+    });
+  });
+} catch (e) {
+  console.log(e);
+}
 
 // Скролл отзывов
 
@@ -144,8 +150,8 @@ document.addEventListener("mousemove", (e) => {
 // Youtube player
 
 var tag = document.createElement("script");
-
-tag.src = "https://www.youtube.com/player_api";
+tag.async = true;
+tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName("script")[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -212,3 +218,35 @@ hamburger.addEventListener("click", toggleMenu);
 menuItems.forEach(function (menuItem) {
   menuItem.addEventListener("click", toggleMenu);
 });
+
+try {
+  $(document).ready(function () {
+    var owl = $(".gallery__list");
+    owl.owlCarousel({
+      loop: true,
+      margin: 0,
+      dots: false,
+      touchDrag: true,
+      responsive: {
+        0: {
+          items: 1,
+          margin: 50,
+        },
+        768: {
+          items: 4,
+          margin: 5,
+        },
+        1200: {
+          items: 4,
+          margin: 10,
+        },
+        1920: {
+          items: 4,
+          margin: 20,
+        },
+      },
+    });
+  });
+} catch (e) {
+  console.log(e);
+}
