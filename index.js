@@ -147,52 +147,44 @@ document.addEventListener("mousemove", (e) => {
   boxLearn.scrollLeft = scrollLeftLearn - walkXLearn;
 });
 
-// Youtube player
+// VK player
+try {
+  $(document).ready(function () {
+    const iframe = document.getElementById("player");
 
-var tag = document.createElement("script");
-tag.async = true;
-tag.src = "https://www.youtube.com/iframe_api";
-tag.referrerPolicy = "strict-origin-when-cross-origin";
-var firstScriptTag = document.getElementsByTagName("script")[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    const player = VK.VideoPlayer(iframe);
 
-var player;
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("player", {
-    height: "100%",
-    width: "100%",
-    videoId: "cA3xM_3t9N4",
+    function stopVideo() {
+      player?.pause();
+    }
+
+    function handleVideoClick(event) {
+      const link = `${event.currentTarget.dataset.link}&js_api=1`;
+      loadVideo(link);
+      const modalOverlay = document.querySelector(".modal-component");
+      modalOverlay.setAttribute("style", "display:block;");
+    }
+    function loadVideo(videoId) {
+      iframe.src = videoId;
+      player?.play();
+    }
+    function handleCloseModal(event) {
+      stopVideo();
+      const modalOverlay = document.querySelector(".modal-component");
+      modalOverlay.setAttribute("style", "display:none;");
+    }
+
+    document.querySelectorAll(".play-btn").forEach((elem) => {
+      elem.addEventListener("click", handleVideoClick);
+    });
+
+    document.querySelectorAll(".modal__close").forEach((elem) => {
+      elem.addEventListener("click", handleCloseModal);
+    });
   });
+} catch (e) {
+  console.log(e);
 }
-
-function stopVideo() {
-  player.stopVideo();
-}
-
-function handleYoutubeClick(event) {
-  const link = event.currentTarget.dataset.link;
-  loadVideo(link);
-  const modalOverlay = document.querySelector(".modal-component");
-  modalOverlay.setAttribute("style", "display:block;");
-}
-function loadVideo(videoId) {
-  player?.loadVideoByUrl?.(videoId);
-  player?.playVideo?.();
-}
-function handleCloseModal(event) {
-  stopVideo();
-  const modalOverlay = document.querySelector(".modal-component");
-  modalOverlay.setAttribute("style", "display:none;");
-}
-// document.addEventListener("DOMContentLoaded", () => {
-document.querySelectorAll(".play-btn").forEach((elem) => {
-  elem.addEventListener("click", handleYoutubeClick);
-});
-// });
-
-document.querySelectorAll(".modal__close").forEach((elem) => {
-  elem.addEventListener("click", handleCloseModal);
-});
 
 // Гамбургер-меню
 
