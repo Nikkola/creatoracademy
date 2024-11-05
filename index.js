@@ -156,6 +156,7 @@ try {
 
     function stopVideo() {
       player?.pause();
+      iframe.src = `https://vk.com/video_ext.php?oid=95541&id=456240106&hd=2&hash=d7ee990dd50426b9&autoplay=1&js_api=1`;
     }
 
     function handleVideoClick(event) {
@@ -166,6 +167,7 @@ try {
     }
     function loadVideo(videoId) {
       iframe.src = videoId;
+      player?.seek(0);
       player?.play();
     }
     function handleCloseModal(event) {
