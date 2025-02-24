@@ -111,9 +111,8 @@ a {
   text-decoration: none;
 }
 
-
 a:hover {
-  color:blanchedalmond;
+  color: blanchedalmond;
 }
 
 .kinopoisk {
@@ -755,7 +754,7 @@ section.reviews {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: var(--z-modal);
+  z-index: 1000;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
 }
@@ -813,15 +812,19 @@ section.reviews {
   background: none;
   outline: none;
   border: none;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
   font-size: 0;
   color: #fff;
   position: absolute;
   width: 32px;
   height: 32px;
-  -webkit-transition: 0.4s;
+  /* -webkit-transition: 0.4s;
   -o-transition: 0.4s;
-  transition: 0.4s;
+  transition: 0.4s; */
 }
 .modal__close:hover {
   -webkit-transition: 0.4s;
@@ -835,7 +838,7 @@ section.reviews {
   position: absolute;
   left: 15px;
   content: " ";
-  height: 20px;
+  height: 32px;
   width: 2px;
   background-color: #fff;
 }
@@ -852,12 +855,11 @@ section.reviews {
 
 .video-modal-component {
   position: relative;
-  width: 250px;
-  height: 140px;
+  width: 80vw;
   height: auto;
 }
 
-@media (min-width: 600px) {
+/* @media (min-width: 600px) {
   .video-modal-component {
     width: 400px;
     height: 225px;
@@ -868,7 +870,7 @@ section.reviews {
     top: -30px;
     right: -30px;
   }
-}
+} */
 
 @media (min-width: 768px) {
   .video-modal-component {
