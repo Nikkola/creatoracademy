@@ -129,7 +129,8 @@
   font-size: 12px;
   line-height: 1.2;
   letter-spacing: -0.4px;
-  white-space: nowrap;
+  /* white-space: nowrap; */
+  white-space: normal;
 }
 
 @media (min-width: 768px) {
