@@ -70,7 +70,7 @@ try {
       autoplayHoverPause: true,
       responsive: {
         0: {
-          items: 3,
+          items: 2,
         },
       },
     });
