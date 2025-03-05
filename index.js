@@ -161,6 +161,19 @@ try {
 
     function handleVideoClick(event) {
       const link = `${event.currentTarget.dataset.link}&js_api=1`;
+      const type = event.currentTarget.dataset.type;
+      const modalComponent = document.querySelector(".video-modal-component");
+      if (
+        type === "reels" &&
+        !modalComponent.classList.contains("reels-modal")
+      ) {
+        modalComponent.classList.add("reels-modal");
+      } else if (
+        modalComponent.classList.contains("reels-modal") &&
+        type !== "reels"
+      ) {
+        modalComponent.classList.remove("reels-modal");
+      }
       loadVideo(link);
       const modalOverlay = document.querySelector(".modal-component");
       modalOverlay.setAttribute("style", "display:block;");

@@ -864,6 +864,17 @@ section.reviews {
   height: auto;
 }
 
+.video-modal-component.reels-modal {
+  width: auto;
+  height: 80vh;
+  aspect-ratio: 9 / 16 auto;
+}
+@media (max-width: 768px) {
+  .video-modal-component.reels-modal {
+    width: 323px;
+    height: 640px;
+  }
+}
 /* @media (min-width: 600px) {
   .video-modal-component {
     width: 400px;
