@@ -9,6 +9,7 @@
 
 .hero__quotes-anchor-right {
   anchor-name: --quotes-right;
+  position: relative;
 }
 .hero__quotes-anchor-left {
   anchor-name: --quotes-left;
@@ -87,6 +88,7 @@
 }
 
 .hero .hero__title h1 {
+  position: relative;
   font-size: 64px;
   font-weight: 400;
   white-space: nowrap;
@@ -167,8 +169,9 @@
   /* position: relative;
   top: 7px; */
   position: absolute;
-  position-anchor: --quotes-left;
-  inset-block-start: calc(anchor(top) + 10%);
+  /* position-anchor: --quotes-left;
+  inset-block-start: calc(anchor(top) + 10%); */
+  top: 7%;
 }
 
 @media (min-width: 768px) {
@@ -187,9 +190,10 @@
   /* top: -39px;
   left: 4px; */
   position: absolute;
-  position-anchor: --quotes-right;
+  /* position-anchor: --quotes-right;
   inset-block-end: anchor(center);
-  inset-inline-start: anchor(self-end);
+  inset-inline-start: anchor(self-end); */
+  bottom: 60%;
 }
 
 @media (min-width: 768px) {
