@@ -78,6 +78,9 @@
   .learn__item:nth-child(3) {
     -ms-flex-preferred-size: calc(55% - 10px);
     flex-basis: calc(55% - 10px);
+    img {
+      object-fit: cover;
+    }
   }
 
   .learn__item:nth-child(4) {
