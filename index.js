@@ -245,3 +245,34 @@ try {
 } catch (e) {
   console.log(e);
 }
+try {
+  $(document).ready(function () {
+    var owl = $(".reels");
+    owl.owlCarousel({
+      loop: true,
+      margin: 0,
+      dots: false,
+      touchDrag: true,
+      responsive: {
+        0: {
+          items: 1,
+          margin: 50,
+        },
+        768: {
+          items: 5,
+          margin: 5,
+        },
+        1200: {
+          items: 5,
+          margin: 10,
+        },
+        1920: {
+          items: 5,
+          margin: 20,
+        },
+      },
+    });
+  });
+} catch (e) {
+  console.log(e);
+}

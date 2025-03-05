@@ -231,6 +231,11 @@ p {
   flex-direction: column;
   gap: 48px;
 }
+@media (max-width: 768px) {
+  .section.info {
+    gap: 0;
+  }
+}
 
 @media (min-width: 768px) {
   .section {
