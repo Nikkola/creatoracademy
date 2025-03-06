@@ -92,6 +92,10 @@
 }
 html {
   height: 100%;
+  background-color: #0e0e0e;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
 }
 body {
   font-family: "Montserrat", sans-serif;
@@ -99,6 +103,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #434343;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 #root,
 .page {
