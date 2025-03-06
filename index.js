@@ -242,6 +242,7 @@ try {
     const iframe = document.getElementById("player");
 
     const player = VK.VideoPlayer(iframe);
+    player.unmute();
     player.setVolume(1);
 
     function stopVideo() {
