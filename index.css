@@ -873,9 +873,10 @@ section.reviews {
 }
 
 .video-modal-component.reels-modal {
-  width: auto;
-  height: 80vh;
-  aspect-ratio: 9 / 16 auto;
+  width: 100%;
+  height: 76vh;
+  max-height: 480px;
+  max-width: 232px;
 }
 @media (max-width: 768px) {
   .video-modal-component.reels-modal {
