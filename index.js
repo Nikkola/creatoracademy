@@ -242,6 +242,7 @@ try {
     const iframe = document.getElementById("player");
 
     const player = VK.VideoPlayer(iframe);
+    player.setVolume(1);
 
     function stopVideo() {
       player?.pause();
@@ -249,7 +250,6 @@ try {
     }
 
     function handleVideoClick(event) {
-      event.preventDefault();
       const link = `${event.currentTarget.dataset.link}&js_api=1`;
       const type = event.currentTarget.dataset.type;
       const modalComponent = document.querySelector(".video-modal-component");
