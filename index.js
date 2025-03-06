@@ -243,11 +243,12 @@ try {
 
     const player = VK.VideoPlayer(iframe);
 
-    async function stopVideo() {
-      await player?.pause();
+    function stopVideo() {
+      player?.pause();
+      iframe.src = `https://vk.com/video_ext.php?oid=95541&id=456240106&hd=2&hash=d7ee990dd50426b9&autoplay=1&js_api=1`;
     }
 
-    async function handleVideoClick(event) {
+    function handleVideoClick(event) {
       const link = `${event.currentTarget.dataset.link}&js_api=1&muted=false`;
       const type = event.currentTarget.dataset.type;
       const modalComponent = document.querySelector(".video-modal-component");
@@ -262,13 +263,13 @@ try {
       ) {
         modalComponent.classList.remove("reels-modal");
       }
-      await loadVideo(link);
+      loadVideo(link);
       const modalOverlay = document.querySelector(".modal-component");
       document.body.classList.add("body-no-scroll");
       modalOverlay.setAttribute("style", "display:block;");
     }
 
-    async function loadVideo(videoId) {
+    function loadVideo(videoId) {
       iframe.src = videoId;
       player?.seek(0);
       player?.play();
@@ -276,8 +277,8 @@ try {
     function handleCloseModal(event) {
       stopVideo();
       const modalOverlay = document.querySelector(".modal-component");
-      document.body.classList.remove("body-no-scroll");
       modalOverlay.setAttribute("style", "display:none;");
+      document.body.classList.remove("body-no-scroll");
     }
 
     document.querySelectorAll(".play-btn").forEach((elem) => {
