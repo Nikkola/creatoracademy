@@ -249,7 +249,7 @@ try {
     }
 
     function handleVideoClick(event) {
-      const link = `${event.currentTarget.dataset.link}&js_api=1`;
+      const link = `${event.currentTarget.dataset.link}&js_api=1&muted=0`;
       const type = event.currentTarget.dataset.type;
       const modalComponent = document.querySelector(".video-modal-component");
       if (
@@ -266,6 +266,7 @@ try {
       loadVideo(link);
       const modalOverlay = document.querySelector(".modal-component");
       modalOverlay.setAttribute("style", "display:block;");
+      document.body.classList.add("body-no-scroll");
     }
 
     function loadVideo(videoId) {
@@ -277,6 +278,7 @@ try {
     function handleCloseModal(event) {
       stopVideo();
       const modalOverlay = document.querySelector(".modal-component");
+      document.body.classList.remove("body-no-scroll");
       modalOverlay.setAttribute("style", "display:none;");
     }
 
