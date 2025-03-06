@@ -935,3 +935,11 @@ section.reviews {
     right: -50px;
   }
 }
+
+.lazy {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.lazy-loaded {
+  opacity: 1 !important;
+}

@@ -292,3 +292,29 @@ try {
 } catch (e) {
   console.log(e);
 }
+
+// Lazy-loading fade
+document.addEventListener("DOMContentLoaded", function () {
+  const lazyImages = document.querySelectorAll(".lazy");
+
+  const lazyLoad = (image) => {
+    const src = image.getAttribute("data-src");
+    image.src = src;
+    image.onload = () => {
+      image.classList.add("lazy-loaded");
+    };
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        lazyLoad(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+
+  lazyImages.forEach((image) => {
+    observer.observe(image);
+  });
+});
