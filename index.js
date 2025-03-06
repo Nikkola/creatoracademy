@@ -271,9 +271,9 @@ try {
 
     function loadVideo(videoId) {
       iframe.src = videoId;
+      player?.setVolume(1);
       player?.seek(0);
       player?.play();
-      player.unmute();
     }
     function handleCloseModal(event) {
       stopVideo();
