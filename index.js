@@ -243,9 +243,8 @@ try {
 
     const player = VK.VideoPlayer(iframe);
 
-    function stopVideo() {
-      player?.pause();
-      iframe.src = `https://vk.com/video_ext.php?oid=95541&id=456240106&hd=2&hash=d7ee990dd50426b9&autoplay=1&js_api=1`;
+    async function stopVideo() {
+      await player?.pause();
     }
 
     async function handleVideoClick(event) {
