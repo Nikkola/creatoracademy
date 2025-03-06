@@ -265,8 +265,8 @@ try {
       }
       loadVideo(link);
       const modalOverlay = document.querySelector(".modal-component");
-      modalOverlay.setAttribute("style", "display:block;");
       document.body.classList.add("body-no-scroll");
+      modalOverlay.setAttribute("style", "display:block;");
     }
 
     function loadVideo(videoId) {
