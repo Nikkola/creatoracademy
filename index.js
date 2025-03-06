@@ -181,6 +181,7 @@ try {
       margin: 0,
       dots: false,
       touchDrag: true,
+      lazyLoad: true,
       responsive: {
         0: {
           items: 1,
