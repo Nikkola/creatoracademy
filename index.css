@@ -886,19 +886,19 @@ section.reviews {
   width: 80vw;
   height: auto;
 }
-
-.video-modal-component.reels-modal {
-  width: 100%;
-  height: 76vh;
-  max-height: 480px;
-  max-width: 232px;
-}
 @media (max-width: 768px) {
   .video-modal-component.reels-modal {
-    width: 323px;
-    height: 640px;
+    width: 100%;
+    height: 76vh;
+    max-height: 480px;
+    max-width: 232px;
   }
 }
+.video-modal-component.reels-modal {
+  width: 323px;
+  height: 640px;
+}
+
 /* @media (min-width: 600px) {
   .video-modal-component {
     width: 400px;
