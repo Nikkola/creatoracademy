@@ -114,6 +114,7 @@ body {
   overflow: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: none;
+  touch-action: none;
 }
 #root,
 .page {
