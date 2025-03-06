@@ -242,7 +242,6 @@ try {
     const iframe = document.getElementById("player");
 
     const player = VK.VideoPlayer(iframe);
-    player.unmute();
 
     function stopVideo() {
       player?.pause();
@@ -273,6 +272,7 @@ try {
       iframe.src = videoId;
       player?.seek(0);
       player?.play();
+      player.unmute();
     }
     function handleCloseModal(event) {
       stopVideo();
