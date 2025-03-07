@@ -944,3 +944,6 @@ section.reviews {
 .lazy-loaded {
   opacity: 1 !important;
 }
+.owl-carousel .owl-item .owl-lazy {
+  transition: opacity 1s ease-in-out !important;
+}

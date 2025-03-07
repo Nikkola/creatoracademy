@@ -210,6 +210,7 @@ try {
     var owl = $(".reels");
     owl.owlCarousel({
       loop: true,
+      lazyLoad: true,
       margin: 0,
       dots: false,
       touchDrag: true,
