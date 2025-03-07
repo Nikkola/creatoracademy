@@ -242,18 +242,22 @@ try {
 try {
   $(document).ready(function () {
     const iframe = document.getElementById("player");
-
     const player = VK.VideoPlayer(iframe);
-
+    const loader = document.getElementById("loader");
+    const modalComponent = document.querySelector(".video-modal-component");
+    const modalOverlay = document.querySelector(".modal-component");
     function stopVideo() {
       player?.pause();
       iframe.src = `https://vk.com/video_ext.php?oid=95541&id=456240106&hd=2&hash=d7ee990dd50426b9&autoplay=1&js_api=1`;
     }
 
     function handleVideoClick(event) {
-      const link = `${event.currentTarget.dataset.link}&js_api=1&muted=false`;
+      document.body.classList.add("body-no-scroll");
+      modalOverlay.setAttribute("style", "display:block;");
+      loader.style.display = "block";
+      const link = `${event.currentTarget.dataset.link}&js_api=1`;
       const type = event.currentTarget.dataset.type;
-      const modalComponent = document.querySelector(".video-modal-component");
+
       if (
         type === "reels" &&
         !modalComponent.classList.contains("reels-modal")
@@ -266,19 +270,20 @@ try {
         modalComponent.classList.remove("reels-modal");
       }
       loadVideo(link);
-      const modalOverlay = document.querySelector(".modal-component");
-      document.body.classList.add("body-no-scroll");
-      modalOverlay.setAttribute("style", "display:block;");
     }
 
     function loadVideo(videoId) {
       iframe.src = videoId;
-      player?.seek(0);
-      player?.play();
+      setTimeout(() => {
+        player?.seek(0);
+        player?.play();
+        loader.style.display = "none";
+        modalComponent.setAttribute("style", "display:block;");
+      }, 2000);
     }
     function handleCloseModal(event) {
       stopVideo();
-      const modalOverlay = document.querySelector(".modal-component");
+      modalComponent.setAttribute("style", "display:none;");
       modalOverlay.setAttribute("style", "display:none;");
       document.body.classList.remove("body-no-scroll");
     }
