@@ -94,12 +94,45 @@
   gap: 10px;
 }
 
+
+.rates .base_rate .rate__item:first-child p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .base_rate .rate__item:nth-child(4) p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .base_rate .rate__item:last-child p {
+  opacity: 100%;
+  color: #fff;
+}
+
+
+
 .rates .standart_rate .rate__item:first-child p {
   opacity: 100%;
   color: #fff;
 }
 
 .rates .standart_rate .rate__item:last-child p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .standart_rate .rate__item:nth-child(4) p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .standart_rate .rate__item:nth-child(5) p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .standart_rate .rate__item:nth-child(6) p {
   opacity: 100%;
   color: #fff;
 }
@@ -116,12 +149,27 @@
 
 .rates .individual .rate__item:last-child p {
   opacity: 100%;
+  color: #ffe491;
+}
+ 
+.rates .individual .rate__item:nth-child(4) p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .individual .rate__item:nth-child(5) p {
+  opacity: 100%;
+  color: #fff;
+}
+
+.rates .individual .rate__item:nth-child(6) p {
+  opacity: 100%;
   color: #fff;
 }
 
 .rates .individual .rate__item:nth-child(7) p {
   opacity: 100%;
-  color: #fff;
+  color: #ffe491;
 }
 
 @media (max-width: 768px) {
