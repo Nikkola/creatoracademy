@@ -211,6 +211,9 @@
   .review__text {
     line-height: 1.2;
   }
+  .reviews__desc a {
+    font-size: 12px;
+}
 }
 
 @media (min-width: 1920px) {
