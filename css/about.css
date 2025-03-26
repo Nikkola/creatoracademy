@@ -443,6 +443,14 @@
   height: 13px;
 }
 
+
+@media (min-width: 375px) {
+  .text__big {
+    font-size: 90px;
+    letter-spacing: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .about__top-button {
     padding: 37px 59px;
