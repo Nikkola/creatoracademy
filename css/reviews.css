@@ -75,9 +75,6 @@
   flex-direction: column;
 }
 
-.reviews__desc a {
-  font-size: 20px;
-}
 
 @media (min-width: 1200px) {
   .reviews__desc {
@@ -89,6 +86,11 @@
   .reviews__desc {
     gap: 20px;
   }
+
+  .reviews__desc a {
+    font-size: 20px;
+  }
+  
 }
 
 .reviews__item {
