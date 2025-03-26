@@ -75,6 +75,10 @@
   flex-direction: column;
 }
 
+.reviews__desc a {
+
+}
+
 @media (min-width: 1200px) {
   .reviews__desc {
     gap: 13px;
@@ -150,7 +154,7 @@
 
 @media (min-width: 1920px) {
   .review__title {
-    font-size: 20px;
+    font-size: 26px;
   }
 }
 
