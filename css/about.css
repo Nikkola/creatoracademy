@@ -34,7 +34,7 @@
 }
 
 .about__block:first-child {
-  background: center/cover no-repeat url("../images/about/1.webp");
+  background: center/cover no-repeat url("../images/about/1.jpg");
 }
 
 .about__block:first-child .about__text {
