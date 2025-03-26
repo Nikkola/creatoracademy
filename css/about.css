@@ -130,7 +130,7 @@
 }
 
 .about__block:nth-child(3) {
-  background: center/cover no-repeat url("../images/about/3.webp");
+  background: center/cover no-repeat url("../images/about/1.webp");
 }
 
 .about__block:nth-child(3) .container {
