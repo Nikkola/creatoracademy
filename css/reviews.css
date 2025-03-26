@@ -173,7 +173,7 @@
 
 @media (min-width: 1920px) {
   .review__user-name {
-    font-size: 18px;
+    font-size: 24px;
   }
 }
 
@@ -211,7 +211,7 @@
 
 @media (min-width: 1920px) {
   .review__text {
-    line-height: 18.9px;
+    line-height: 24.9px;
   }
 }
 
