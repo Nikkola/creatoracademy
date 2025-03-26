@@ -34,7 +34,7 @@
 }
 
 .about__block:first-child {
-  background: center/cover no-repeat url("../images/about/1.jpg");
+  background: center/cover no-repeat url("../images/about/3.jpg");
 }
 
 .about__block:first-child .about__text {
@@ -193,7 +193,7 @@
 
   .about__block:nth-child(3) .about__top {
     -ms-flex-item-align: end;
-    align-self: flex-end;
+    align-self: flex-start;
     padding: 40px 0 0 0;
     margin-right: 31px;
     width: 20%;
