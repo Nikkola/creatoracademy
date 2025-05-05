@@ -7,6 +7,10 @@
   /* background: center/cover no-repeat url("../images/hero/hero-bg.webp"); */
 }
 
+.book-btn {
+  color: #ffe491;
+}
+
 .hero__quotes-anchor-right {
   anchor-name: --quotes-right;
   position: relative;
