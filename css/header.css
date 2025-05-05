@@ -81,8 +81,7 @@
 
 .menu__item:last-child {
   border: unset;
-  background: #fff;
-  color: grey;
+  color: #ffe491;
 }
 
 .menu__item:last-child:hover {
@@ -90,6 +89,7 @@
   color: black;
   opacity: 1;
   cursor: pointer;
+  background: #fff;
 }
 
 .menu__item:hover {
