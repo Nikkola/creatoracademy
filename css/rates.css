@@ -16,6 +16,10 @@
   flex-direction: column;
 }
 
+.rates_button {
+  color: #ffe491!important;
+}
+
 @media (min-width: 768px) {
   .rates .rates__block {
     -webkit-box-orient: horizontal;
