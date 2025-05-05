@@ -81,6 +81,8 @@
 
 .menu__item:last-child {
   border: unset;
+  background: #fff;
+  color: black;
 }
 
 .menu__item:hover {
