@@ -11,6 +11,11 @@
   color: #ffe491!important;
 }
 
+
+.book-btn:hover {
+  color: black!important;
+}
+
 .hero__quotes-anchor-right {
   anchor-name: --quotes-right;
   position: relative;
