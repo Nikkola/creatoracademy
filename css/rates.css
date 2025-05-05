@@ -20,6 +20,10 @@
   color: #ffe491!important;
 }
 
+.rates__button:hover {
+  color: black!important;
+}
+
 @media (min-width: 768px) {
   .rates .rates__block {
     -webkit-box-orient: horizontal;
