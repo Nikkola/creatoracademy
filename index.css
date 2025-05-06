@@ -579,7 +579,11 @@ p {
 }
 
 .text-end {
-  text-align: end;
+/*  text-align: end;*/
+}
+
+.text-end li {
+  padding-right: 25px;
 }
 
 .flex-column {
