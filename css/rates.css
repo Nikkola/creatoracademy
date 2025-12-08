@@ -173,6 +173,11 @@
   color: #fff;
 }
 
+.rates .individual .rate__item:nth-child(7) p {
+  opacity: 100%;
+  color: #fff;
+}
+
 .rates .individual .rate__item:nth-child(8) p {
   opacity: 100%;
   color: #ffe491;
