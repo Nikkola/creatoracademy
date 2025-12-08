@@ -148,6 +148,11 @@
   color: #fff;
 }
 
+.rates .standart_rate .rate__item:nth-child(8) p {
+  opacity: 100%;
+  color: #fff;
+}
+
 .rates .individual .rate__item:first-child p {
   opacity: 100%;
   color: #fff;
