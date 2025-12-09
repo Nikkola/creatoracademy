@@ -16,13 +16,6 @@
   flex-direction: column;
 }
 
-.rates__button {
-  color: #ffe491!important;
-}
-
-.rates__button:hover {
-  color: black!important;
-}
 
 @media (min-width: 768px) {
   .rates .rates__block {
@@ -101,6 +94,7 @@
   align-items: center;
   gap: 10px;
 }
+
 
 .rates .base_rate .rate__item:first-child p {
   opacity: 100%;
@@ -227,6 +221,56 @@
     height: 5px;
   }
 }
+
+/* цвета тарифов */ 
+
+.rates .individual .rate__top{
+  transition: border 0.8s ease;
+}
+
+.rates .individual .rate__top:hover { 
+  border: 1px solid #ffe491;
+}
+
+
+.rates .standart_rate .rate__top{
+  transition: border 0.8s ease;
+}
+
+.rates .standart_rate .rate__top:hover { 
+  border: 1px solid #c0c0c0;
+}
+
+.rates .base_rate .rate__top{
+  transition: border 0.8s ease;
+}
+
+.rates .base_rate .rate__top:hover { 
+  border: 1px solid #B87333;
+}
+
+
+.individual .rates__button {
+  color: #ffe491!important;
+}
+
+.standart_rate .rates__button {
+  
+}
+
+.base_rate .rates__button {
+  color: #B87333!important;
+}
+
+/*.rates__button {
+  color: #ffe491!important;
+}*/
+
+.rates__button:hover {
+  color: black!important;
+}
+
+/* цвета тарифов */ 
 
 .rates .rate__top {
   border: 1px solid rgba(255, 255, 255, 0.1);
