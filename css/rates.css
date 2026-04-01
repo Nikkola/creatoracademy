@@ -182,6 +182,11 @@
   color: #ffe491;
 }
 
+.rates .individual .rate__item:nth-child(9) p {
+  opacity: 100%;
+  color: #ffe491;
+}
+
 .rates .test_rate {
     flex-wrap: wrap; 
     align-self: anchor-center;
