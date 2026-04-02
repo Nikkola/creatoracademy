@@ -255,7 +255,14 @@ try {
       document.body.classList.add("body-no-scroll");
       modalOverlay.setAttribute("style", "display:block;");
       loader.style.display = "block";
-      const link = `${event.currentTarget.dataset.link}&js_api=1`;
+
+      const baseLink = event.currentTarget.dataset.link;
+      const isVkVideo = baseLink.includes("vk.ru") || baseLink.includes("vk.com") || baseLink.includes("vkvideo");
+
+      const link = isVkVideo
+        ? `${baseLink}${baseLink.includes("?") ? "&" : "?"}js_api=1`
+        : baseLink;
+
       const type = event.currentTarget.dataset.type;
 
       if (
@@ -269,6 +276,7 @@ try {
       ) {
         modalComponent.classList.remove("reels-modal");
       }
+
       loadVideo(link);
     }
 
@@ -325,3 +333,32 @@ document.addEventListener("DOMContentLoaded", function () {
     observer.observe(image);
   });
 });
+
+
+// FAQ аккордион
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Находим все элементы details
+//     const details = document.querySelectorAll('details.faq-item');
+
+//     details.forEach(detail => {
+//         detail.addEventListener('toggle', (event) => {
+//             const answer = detail.querySelector('.animated-answer');
+            
+//             if (detail.open) {
+//                 // При открытии: 
+//                 // 1. Устанавливаем max-height равным высоте всего содержимого внутри answer
+//                 answer.style.maxHeight = answer.scrollHeight + 'px';
+//             } else {
+//                 // При закрытии:
+//                 // 1. Сначала сбрасываем max-height, чтобы transition сработал 
+//                 //    (иначе он перейдет из, например, 150px в 0px, что займет время)
+//                 answer.style.maxHeight = answer.scrollHeight + 'px';
+//                 // 2. Затем ждем следующий кадр анимации и устанавливаем 0
+//                 requestAnimationFrame(() => {
+//                    answer.style.maxHeight = '0';
+//                 });
+//             }
+//         });
+//     });
+// });
