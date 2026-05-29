@@ -42,6 +42,13 @@ function throttle(callee, timeout) {
   };
 }
 
+// Кнопка скрола наверх
+
+ const scrollBtn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+
 window.addEventListener("scroll", throttle(showFixedBanner, 250), false);
 
 // Скролл клиентов
