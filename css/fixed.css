@@ -168,3 +168,15 @@
     gap: 10px;
   }
 }
+
+/*Кнопка скрола наверх */
+
+#scrollTopBtn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  #scrollTopBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
