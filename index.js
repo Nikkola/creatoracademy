@@ -344,28 +344,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // FAQ аккордион
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Находим все элементы details
-//     const details = document.querySelectorAll('details.faq-item');
+try {
+  (function () {
+    var items = document.querySelectorAll(".faq__item");
+    if (!items.length) return;
 
-//     details.forEach(detail => {
-//         detail.addEventListener('toggle', (event) => {
-//             const answer = detail.querySelector('.animated-answer');
-            
-//             if (detail.open) {
-//                 // При открытии: 
-//                 // 1. Устанавливаем max-height равным высоте всего содержимого внутри answer
-//                 answer.style.maxHeight = answer.scrollHeight + 'px';
-//             } else {
-//                 // При закрытии:
-//                 // 1. Сначала сбрасываем max-height, чтобы transition сработал 
-//                 //    (иначе он перейдет из, например, 150px в 0px, что займет время)
-//                 answer.style.maxHeight = answer.scrollHeight + 'px';
-//                 // 2. Затем ждем следующий кадр анимации и устанавливаем 0
-//                 requestAnimationFrame(() => {
-//                    answer.style.maxHeight = '0';
-//                 });
-//             }
-//         });
-//     });
-// });
+    var DURATION = 420; // синхронно с transition в faq.css
+
+    function openItem(item) {
+      var answer = item.querySelector(".faq__answer");
+      item.open = true;
+      answer.style.maxHeight = answer.scrollHeight + "px";
+      // после анимации снимаем фиксированную высоту,
+      // чтобы блок мог тянуться (адаптив, перенос строк)
+      window.setTimeout(function () {
+        if (item.open) answer.style.maxHeight = "none";
+      }, DURATION);
+    }
+
+    function closeItem(item) {
+      var answer = item.querySelector(".faq__answer");
+      // фиксируем текущую высоту, затем уводим в 0
+      answer.style.maxHeight = answer.scrollHeight + "px";
+      requestAnimationFrame(function () {
+        answer.style.maxHeight = "0px";
+      });
+      window.setTimeout(function () {
+        item.open = false;
+      }, DURATION);
+    }
+
+    items.forEach(function (item) {
+      var summary = item.querySelector(".faq__q");
+
+      summary.addEventListener("click", function (e) {
+        e.preventDefault(); // берём управление раскрытием на себя
+
+        if (item.open) {
+          closeItem(item);
+          return;
+        }
+
+        // режим аккордеона: закрываем остальные открытые
+        items.forEach(function (other) {
+          if (other !== item && other.open) closeItem(other);
+        });
+
+        openItem(item);
+      });
+    });
+
+    // первый вопрос открыт по умолчанию
+    openItem(items[0]);
+  })();
+} catch (e) {
+  console.log(e);
+}
