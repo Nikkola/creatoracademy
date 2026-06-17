@@ -119,7 +119,7 @@
   line-height: 1.62;
   letter-spacing: 0;
   text-transform: none;
-  max-width: 60ch;
+  max-width: 100ch;
 }
 .faq__answer-inner p + p {
   margin-top: 14px;
