@@ -16,6 +16,10 @@
   flex-direction: column;
 }
 
+.rates .installment__price {
+  font-size: 30px;
+}
+
 
 @media (min-width: 768px) {
   .rates .rates__block {
