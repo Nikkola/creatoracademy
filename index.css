@@ -979,7 +979,7 @@ section.reviews {
 }
 
 /* Salebot принудительно вешает 16px гаттер на секцию при ширине ≤640px.
-   Гасим саму переменную и возвращаем отступ внутрь .page, которая красит фон. */
+   Гасим саму переменную и возвращаем отступ внутрь .page, которая красит фон. 
 .salebot-landing__section-inner {
   --sb-mobile-gutter: 0px;
 }
@@ -989,4 +989,4 @@ section.reviews {
     padding-left: 16px;
     padding-right: 16px;
   }
-}
+} */
