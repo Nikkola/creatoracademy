@@ -105,8 +105,8 @@
   }
 
   .kit__tools {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 26px 28px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px 40px;
     align-items: start;
   }
 
