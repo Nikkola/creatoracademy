@@ -96,8 +96,8 @@
   }
 
   .kit__tools {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 26px 40px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px 28px;
   }
 
   .kit__title {
@@ -105,12 +105,12 @@
   }
 
   .kit__icon {
-    width: 48px;
-    height: 48px;
-    flex: 0 0 48px;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
   }
 
   .kit__tool-label {
-    font-size: 21px;
+    font-size: 19px;
   }
 }
