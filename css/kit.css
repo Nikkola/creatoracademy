@@ -16,10 +16,15 @@
 }
 
 .kit__icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   color: #ffe491;
+}
+
+.kit__more {
+  margin-top: 14px;
+  opacity: 0.6;
 }
 
 .kit__tool-label {
@@ -100,9 +105,9 @@
   }
 
   .kit__icon {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
   }
 
   .kit__tool-label {
