@@ -1,0 +1,62 @@
+.section.kit {
+  gap: 20px;
+}
+
+.kit__lead {
+  max-width: 760px;
+}
+
+.kit__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.kit__item {
+  width: 100%;
+  overflow: hidden;
+}
+
+.kit__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.kit__note {
+  margin-top: 18px;
+}
+
+.kit__note span {
+  display: block;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+  .section.kit {
+    gap: 33px;
+  }
+
+  .kit__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .section.kit {
+    gap: 50px;
+  }
+
+  .kit__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .kit__title {
+    width: 60%;
+  }
+}
