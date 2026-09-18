@@ -2818,31 +2818,8 @@
                   <p class="cases__work">Выпускная работа: «Я устал арендовать свою жизнь»</p>
                 </li>
               </ul>
-
-              <div class="cases__nav">
-                <button class="cases__btn" type="button" aria-label="Предыдущий кейс" data-cases="prev">&#8592;</button>
-                <button class="cases__btn" type="button" aria-label="Следующий кейс" data-cases="next">&#8594;</button>
-              </div>
             </section>
           </div>
-
-          <script>
-            (function () {
-              var slider = document.getElementById("casesSlider");
-              if (!slider) return;
-              document.querySelectorAll("[data-cases]").forEach(function (btn) {
-                btn.addEventListener("click", function () {
-                  var item = slider.querySelector(".cases__item");
-                  if (!item) return;
-                  var step = item.getBoundingClientRect().width + 12;
-                  slider.scrollBy({
-                    left: btn.dataset.cases === "next" ? step : -step,
-                    behavior: "smooth"
-                  });
-                });
-              });
-            })();
-          </script>
 
           <!-- Секция "Тарифы" -->
 
