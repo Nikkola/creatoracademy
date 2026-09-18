@@ -60,6 +60,17 @@
   padding-top: 6px;
 }
 
+.cases__link {
+  color: #ffe491;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 228, 145, 0.35);
+  transition: border-color 0.3s ease;
+}
+
+.cases__link:hover {
+  border-bottom-color: #ffe491;
+}
+
 .cases__slider .owl-stage {
   display: flex;
 }
