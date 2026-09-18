@@ -192,6 +192,11 @@
     gap: 50px;
   }
 
+  .cases__slider {
+    margin-left: -40px;
+    margin-right: -40px;
+  }
+
   .cases__item {
     padding: 24px;
   }
