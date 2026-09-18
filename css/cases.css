@@ -59,6 +59,11 @@
   margin: 0;
 }
 
+.cases__handle {
+  font-size: 13px;
+  margin: 2px 0 0;
+}
+
 .cases__col {
   display: flex;
   flex-direction: column;
