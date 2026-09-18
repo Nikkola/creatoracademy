@@ -2726,6 +2726,124 @@
             </section>
           </div>
 
+          <!-- Секция "Кейсы выпускников" -->
+
+          <div class="container">
+            <section class="section cases">
+              <h1 class="section__title dita cases__title">Кейсы выпускников</h1>
+              <p class="cases__lead">
+                Пять человек, пять разных стартовых точек. У каждого своя мера
+                результата: у кого-то аудитория, у кого-то первое выпущенное видео,
+                у кого-то смена профессии.
+              </p>
+
+              <ul class="cases__slider" id="casesSlider">
+                <li class="cases__item">
+                  <span class="cases__flow bebas">Даврон Буронов · третий поток</span>
+                  <div class="cases__name bebas">Рост аудитории в восемь раз</div>
+                  <div class="cases__ab">
+                    <div class="cases__was">
+                      <span class="cases__label bebas">Было</span>
+                      <p>3 000 подписчиков в Instagram, ниша печати и полиграфии, отдельного профиля об авторстве нет.</p>
+                    </div>
+                    <div class="cases__now">
+                      <span class="cases__label bebas">Стало</span>
+                      <p>8 000 к концу курса и 23 000 сейчас. Клиенты приходят сами.</p>
+                    </div>
+                  </div>
+                  <p class="cases__work">Выпускная работа: «Количество важнее качества»</p>
+                </li>
+
+                <li class="cases__item">
+                  <span class="cases__flow bebas">Кирилл Усиков · шестой поток</span>
+                  <div class="cases__name bebas">23 000 просмотров без большой аудитории</div>
+                  <div class="cases__ab">
+                    <div class="cases__was">
+                      <span class="cases__label bebas">Было</span>
+                      <p>Своего канала не было.</p>
+                    </div>
+                    <div class="cases__now">
+                      <span class="cases__label bebas">Стало</span>
+                      <p>23 видео, одно из них набрало 23 000 просмотров. 50 000 просмотров канала за неделю при 480 подписчиках.</p>
+                    </div>
+                  </div>
+                  <p class="cases__work">Канал: @usikovproduction</p>
+                </li>
+
+                <li class="cases__item">
+                  <span class="cases__flow bebas">Александр Слудников · первый поток</span>
+                  <div class="cases__name bebas">Два канала с нуля</div>
+                  <div class="cases__ab">
+                    <div class="cases__was">
+                      <span class="cases__label bebas">Было</span>
+                      <p>Ни одного своего канала.</p>
+                    </div>
+                    <div class="cases__now">
+                      <span class="cases__label bebas">Стало</span>
+                      <p>Два канала, запущенные на курсе: 5 800 подписчиков и 46 выпущенных видео.</p>
+                    </div>
+                  </div>
+                  <p class="cases__work">Выпускная работа: «26 вещей до 26 лет»</p>
+                </li>
+
+                <li class="cases__item">
+                  <span class="cases__flow bebas">Полина Гладких</span>
+                  <div class="cases__name bebas">Сменила работу на камеру</div>
+                  <div class="cases__ab">
+                    <div class="cases__was">
+                      <span class="cases__label bebas">Было</span>
+                      <p>Вела текстовые блоги. Не разбиралась в настройках камеры, свет казался непосильным.</p>
+                    </div>
+                    <div class="cases__now">
+                      <span class="cases__label bebas">Стало</span>
+                      <p>По её собственным словам, «сменила взрослую работу на камеру». Документирует жизнь видео.</p>
+                    </div>
+                  </div>
+                  <p class="cases__work">Выпускная работа: «Переходный возраст 25+»</p>
+                </li>
+
+                <li class="cases__item">
+                  <span class="cases__flow bebas">Андрей Ковалевский</span>
+                  <div class="cases__name bebas">Шесть видео там, где не было ни одного</div>
+                  <div class="cases__ab">
+                    <div class="cases__was">
+                      <span class="cases__label bebas">Было</span>
+                      <p>Ни одного выпущенного видео.</p>
+                    </div>
+                    <div class="cases__now">
+                      <span class="cases__label bebas">Стало</span>
+                      <p>Свой канал и шесть выпущенных роликов.</p>
+                    </div>
+                  </div>
+                  <p class="cases__work">Выпускная работа: «Я устал арендовать свою жизнь»</p>
+                </li>
+              </ul>
+
+              <div class="cases__nav">
+                <button class="cases__btn" type="button" aria-label="Предыдущий кейс" data-cases="prev">&#8592;</button>
+                <button class="cases__btn" type="button" aria-label="Следующий кейс" data-cases="next">&#8594;</button>
+              </div>
+            </section>
+          </div>
+
+          <script>
+            (function () {
+              var slider = document.getElementById("casesSlider");
+              if (!slider) return;
+              document.querySelectorAll("[data-cases]").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                  var item = slider.querySelector(".cases__item");
+                  if (!item) return;
+                  var step = item.getBoundingClientRect().width + 12;
+                  slider.scrollBy({
+                    left: btn.dataset.cases === "next" ? step : -step,
+                    behavior: "smooth"
+                  });
+                });
+              });
+            })();
+          </script>
+
           <!-- Секция "Тарифы" -->
 
           <div class="container">
