@@ -142,16 +142,48 @@
   text-decoration-color: #ffe491;
 }
 
+.cases__person-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
 @media (min-width: 768px) {
   .section.cases {
     gap: 33px;
   }
 
   .cases__item {
-    grid-template-columns: 170px 1fr 1fr;
-    gap: 24px;
-    padding: 24px;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 20px;
+    padding: 22px;
+    align-content: start;
+  }
+
+  .cases__person {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+  }
+
+  .cases__avatar img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .cases__name {
+    font-size: 19px;
+  }
+
+  .cases__result {
+    font-size: 13px;
+  }
+
+  .cases__text {
+    font-size: 15px;
   }
 }
 
@@ -161,22 +193,7 @@
   }
 
   .cases__item {
-    grid-template-columns: 150px 1fr 1fr;
-    gap: 20px;
     padding: 24px;
-  }
-
-  .cases__avatar img {
-    width: 100px;
-    height: 100px;
-  }
-
-  .cases__name {
-    font-size: 20px;
-  }
-
-  .cases__text {
-    font-size: 15px;
   }
 
   .cases__title {
