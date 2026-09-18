@@ -295,3 +295,7 @@
     margin-top: 0;
   }
 }
+
+.rates .rate__num {
+  color: #ffe491;
+}
