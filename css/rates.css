@@ -100,20 +100,18 @@
 }
 
 
-.rates .rate__item p {
-  opacity: 100%;
-  color: #fff;
-}
-
 .rates .rate__item--gold p {
+  opacity: 100%;
   color: #ffe491;
 }
 
 .rates .rate__item--silver p {
+  opacity: 100%;
   color: #e8eef2;
 }
 
 .rates .rate__item--bronze p {
+  opacity: 100%;
   color: #B87333;
 }
 
