@@ -15,6 +15,20 @@
   gap: 14px;
 }
 
+.cases__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cases__avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
 .cases__flow {
   font-size: 12px;
   letter-spacing: 0.08em;
