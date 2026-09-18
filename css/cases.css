@@ -55,7 +55,7 @@
 
 .cases__work {
   font-size: 13px;
-  opacity: 0.55;
+  color: rgba(255, 255, 255, 0.45);
   margin-top: auto;
   padding-top: 6px;
 }
@@ -63,12 +63,13 @@
 .cases__link {
   color: #ffe491;
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 228, 145, 0.35);
-  transition: border-color 0.3s ease;
+  border-bottom: 1px solid #ffe491;
+  padding-bottom: 1px;
+  transition: opacity 0.3s ease;
 }
 
 .cases__link:hover {
-  border-bottom-color: #ffe491;
+  opacity: 0.7;
 }
 
 .cases__slider .owl-stage {
