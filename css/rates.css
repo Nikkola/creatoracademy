@@ -109,8 +109,12 @@
   color: #ffe491;
 }
 
-.rates .rate__item--muted p {
-  opacity: 55%;
+.rates .rate__item--silver p {
+  color: #e8eef2;
+}
+
+.rates .rate__item--bronze p {
+  color: #B87333;
 }
 
 .rates .test_rate {
@@ -296,3 +300,6 @@
   }
 }
 
+.rates .rate__num {
+  color: #ffe491;
+}
