@@ -250,7 +250,7 @@ try {
   $(document).ready(function () {
     var owl = $(".cases__slider");
     owl.owlCarousel({
-      loop: false,
+      loop: true,
       margin: 12,
       dots: false,
       touchDrag: true,
