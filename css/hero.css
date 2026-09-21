@@ -384,3 +384,10 @@
     left: 46%;
   }
 }
+
+.hero__installment {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.6);
+}
