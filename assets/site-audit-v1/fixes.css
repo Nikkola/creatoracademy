@@ -1,0 +1,32 @@
+/* Functional repairs only. The original stylesheet remains intact. */
+.menu__item { position: relative; }
+.menu__item > a { color: inherit; }
+.menu__item > a::after { content: ""; position: absolute; inset: 0; }
+.audit-scroll-locked { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }
+.menu { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.menu .ham-menu__video { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.modal-component { z-index: 11000; }
+.modal-fullscreen-component { padding: 60px 16px 20px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+.video-modal-component { width: min(80vw, 800px, calc((100dvh - 90px) * 16 / 9)); height: auto; aspect-ratio: 16 / 9; }
+.video-modal-component.reels-modal { width: min(323px, 80vw, calc((100dvh - 90px) * 323 / 640)); height: auto; max-width: none; max-height: none; aspect-ratio: 323 / 640; }
+.video-modal-component iframe { display: block; width: 100%; height: 100%; border: 0; }
+.modal__close { top: -50px; right: 0; width: 44px; height: 44px; }
+.modal__close:before, .modal__close:after { left: 21px; }
+.modal__close:focus-visible, .hamburger:focus-visible { outline: 2px solid #ffe491; outline-offset: 3px; }
+#loader { position: absolute; left: calc(50% - 15px); top: calc(50% - 8px); pointer-events: none; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .video-modal-component { max-width: 600px; }
+}
+@media (max-width: 767px) {
+  .hamburger-header { top: 0; }
+  .hamburger::before { content: ''; position: absolute; inset: 0 -10px; }
+}
+.hero__button-svg { display: block; }
+@media (max-width: 767px) {
+  /* The fixed 60px header must not cover the first line of the course title. */
+  .hero { margin-top: 60px; }
+}
+@media (min-width: 768px) {
+  /* Retain the existing header design and its in-flow spacer. */
+  .header-fixed.shown { z-index: 1000; animation: none; }
+}
