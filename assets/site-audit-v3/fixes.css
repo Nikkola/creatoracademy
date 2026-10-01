@@ -34,6 +34,10 @@
 .how__bottom.owl-carousel, .kit__grid.owl-carousel { display:block; min-width:0; width:100%; }
 .how__bottom.owl-carousel .owl-stage, .kit__grid.owl-carousel .owl-stage { display:flex; }
 .how__bottom .owl-stage-outer, .kit__grid .owl-stage-outer { cursor:grab; touch-action:pan-y; }
+@media (max-width: 767px) {
+  .learn__list.owl-carousel { display:block; overflow:hidden; }
+  .learn__list.owl-carousel .owl-item > .learn__item { width:100%; min-width:0; margin-top:0; }
+}
 
 .portfolio-category.section { display:block; margin-top:0; padding:0; border-top:1px solid rgba(255,255,255,.2); }
 .portfolio-summary { position:relative; cursor:pointer; list-style:none; padding:24px 48px 24px 0; }
@@ -54,38 +58,35 @@
 
 
 .about .text__big { max-width:100%; overflow-wrap:anywhere; }
-.about__list { display:flex; width:100%; min-width:0; list-style:none; margin:0; padding:0; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scroll-behavior:smooth; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; scrollbar-width:none; touch-action:pan-y pinch-zoom; }
-.about__list { cursor:grab; }
-.about__list.is-dragging { cursor:grabbing; scroll-snap-type:none; scroll-behavior:auto; user-select:none; }
-.about__list::-webkit-scrollbar { display:none; }
-.about__list > .about__block { flex:0 0 100%; width:100%; scroll-snap-align:start; scroll-snap-stop:always; }
+.about__list.owl-carousel { display:block; width:100%; min-width:0; list-style:none; margin:0; padding:0; }
+.about__list .owl-item { height:auto; }
+.about__list .owl-item > .about__block { width:100%; }
 .about-slider-dots { display:flex; justify-content:center; gap:12px; padding:20px 0 0; }
 .about-slider-dots button { width:10px; height:10px; border:0; border-radius:50%; padding:0; background:rgba(255,255,255,.38); cursor:pointer; }
 .about-slider-dots button[aria-current="true"] { background:#ffe491; transform:scale(1.2); }
 .about-slider-dots button:focus-visible { outline:2px solid #ffe491; outline-offset:4px; }
-.about__block:nth-child(3) .text__big { width:fit-content; max-width:100%; font-size:clamp(44px,14vw,56px); letter-spacing:-1.9px; white-space:nowrap; overflow-wrap:normal; text-align:right; }
-.about__block:first-child { background-image:url("./images/bg-images-about-7-mobile.webp"); }
-.about__block:nth-child(2) { background-image:url("./images/bg-images-about-2-mobile.webp"); }
-.about__block:nth-child(3) { background-image:url("./images/bg-images-about-1-mobile.webp"); }
+.about__block--entrepreneur .text__big { width:fit-content; max-width:100%; font-size:clamp(44px,14vw,56px); letter-spacing:-1.9px; white-space:nowrap; overflow-wrap:normal; text-align:right; }
+.about__block--director { background-image:url("./images/bg-images-about-7-mobile.webp"); }
+.about__block--author { background-image:url("./images/bg-images-about-2-mobile.webp"); }
+.about__block--entrepreneur { background-image:url("./images/bg-images-about-1-mobile.webp"); }
 @media (min-width:1200px) {
-  .about__block:first-child { background-image:url("./images/bg-images-about-7-wide.webp"); }
-  .about__block:nth-child(2) { background-image:url("./images/bg-images-about-2-wide.webp"); }
-  .about__block:nth-child(3) { background-image:url("./images/bg-images-about-1-wide.webp"); }
+  .about__block--director { background-image:url("./images/bg-images-about-7-wide.webp"); }
+  .about__block--author { background-image:url("./images/bg-images-about-2-wide.webp"); }
+  .about__block--entrepreneur { background-image:url("./images/bg-images-about-1-wide.webp"); }
 }
-@media(prefers-reduced-motion:reduce) { .about__list { scroll-behavior:auto; } }
 @media (min-width:768px) {
-  .about__block:nth-child(3) .text__big { font-size:134px; letter-spacing:-4px; }
+  .about__block--entrepreneur .text__big { font-size:134px; letter-spacing:-4px; }
 }
 @media (min-width:1200px) {
-  .about__block:nth-child(3) .text__big { font-size:218px; letter-spacing:-7px; }
+  .about__block--entrepreneur .text__big { font-size:218px; letter-spacing:-7px; }
 }
 @media (min-width:1920px) {
-  .about__block:nth-child(3) .text__big { font-size:218px; letter-spacing:-7px; }
+  .about__block--entrepreneur .text__big { font-size:218px; letter-spacing:-7px; }
 }
 @media (min-width:1200px) {
-  .about__block:nth-child(3) .about__text { width:100%; box-sizing:border-box; }
-  .about__block:nth-child(3) .text__small-list { display:grid; grid-template-columns:1.3fr 1fr .9fr; align-items:start; width:100%; max-width:100%; gap:clamp(16px,2vw,36px); padding:0; }
-  .about__block:nth-child(3) .text__small-item { min-width:0; }
+  .about__block--entrepreneur .about__text { width:100%; box-sizing:border-box; }
+  .about__block--entrepreneur .text__small-list { display:grid; grid-template-columns:1.3fr 1fr .9fr; align-items:start; width:100%; max-width:100%; gap:clamp(16px,2vw,36px); padding:0; }
+  .about__block--entrepreneur .text__small-item { min-width:0; }
 }
 @media (max-width: 767px) {
   /* Keep long role titles inside the photo even on narrow embedded pages. */

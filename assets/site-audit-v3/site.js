@@ -104,6 +104,7 @@ try {
         "<i class='fa fa-caret-right'></i>",
       ],
       touchDrag: true,
+      mouseDrag: true,
       autoplay: 0.5,
       autoplayHoverPause: true,
       responsive: {
@@ -148,26 +149,63 @@ if (box) {
     e.preventDefault();
     const x = e.pageX - box.offsetLeft;
     const walkX = x - startX;
+    if (Math.abs(walkX) > 4) sliderDragAt.set(box, performance.now());
     box.scrollLeft = scrollLeft - walkX;
   });
 }
 
-// Скролл "Вы научитесь"
+// Clicking a card in any Owl carousel brings that card into focus. Keep
+// buttons and links (video playback, portfolio links) as ordinary controls.
+const sliderDragAt = new WeakMap();
+const sliderPointerStarts = new WeakMap();
+document.addEventListener('pointerdown', function(event) {
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+  const slider = event.target.closest('.owl-carousel, #reviews-container');
+  if (slider) sliderPointerStarts.set(slider, { x:event.clientX, y:event.clientY });
+}, true);
+document.addEventListener('pointermove', function(event) {
+  const slider = event.target.closest('.owl-carousel, #reviews-container');
+  const start = slider && sliderPointerStarts.get(slider);
+  if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 5) {
+    sliderDragAt.set(slider, performance.now());
+  }
+}, true);
+function clearSliderPointer(event) {
+  const slider = event.target.closest('.owl-carousel, #reviews-container');
+  if (slider) sliderPointerStarts.delete(slider);
+}
+document.addEventListener('pointerup', clearSliderPointer, true);
+document.addEventListener('pointercancel', clearSliderPointer, true);
+site$(document).on('dragged.owl.carousel', '.owl-carousel', function () {
+  sliderDragAt.set(this, performance.now());
+});
+document.addEventListener('click', function (event) {
+  if (event.target.closest('a, button, input, summary, .play-btn')) return;
+  const item = event.target.closest('.owl-carousel .owl-item');
+  if (!item) return;
+  const carousel = item.closest('.owl-carousel');
+  if (performance.now() - (sliderDragAt.get(carousel) || -Infinity) < 350) return;
+  const instance = site$(carousel).data('owl.carousel');
+  if (!instance) return;
+  const position = Array.prototype.indexOf.call(item.parentElement.children, item);
+  if (position < 0) return;
+  const target = instance.relative(position);
+  if (target === instance.relative(instance.current())) instance.next();
+  else instance.to(target);
+});
 
-document.querySelectorAll('.learn__list').forEach((list) => {
-  let start;
-  list.addEventListener('mousedown', event => {
-    if (event.button !== 0) return;
-    start = { x: event.pageX, left: list.scrollLeft };
-    list.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mouseup', () => { start = null; list.style.cursor = 'grab'; });
-  document.addEventListener('mousemove', event => {
-    if (!start) return;
-    event.preventDefault();
-    list.scrollLeft = start.left - (event.pageX - start.x);
+// The reviews rail supports click-to-focus and mouse dragging.
+document.querySelectorAll('#reviews-container').forEach(function (rail) {
+  rail.addEventListener('click', function (event) {
+    if (event.target.closest('a, button, input, summary, .play-btn')) return;
+    if (performance.now() - (sliderDragAt.get(rail) || -Infinity) < 350) return;
+    const card = event.target.closest(':scope > li');
+    if (!card) return;
+    rail.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
   });
 });
+
+// Скролл "Вы научитесь"
 
 // Гамбургер-меню
 
@@ -251,6 +289,7 @@ try {
       margin: 0,
       dots: false,
       touchDrag: true,
+      mouseDrag: true,
       lazyLoad: true,
       responsive: {
         0: {
@@ -284,6 +323,7 @@ try {
       margin: 0,
       dots: false,
       touchDrag: true,
+      mouseDrag: true,
       responsive: {
         0: {
           items: 1,
@@ -433,89 +473,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
 site$(function () { site$('.how__bottom, .kit__grid').owlCarousel({loop:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,responsive:{0:{items:1,margin:12,stagePadding:20},768:{items:2,margin:16,stagePadding:24},1200:{items:3,margin:20,stagePadding:30}}}); });
 
-document.querySelectorAll('.about').forEach(function(section) {
- const track = section.querySelector('.about__list');
- const slides = Array.from(track.querySelectorAll(':scope > .about__block'));
- const dots = Array.from(section.querySelectorAll('.about-slider-dots button'));
- let drag = null;
- let dragged = false;
- function nearestSlideIndex() {
-  const left = track.getBoundingClientRect().left;
-  return slides.reduce(function(best, slide, index) {
-   return Math.abs(slide.getBoundingClientRect().left - left) < Math.abs(slides[best].getBoundingClientRect().left - left) ? index : best;
-  }, 0);
- }
- track.addEventListener('pointerdown', function(event) {
-  dragged = false;
-  if ((event.pointerType === 'mouse' && event.button !== 0) || event.target.closest('button,a,input,summary')) return;
-  if (event.pointerType !== 'mouse' && event.pointerType !== 'touch') return;
-  drag = { id:event.pointerId, x:event.clientX, y:event.clientY, scroll:track.scrollLeft, moved:false, touch:event.pointerType === 'touch', startIndex:nearestSlideIndex(), started:event.timeStamp };
-  if (!drag.touch) track.setPointerCapture(event.pointerId);
- });
- track.addEventListener('pointermove', function(event) {
-  if (!drag || drag.id !== event.pointerId) return;
-  const delta = event.clientX - drag.x;
-  const vertical = event.clientY - drag.y;
-  if (drag.touch && !drag.moved) {
-   if (Math.abs(vertical) > 8 && Math.abs(vertical) > Math.abs(delta)) { drag = null; return; }
-   if (Math.abs(delta) < 8 || Math.abs(delta) < Math.abs(vertical) * 1.2) return;
-   drag.moved = true;
-   track.setPointerCapture(event.pointerId);
-   track.classList.add('is-dragging');
-  } else if (!drag.touch && Math.abs(delta) > 4) {
-   drag.moved = true;
-   track.classList.add('is-dragging');
-  }
-  if (drag.moved) {
-   event.preventDefault();
-   track.scrollLeft = drag.scroll - delta;
-  }
- });
- function finishDrag(event, cancelled) {
-  if (!drag || drag.id !== event.pointerId) return;
-  const completed = drag;
-  dragged = completed.moved;
-  drag = null;
-  track.classList.remove('is-dragging');
-  if (completed.touch && completed.moved && !cancelled) {
-   const delta = event.clientX - completed.x;
-   const elapsed = Math.max(1, event.timeStamp - completed.started);
-   const threshold = Math.max(22, track.clientWidth * .14);
-   const quickFlick = Math.abs(delta) / elapsed > .22;
-   const direction = Math.abs(delta) >= threshold || quickFlick ? (delta < 0 ? 1 : -1) : 0;
-   select(completed.startIndex + direction, true);
+// Keep the desktop learning-card collage intact; on mobile use the same Owl
+// loop as the participant-work carousel so the last card advances to the first.
+site$(function () {
+ const rail = site$('#learn-container');
+ const mobile = window.matchMedia('(max-width: 767px)');
+ function syncLearnCarousel() {
+  const loaded = rail.hasClass('owl-loaded');
+  if (mobile.matches && !loaded) {
+   rail.addClass('owl-carousel').owlCarousel({
+    loop:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,
+    responsive:{0:{items:1,margin:15,stagePadding:20}}
+   });
+  } else if (!mobile.matches && loaded) {
+   rail.trigger('destroy.owl.carousel').removeClass('owl-carousel');
   }
  }
- track.addEventListener('pointerup', finishDrag);
- track.addEventListener('pointercancel', function(event) { finishDrag(event, true); });
- track.addEventListener('click', function(event) {
-  if (!dragged) return;
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  dragged = false;
- }, true);
- function slidePosition(slide) {
-  return track.scrollLeft + slide.getBoundingClientRect().left - track.getBoundingClientRect().left;
- }
- function select(index, scroll) {
-  const target = Math.max(0, Math.min(index, slides.length - 1));
-  dots.forEach(function(dot, i) {
-   if (i === target) dot.setAttribute('aria-current', 'true');
-   else dot.removeAttribute('aria-current');
+ syncLearnCarousel();
+ mobile.addEventListener('change', syncLearnCarousel);
+});
+
+site$(function () {
+ document.querySelectorAll('.about').forEach(function(section) {
+  const track = site$(section).find('.about__list');
+  const dots = Array.from(section.querySelectorAll('.about-slider-dots button'));
+  track.addClass('owl-carousel').owlCarousel({
+   loop:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,
+   responsive:{0:{items:1,margin:0},768:{items:1,margin:0}}
   });
-  if (scroll) track.scrollTo({left:slidePosition(slides[target]),behavior:'smooth'});
- }
- dots.forEach(function(dot, index) { dot.addEventListener('click', function() { select(index, true); }); });
- let frame = 0;
- track.addEventListener('scroll', function() {
-  cancelAnimationFrame(frame);
-  frame = requestAnimationFrame(function() {
-   const current = slides.reduce(function(best, slide, index) {
-    return Math.abs(slide.getBoundingClientRect().left - track.getBoundingClientRect().left) < Math.abs(slides[best].getBoundingClientRect().left - track.getBoundingClientRect().left) ? index : best;
-   }, 0);
-   select(current, false);
+  track.on('changed.owl.carousel', function(event) {
+   if (event.item) {
+    const current = event.relatedTarget.relative(event.item.index);
+    dots.forEach(function(dot, index) {
+     if (index === current) dot.setAttribute('aria-current', 'true');
+     else dot.removeAttribute('aria-current');
+    });
+   }
   });
- }, {passive:true});
+  dots.forEach(function(dot, index) {
+   dot.addEventListener('click', function() {
+    const owl = track.data('owl.carousel');
+    if (owl) owl.to(index, 300);
+   });
+  });
+ });
 });
 
 document.querySelectorAll('.portfolio-category').forEach(function(category) {

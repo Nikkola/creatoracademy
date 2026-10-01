@@ -119,9 +119,11 @@ test('unique IDs, local assets and no local analytics', async ({page}) => {
   expect(duplicates).toEqual([]); expect(remote).toEqual([]); expect(missing).toEqual([]);
 });
 test('release keeps legacy resources and landing copy intact', async () => {
-  for (const file of ['index.css','index.js',...fs.readdirSync('css').map(f=>'css/'+f)]) {
+  for (const file of ['index.css','index.js',...fs.readdirSync('css').filter(f=>f!=='about.css').map(f=>'css/'+f)]) {
     expect(fs.readFileSync(file)).toEqual(execFileSync('git',['show',`24fdecd:${file}`]));
   }
+  const aboutCss=fs.readFileSync('css/about.css','utf8');
+  expect(aboutCss).toContain('.about__block--director');
   const old=execFileSync('git',['show','24fdecd:index.html']).toString();
   const current=fs.readFileSync('index.html','utf8');
   const text=s=>s.replace(/<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g,'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
@@ -135,7 +137,7 @@ test('release keeps legacy resources and landing copy intact', async () => {
   expect(current).toContain('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>');
   const videoLinks=html=>[...html.matchAll(/data-link="([^"]+)"/g)].map(m=>m[1]);
   expect(videoLinks(current).sort()).toEqual(videoLinks(old).sort());
-  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.1.0/';
+  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.2.0/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
@@ -237,8 +239,16 @@ test('process and materials carousels move by dragging at mobile and desktop wid
   for (const width of [375,1440]) {
     await page.setViewportSize({width,height:900});
     await open(page);
-    await expect(page.locator('#learn-container')).toHaveClass('learn__list');
-    await expect(page.locator('#learn-container > .learn__item')).toHaveCount(7);
+    await expect(page.locator('#learn-container')).toHaveClass(/learn__list/);
+    if (width < 768) {
+      const learn = page.locator('#learn-container');
+      await expect(learn).toHaveClass(/owl-loaded/);
+      await expect(learn.locator('.owl-item:not(.cloned) > .learn__item')).toHaveCount(7);
+      await expect.poll(() => learn.locator('.owl-item.cloned').count()).toBeGreaterThan(0);
+    } else {
+      await expect(page.locator('#learn-container > .learn__item')).toHaveCount(7);
+      await expect(page.locator('#learn-container')).not.toHaveClass(/owl-loaded/);
+    }
     for (const selector of ['.how__bottom','.kit__grid']) {
       const slider=page.locator(selector);
       await expect(slider).toHaveClass(/owl-loaded/);
@@ -255,6 +265,110 @@ test('process and materials carousels move by dragging at mobile and desktop wid
       const gestures=await slider.evaluate(el=>{const o=window.creatorAcademyJQuery(el).data('owl.carousel');return [o.settings.touchDrag,o.settings.mouseDrag];});
       expect(gestures).toEqual([true,true]);
     }
+  }
+});
+
+test('process and materials carousels keep looping in both directions', async ({page}) => {
+  for (const width of [375,1440]) {
+    await page.setViewportSize({width,height:900});
+    await open(page);
+    for (const selector of ['.how__bottom','.kit__grid']) {
+      const slider=page.locator(selector);
+      await slider.scrollIntoViewIfNeeded();
+      const state=await slider.evaluate(el=>{
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        return {loop:owl.settings.loop,items:owl.items().length,clones:owl.clones().length,maximum:owl.maximum(true)};
+      });
+      expect(state.loop).toBe(true);
+      expect(state.clones).toBeGreaterThan(0);
+      await slider.evaluate(el=>{
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        owl.to(owl.maximum(true),0);
+      });
+      await slider.evaluate(el=>window.creatorAcademyJQuery(el).data('owl.carousel').next(0));
+      await expect.poll(()=>slider.evaluate(el=>{
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        return owl.relative(owl.current());
+      })).toBe(0);
+      await slider.evaluate(el=>window.creatorAcademyJQuery(el).data('owl.carousel').prev(0));
+      await expect.poll(()=>slider.evaluate(el=>{
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        return owl.relative(owl.current());
+      })).toBe(state.maximum);
+    }
+  }
+});
+
+test('process and materials carousels wrap after mouse drags at both ends', async ({page}) => {
+  await page.setViewportSize({width:375,height:812});
+  await open(page);
+  for (const selector of ['.how__bottom','.kit__grid']) {
+    const slider=page.locator(selector);
+    await slider.scrollIntoViewIfNeeded();
+    const maximum=await slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      owl.to(owl.maximum(true),0);
+      return owl.maximum(true);
+    });
+    await page.waitForTimeout(300);
+    const bounds=await slider.locator('.owl-stage-outer').boundingBox();
+    const y=bounds.y+bounds.height/2;
+    await page.mouse.move(bounds.x+bounds.width*.8,y);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x+bounds.width*.2,y,{steps:12});
+    await page.mouse.up();
+    await expect.poll(()=>slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      return owl.relative(owl.current());
+    })).toBe(0);
+    await page.waitForTimeout(300);
+    await page.mouse.move(bounds.x+bounds.width*.2,y);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x+bounds.width*.8,y,{steps:12});
+    await page.mouse.up();
+    await expect.poll(()=>slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      return owl.relative(owl.current());
+    })).toBe(maximum);
+  }
+});
+
+test('process and materials carousels wrap after touch swipes at both ends', async ({page,browserName}) => {
+  test.skip(browserName!=='chromium','CDP touch emulation is available in Chromium');
+  await page.setViewportSize({width:375,height:812});
+  await open(page);
+  const cdp=await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  for (const selector of ['.how__bottom','.kit__grid']) {
+    const slider=page.locator(selector);
+    await slider.scrollIntoViewIfNeeded();
+    const maximum=await slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      owl.to(owl.maximum(true),0);
+      return owl.maximum(true);
+    });
+    await page.waitForTimeout(300);
+    const bounds=await slider.locator('.owl-stage-outer').boundingBox();
+    const x1=Math.round(bounds.x+bounds.width*.8), x2=Math.round(bounds.x+bounds.width*.2), y=Math.round(bounds.y+bounds.height/2);
+    const swipe=async(from,to)=>{
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:from,y,id:1}]});
+      for(let step=1;step<=12;step++){
+        const x=Math.round(from+(to-from)*step/12);
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y,id:1}]});
+      }
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    };
+    await swipe(x1,x2);
+    await expect.poll(()=>slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      return owl.relative(owl.current());
+    })).toBe(0);
+    await page.waitForTimeout(300);
+    await swipe(x2,x1);
+    await expect.poll(()=>slider.evaluate(el=>{
+      const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+      return owl.relative(owl.current());
+    })).toBe(maximum);
   }
 });
 

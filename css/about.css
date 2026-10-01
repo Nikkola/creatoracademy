@@ -33,35 +33,35 @@
   justify-content: flex-end;
 }
 
-.about__block:first-child {
+.about__block--director {
   background: center/cover no-repeat url("../images/about/7.jpg");
 }
 
-.about__block:first-child .about__text {
+.about__block--director .about__text {
   gap: 10px;
 }
 
-.about__block:first-child .about__text-right {
+.about__block--director .about__text-right {
   text-align: justify;
 }
 
 @media (min-width: 768px) {
-  .about__block:first-child .about__text {
+  .about__block--director .about__text {
     gap: 57px;
   }
 }
 
 @media (min-width: 1920px) {
-  .about__block:first-child .about__text-right {
+  .about__block--director .about__text-right {
     text-align: justify;
   }
 }
 
-.about__block:nth-child(2) {
+.about__block--author {
   background: 84% / cover no-repeat url("../images/about/2.webp");
 }
 
-.about__block:nth-child(2) .about__text {
+.about__block--author .about__text {
   -webkit-box-orient: vertical;
   -webkit-box-direction: reverse;
   -ms-flex-direction: column-reverse;
@@ -69,7 +69,7 @@
   gap: 20px;
 }
 
-.about__block:nth-child(2) .about__text-right {
+.about__block--author .about__text-right {
   text-align: end;
   -webkit-box-align: end;
   -ms-flex-align: end;
@@ -84,11 +84,11 @@
 }
 
 @media (min-width: 768px) {
-  .about__block:nth-child(2) {
+  .about__block--author {
     background: center/cover no-repeat url("../images/about/2.webp");
   }
 
-  .about__block:nth-child(2) .about__text {
+  .about__block--author .about__text {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
@@ -96,19 +96,19 @@
     gap: 0;
   }
 
-  .about__block:nth-child(2) .about__text-right {
+  .about__block--author .about__text-right {
     text-align: unset;
     padding-right: 59px;
   }
 }
 
 @media (min-width: 1200px) {
-  .about__block:nth-child(2) .about__text-right {
+  .about__block--author .about__text-right {
     padding-right: 0;
   }
 }
 
-.about__block:nth-child(2) .about__text-left {
+.about__block--author .about__text-left {
   text-align: justify;
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -116,24 +116,24 @@
 }
 
 @media (min-width: 768px) {
-  .about__block:nth-child(2) .about__text-left {
+  .about__block--author .about__text-left {
     width: 27%;
     padding: 14px 13px;
   }
 }
 
 @media (min-width: 1200px) {
-  .about__block:nth-child(2) .about__text-left {
+  .about__block--author .about__text-left {
     padding: 29px 7px;
     width: 26%;
   }
 }
 
-.about__block:nth-child(3) {
+.about__block--entrepreneur {
   background: center/cover no-repeat url("../images/about/1.webp");
 }
 
-.about__block:nth-child(3) .container {
+.about__block--entrepreneur .container {
   -webkit-box-orient: vertical;
   -webkit-box-direction: reverse;
   -ms-flex-direction: column-reverse;
@@ -144,27 +144,27 @@
   gap: 20px;
 }
 
-.about__block:nth-child(3) .about__text {
+.about__block--entrepreneur .about__text {
   text-align: right;
   gap: 6px;
 }
 
-.about__block:nth-child(3) .about__text-right {
+.about__block--entrepreneur .about__text-right {
   text-align: justify;
 }
 
-.about__block:nth-child(3) .about__top {
+.about__block--entrepreneur .about__top {
   width: 100%;
   text-align: justify;
   padding-bottom: 30px;
 }
 
-.about__block:nth-child(3) .about__top p {
+.about__block--entrepreneur .about__top p {
   width: 100%;
 }
 
 @media (min-width: 768px) {
-  .about__block:nth-child(3) .container {
+  .about__block--entrepreneur .container {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
@@ -175,7 +175,7 @@
     gap: 0;
   }
 
-  .about__block:nth-child(3) .about__text {
+  .about__block--entrepreneur .about__text {
     gap: 0;
     text-align: unset;
     -ms-flex-item-align: start;
@@ -183,15 +183,15 @@
     padding-left: 20px;
   }
 
-  .about__block:nth-child(3) .text__small {
+  .about__block--entrepreneur .text__small {
     padding: 0 5px;
   }
 
-  .about__block:nth-child(3) .about__text-right {
+  .about__block--entrepreneur .about__text-right {
     text-align: unset;
   }
 
-  .about__block:nth-child(3) .about__top {
+  .about__block--entrepreneur .about__top {
     -ms-flex-item-align: end;
     align-self: flex-start;
     padding: 40px 0 0 0;
@@ -201,11 +201,11 @@
 }
 
 @media (min-width: 1200px) {
-  .about__block:nth-child(3) .about__text {
+  .about__block--entrepreneur .about__text {
     padding-left: 0;
   }
 
-  .about__block:nth-child(3) .about__top {
+  .about__block--entrepreneur .about__top {
     width: 22%;
     margin-right: 122px;
     padding: 67px 0;

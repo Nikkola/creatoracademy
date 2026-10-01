@@ -11,7 +11,7 @@ for (const width of [320, 375, 390]) {
         return { top: r.top + window.scrollY, left: r.left, right: r.right, height: r.height };
       };
       return {
-        titles: [...document.querySelectorAll('.about .text__big')].map(el => {
+        titles: [...document.querySelectorAll('.about__list .owl-item:not(.cloned) .text__big')].map(el => {
           const slide = bounds(el.closest('.about__block'));
           return { text:el.textContent.trim(), slide, title:bounds(el) };
         }),
@@ -25,7 +25,7 @@ for (const width of [320, 375, 390]) {
     });
     await info.attach('mobile-reading', { body: JSON.stringify(report, null, 2), contentType: 'application/json' });
     console.log(info.project.name, width, JSON.stringify(report));
-    await page.locator('.about__block').last().screenshot({ path: `test-results/${info.project.name}-${width}-about.png` });
+    await page.locator('.about__list .owl-item.active .about__block').screenshot({ path: `test-results/${info.project.name}-${width}-about.png` });
     await page.locator('.goal').last().scrollIntoViewIfNeeded();
     await page.screenshot({ path: `test-results/${info.project.name}-${width}-ending.png` });
     for (const [index, title] of report.titles.entries()) {
@@ -33,10 +33,14 @@ for (const width of [320, 375, 390]) {
       expect(title.title.right).toBeLessThanOrEqual(title.slide.right + 1);
       await page.locator('.about-slider-dots button').nth(index).click();
       await expect.poll(() => page.locator('.about__list').evaluate((el,index) => {
-        const slide=el.children[index];
-        return Math.abs(slide.getBoundingClientRect().left-el.getBoundingClientRect().left);
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        return owl.relative(owl.current()) === index ? 0 : 1000;
       }, index)).toBeLessThan(1);
-      const visible = await page.locator('.about__list .about__block').nth(index).locator('.text__big').boundingBox();
+      await page.waitForTimeout(350);
+      const visible = await page.locator('.about__list').evaluate((el,index) => {
+        const owl=window.creatorAcademyJQuery(el).data('owl.carousel');
+        return owl.items(index).get(0).querySelector('.text__big').getBoundingClientRect().toJSON();
+      }, index);
       expect(visible.x).toBeGreaterThanOrEqual(-1);
       expect(visible.x + visible.width).toBeLessThanOrEqual(width + 1);
     }
