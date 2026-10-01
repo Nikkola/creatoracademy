@@ -202,9 +202,23 @@ document.querySelectorAll('#reviews-container').forEach(function (rail) {
   rail.addEventListener('click', function (event) {
     if (event.target.closest('a, button, input, summary, .play-btn')) return;
     if (performance.now() - (sliderDragAt.get(rail) || -Infinity) < 350) return;
-    const card = event.target.closest(':scope > li');
-    if (!card) return;
-    rail.scrollTo({ left: card.offsetLeft, behavior: 'smooth' });
+    const card = event.target.closest('.reviews__item');
+    if (!card || card.parentElement !== rail) return;
+    const cards = Array.from(rail.children);
+    const clickedIndex = cards.indexOf(card);
+    if (clickedIndex < 0) return;
+    const railRect = rail.getBoundingClientRect();
+    const firstVisible = cards.findIndex(item => item.getBoundingClientRect().right > railRect.left + 1);
+    const atEnd = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 2;
+    let targetIndex = clickedIndex;
+    if (clickedIndex === firstVisible) targetIndex = clickedIndex + 1;
+    if (clickedIndex === cards.length - 1 && atEnd) targetIndex = 0;
+    if (targetIndex >= cards.length) targetIndex = 0;
+    const target = cards[targetIndex];
+    const left = targetIndex === 0
+      ? 0
+      : rail.scrollLeft + target.getBoundingClientRect().left - railRect.left;
+    rail.scrollTo({ left, behavior: 'smooth' });
   });
 });
 
@@ -289,7 +303,6 @@ try {
     var owl = site$(".gallery__list").filter(function () { return !this.closest(".portfolio-category"); });
     owl.owlCarousel({
       loop: true,
-      rewind: true,
       margin: 0,
       dots: false,
       touchDrag: true,
@@ -475,7 +488,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-site$(function () { site$('.how__bottom, .kit__grid').owlCarousel({loop:true,rewind:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,responsive:{0:{items:1,margin:12,stagePadding:20},768:{items:2,margin:16,stagePadding:24},1200:{items:3,margin:20,stagePadding:30}}}); });
+site$(function () { site$('.how__bottom, .kit__grid').owlCarousel({loop:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,responsive:{0:{items:1,margin:12,stagePadding:20},768:{items:2,margin:16,stagePadding:24},1200:{items:3,margin:20,stagePadding:30}}}); });
 
 // Keep the desktop learning-card collage intact; on mobile use the same Owl
 // loop as the participant-work carousel so the last card advances to the first.

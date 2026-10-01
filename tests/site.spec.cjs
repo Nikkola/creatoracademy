@@ -106,6 +106,16 @@ test('video controls fit in portrait and landscape', async ({page}) => {
     await page.locator('.modal__close').click();
   }
 });
+test('text review cards advance when clicked', async ({page}) => {
+  await page.setViewportSize({width:375,height:812});
+  await open(page);
+  const rail=page.locator('#reviews-container');
+  await rail.scrollIntoViewIfNeeded();
+  await rail.evaluate(el=>el.scrollTo({left:0,behavior:'instant'}));
+  await rail.locator(':scope > .reviews__item').first().locator('.review__title').click();
+  await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);
+});
+
 test('unique IDs, local assets and no local analytics', async ({page}) => {
   const remote=[];
   const missing=[];
