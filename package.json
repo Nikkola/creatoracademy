@@ -1,0 +1,17 @@
+{
+  "name": "creatoracademy",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build:salebot": "node scripts/build.mjs",
+    "test": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium webkit"
+  },
+  "devDependencies": {
+    "@fontsource-variable/montserrat": "5.3.0",
+    "@playwright/test": "1.63.0",
+    "jquery": "3.6.0",
+    "owl.carousel": "2.3.4",
+    "sharp": "0.35.5"
+  }
+}
