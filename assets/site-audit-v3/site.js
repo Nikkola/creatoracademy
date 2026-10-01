@@ -190,7 +190,10 @@ document.addEventListener('click', function (event) {
   const position = Array.prototype.indexOf.call(item.parentElement.children, item);
   if (position < 0) return;
   const target = instance.relative(position);
-  if (target === instance.relative(instance.current())) instance.next();
+  const current = instance.relative(instance.current());
+  const count = instance.items().length;
+  if (target === current || target === (current + 1) % count) instance.next();
+  else if (target === (current + count - 1) % count) instance.prev();
   else instance.to(target);
 });
 
@@ -286,6 +289,7 @@ try {
     var owl = site$(".gallery__list").filter(function () { return !this.closest(".portfolio-category"); });
     owl.owlCarousel({
       loop: true,
+      rewind: true,
       margin: 0,
       dots: false,
       touchDrag: true,
@@ -471,7 +475,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-site$(function () { site$('.how__bottom, .kit__grid').owlCarousel({loop:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,responsive:{0:{items:1,margin:12,stagePadding:20},768:{items:2,margin:16,stagePadding:24},1200:{items:3,margin:20,stagePadding:30}}}); });
+site$(function () { site$('.how__bottom, .kit__grid').owlCarousel({loop:true,rewind:true,dots:false,nav:false,touchDrag:true,mouseDrag:true,responsive:{0:{items:1,margin:12,stagePadding:20},768:{items:2,margin:16,stagePadding:24},1200:{items:3,margin:20,stagePadding:30}}}); });
 
 // Keep the desktop learning-card collage intact; on mobile use the same Owl
 // loop as the participant-work carousel so the last card advances to the first.

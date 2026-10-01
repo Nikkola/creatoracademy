@@ -130,6 +130,29 @@ test('click direction follows the selected Video Podcasts card', async ({ page }
   await expect.poll(() => slider.evaluate(el => window.creatorAcademyJQuery(el).data('owl.carousel').current())).toBe(expectedPosition);
 });
 
+test('video reviews continue forward from the last slide to the first on desktop', async ({ page }) => {
+  await page.setViewportSize({ width:1440, height:900 });
+  await page.goto('/');
+  const slider = page.locator('.section.gallery').filter({ hasText:'Видеоотзывы' }).locator('.gallery__list');
+  await expect(slider).toHaveClass(/owl-loaded/);
+  const count = await slider.evaluate(el => {
+    const owl = window.creatorAcademyJQuery(el).data('owl.carousel');
+    owl.to(owl.items().length - 2, 0);
+    return owl.items().length;
+  });
+  const nextCard = slider.locator('.owl-item.active .gallery__subtitle').nth(1);
+  await nextCard.click();
+  await expect.poll(() => slider.evaluate(el => {
+    const owl = window.creatorAcademyJQuery(el).data('owl.carousel');
+    return owl.relative(owl.current());
+  })).toBe(count - 1);
+  await slider.locator('.owl-item.active .gallery__subtitle').nth(1).click();
+  await expect.poll(() => slider.evaluate(el => {
+    const owl = window.creatorAcademyJQuery(el).data('owl.carousel');
+    return owl.relative(owl.current());
+  })).toBe(0);
+});
+
 test('mobile “Вы научитесь” carousel wraps continuously like participant work', async ({ page }) => {
   await page.setViewportSize({ width:375, height:812 });
   await page.goto('/');
