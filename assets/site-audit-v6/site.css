@@ -5490,7 +5490,7 @@ section.reviews {
 @media (max-width:767px) {
   .cases__slider .owl-stage-outer { overflow:hidden; }
   .cases__slider .owl-stage { padding:0; }
-  .cases__slider .owl-item { margin-right:0 !important; }
+  .cases__slider .owl-item { flex:0 0 auto; margin-right:0 !important; }
   .cases__slider .owl-item > .cases__item { margin:0; }
   .cases-slider-dots { display:flex; justify-content:center; gap:12px; padding:16px 0 0; }
   .cases-slider-dots button { width:10px; height:10px; flex:0 0 10px; border:0; border-radius:50%; padding:0; background:rgba(255,255,255,.38); cursor:pointer; }

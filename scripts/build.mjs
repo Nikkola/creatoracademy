@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import sharp from 'sharp';
 export const base = 'https://Nikkola.github.io/creatoracademy/';
-export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.2/';
+export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.3/';
 export async function build() {
   let css = await readFile('index.css', 'utf8');
   const imports = [...css.matchAll(/@import url\((css\/[^)]+)\);/g)];
