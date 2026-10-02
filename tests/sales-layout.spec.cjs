@@ -236,3 +236,39 @@ test('short hero proposal works separately from landing', async ({ page }, info)
   await expect.poll(() => page.locator('#rates').evaluate(el => Math.abs(el.getBoundingClientRect().top - 75))).toBeLessThan(180);
   expect(errors).toEqual([]);
 });
+
+for (const width of [375, 1440, 2048]) {
+  test(`new explanatory paragraphs match existing programme typography ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    const styles = await page.evaluate(() => {
+      const typography = el => {
+        const s = getComputedStyle(el);
+        return Object.fromEntries(['fontFamily','fontWeight','fontSize','lineHeight','letterSpacing','color','textTransform'].map(key => [key, s[key]]));
+      };
+      return {
+        reference: typography(document.querySelector('.programme__description p')),
+        paragraphs: [...document.querySelectorAll('.how__details p, .lesson-demos__description')].map(typography),
+      };
+    });
+    expect(styles.paragraphs).toHaveLength(3);
+    for (const style of styles.paragraphs) expect(style).toEqual(styles.reference);
+  });
+}
+
+for (const width of [375, 768, 1440, 2048]) {
+  test(`section heading spacing stays consistent ${width}`, async ({ page }) => {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    const gaps = await page.evaluate(() => {
+      const gap = (a,b) => document.querySelector(b).getBoundingClientRect().top - document.querySelector(a).getBoundingClientRect().bottom;
+      const values = [gap('.lesson-demos__title','.lesson-demos__description'),gap('.kit__title','.kit__tools')];
+      if (innerWidth < 768) values.push(gap('.how__title','.how__block'));
+      return values;
+    });
+    for (const gap of gaps) expect(Math.abs(gap - gaps[0])).toBeLessThan(1);
+    expect(gaps[0]).toBeGreaterThanOrEqual(20);
+  });
+}

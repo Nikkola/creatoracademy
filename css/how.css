@@ -164,5 +164,4 @@
 }
 
 .how__details { display:grid; gap:12px; width:100%; max-width:960px; }
-.how__details p { margin:0; font:400 16px/1.6 Montserrat,sans-serif; color:#c5c5c5; }
-@media (max-width:767px) { .how__details p { font-size:14px; } }
+.how__details p { margin:0; }

@@ -1,0 +1,197 @@
+/* Functional repairs only. The original stylesheet remains intact. */
+.menu__item { position: relative; }
+.menu__item > a { color: inherit; }
+.menu__item > a::after { content: ""; position: absolute; inset: 0; }
+.audit-scroll-locked { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }
+.menu { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.menu .ham-menu__video { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.modal-component { z-index: 11000; }
+.modal-fullscreen-component { padding: 60px 16px 20px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+.video-modal-component { width: min(80vw, 800px, calc((100dvh - 90px) * 16 / 9)); height: auto; aspect-ratio: 16 / 9; }
+.video-modal-component.reels-modal { width: min(323px, 80vw, calc((100dvh - 90px) * 323 / 640)); height: auto; max-width: none; max-height: none; aspect-ratio: 323 / 640; }
+.video-modal-component iframe { display: block; width: 100%; height: 100%; border: 0; }
+.modal__close { top: -50px; right: 0; width: 44px; height: 44px; }
+.modal__close:before, .modal__close:after { left: 21px; }
+.modal__close:focus-visible, .hamburger:focus-visible { outline: 2px solid #ffe491; outline-offset: 3px; }
+#loader { position: absolute; left: calc(50% - 15px); top: calc(50% - 8px); pointer-events: none; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .video-modal-component { max-width: 600px; }
+}
+@media (max-width: 767px) {
+  .hamburger-header { top: 0; }
+  .hamburger::before { content: ''; position: absolute; inset: 0 -10px; }
+}
+.hero__button-svg { display: block; }
+@media (max-width: 767px) {
+  /* The fixed 60px header must not cover the first line of the course title. */
+  .hero { margin-top: 60px; }
+}
+@media (min-width: 768px) {
+  /* Retain the existing header design and its in-flow spacer. */
+  .header-fixed.shown { z-index: 1000; animation: none; }
+}
+
+.how__bottom.owl-carousel, .kit__grid.owl-carousel { display:block; min-width:0; width:100%; }
+.how__bottom.owl-carousel .owl-stage, .kit__grid.owl-carousel .owl-stage { display:flex; }
+.how__bottom .owl-stage-outer, .kit__grid .owl-stage-outer { cursor:grab; touch-action:pan-y; }
+@media (max-width: 767px) {
+  .learn__list.owl-carousel { display:block; overflow:hidden; }
+  .learn__list.owl-carousel .owl-item > .learn__item { width:100%; min-width:0; margin-top:0; }
+}
+
+.portfolio-category.section { display:block; margin-top:0; padding:0; border-top:1px solid rgba(255,255,255,.2); }
+.portfolio-summary { position:relative; cursor:pointer; list-style:none; padding:24px 48px 24px 0; }
+.portfolio-summary::-webkit-details-marker { display:none; }
+.portfolio-summary::after { content:'+'; position:absolute; right:8px; top:50%; transform:translateY(-50%); color:#ffe491; font:300 32px Montserrat,sans-serif; }
+.portfolio-category[open] > .portfolio-summary::after { content:'−'; }
+.portfolio-summary .section__title { margin:0; width:100%; font-size:clamp(30px,4vw,64px); }
+.portfolio-category .gallery__block { padding:8px 0 32px; }
+.portfolio-category .gallery__list, .portfolio-category .reels { width:100%!important; }
+.portfolio-summary:focus-visible { outline:2px solid #ffe491; outline-offset:4px; }
+@media(prefers-reduced-motion:reduce) { .owl-stage { transition:none!important; } }
+
+.portfolio__title { margin:60px 0 32px; }
+.disclosure-panel { overflow:hidden; height:auto; opacity:1; transition:height 500ms cubic-bezier(.4,0,.2,1),opacity 350ms ease; }
+.disclosure-panel .faq__answer { max-height:none!important; transition:none; }
+@media(max-width:767px) { .portfolio__title { margin:40px 0 24px; } }
+@media(prefers-reduced-motion:reduce) { .disclosure-panel { transition:none; } }
+
+
+.about .text__big { max-width:100%; overflow-wrap:anywhere; }
+.about__list.owl-carousel { display:block; width:100%; min-width:0; list-style:none; margin:0; padding:0; }
+.about__list .owl-item { height:auto; }
+.about__list .owl-item > .about__block { width:100%; }
+.about-slider-dots { display:flex; justify-content:center; gap:12px; padding:20px 0 0; }
+.about-slider-dots button { width:10px; height:10px; border:0; border-radius:50%; padding:0; background:rgba(255,255,255,.38); cursor:pointer; }
+.about-slider-dots button[aria-current="true"] { background:#ffe491; transform:scale(1.2); }
+.about-slider-dots button:focus-visible { outline:2px solid #ffe491; outline-offset:4px; }
+.about__block--entrepreneur .text__big { width:fit-content; max-width:100%; font-size:clamp(44px,14vw,56px); letter-spacing:-1.9px; white-space:nowrap; overflow-wrap:normal; text-align:right; }
+.about__block--director { background-image:url("./images/bg-images-about-7-mobile.webp"); }
+.about__block--author { background-image:url("./images/bg-images-about-2-mobile.webp"); }
+.about__block--entrepreneur { background-image:url("./images/bg-images-about-1-mobile.webp"); }
+@media (max-width: 767px) {
+  /* Keep the section heading clear of the first line in each portrait slide. */
+  .about__title { top:0; margin:0 0 24px; }
+}
+@media (min-width:1200px) {
+  .about__block--director { background-image:url("./images/bg-images-about-7-wide.webp"); }
+  .about__block--author { background-image:url("./images/bg-images-about-2-wide.webp"); }
+  .about__block--entrepreneur { background-image:url("./images/bg-images-about-1-wide.webp"); }
+}
+@media (min-width:768px) {
+  .about__block--entrepreneur .text__big { font-size:134px; letter-spacing:-4px; }
+}
+@media (min-width:1200px) {
+  .about__block--entrepreneur .text__big { font-size:218px; letter-spacing:-7px; }
+}
+@media (min-width:1920px) {
+  .about__block--entrepreneur .text__big { font-size:218px; letter-spacing:-7px; }
+}
+@media (min-width:1200px) {
+  .about__block--entrepreneur .about__text { width:100%; box-sizing:border-box; }
+  .about__block--entrepreneur .text__small-list { display:grid; grid-template-columns:1.3fr 1fr .9fr; align-items:start; width:100%; max-width:100%; gap:clamp(16px,2vw,36px); padding:0; }
+  .about__block--entrepreneur .text__small-item { min-width:0; }
+}
+@media (max-width: 767px) {
+  /* Keep long role titles inside the photo even on narrow embedded pages. */
+  .about .about__text, .about .about__text-left, .about .about__text-right { min-width:0; max-width:100%; }
+  .about .text__big { font-size:clamp(28px,10vw,48px); max-width:100%; overflow-wrap:anywhere; }
+  .about .about__text-desc, .about .about__top { text-align:left; }
+  /* Quotes need breathing room without a full screen of empty spacing. */
+  section.goal { padding:48px 0 24px; }
+  .goal__block { gap:24px; }
+  section.footer { padding:32px 0 max(24px,env(safe-area-inset-bottom)); }
+  .footer .footer__block { gap:24px; }
+  .footer .footer__top { gap:24px; }
+  .footer .footer__mail, .footer .footer__logo { margin-bottom:0; }
+}
+
+/* iPhone: natural card height and display typography, with complete copy. */
+@media (max-width:767px) {
+  .page .container { width:calc(100% - 32px); }
+  .section__title { font-size:clamp(36px,10vw,45px); }
+  section.cases, section.kit, section.about { padding:40px 0; }
+  section.how, section.clients { padding:32px 0; }
+  .section.clients { gap:20px; }
+  .portfolio__title { margin:24px 0; }
+  .portfolio-summary { padding:20px 48px 20px 0; }
+  .cases__slider .owl-stage { align-items:flex-start; }
+  .cases__slider .owl-item { display:block; }
+  .cases__item { align-content:start; gap:12px; padding:12px; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  .cases__person { flex-direction:row; text-align:left; align-items:center; gap:10px; }
+  .cases__avatar { flex:0 0 52px; }
+  .cases__avatar img { width:52px; height:52px; }
+  .cases__name { font-size:20px; }
+  .cases__result { font:400 12.5px/1.35 Montserrat,sans-serif; }
+  .cases__col { gap:8px; }
+  .cases__text { font:400 13px/1.4 Montserrat,sans-serif; letter-spacing:0; }
+  .cases__work { margin:0; padding-top:4px; font-size:12px; line-height:1.35; }
+  .how__top { gap:24px; }
+  .how__block { flex-direction:column; gap:16px; }
+  .how__list { width:100%; gap:16px; }
+  .how__description { font-size:20px; line-height:1.1; }
+  .section.kit { gap:20px; }
+  .kit__tools { gap:14px; }
+  .kit__icon { width:32px; height:32px; flex-basis:32px; }
+  .kit__tool-label { font-size:17px; }
+  .about .about__block { height:auto; min-height:500px; position:relative; background-position:center; }
+  .about .about__block::before { content:''; position:absolute; inset:0; background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.35) 50%,rgba(0,0,0,.92) 100%); pointer-events:none; }
+  .about .about__block > .container { width:100%; min-height:500px; padding:20px 12px; justify-content:flex-end; gap:18px; flex-direction:column; }
+  .about .about__text { width:100%; gap:16px; }
+  .about .about__text-left, .about .about__text-right { width:100%; }
+  .about .text__big { font-size:clamp(72px,23vw,120px); line-height:.9; letter-spacing:-2px; white-space:nowrap; overflow-wrap:normal; text-align:right; align-self:flex-end; }
+  .about .about__block--entrepreneur .text__big { font-size:clamp(40px,12.3vw,90px); letter-spacing:-1.5px; }
+  .about .text__small-list { gap:6px; }
+  .about .text__small-item { font-size:18px; line-height:1.05; padding:0; }
+  .about .about__text-desc, .about .about__top { padding:0; }
+  .about .about__text-desc p, .about .about__top p { font-size:13px; line-height:1.4; letter-spacing:0; }
+  .about .about__block--entrepreneur .about__top { order:2; }
+  .about .about__top-button { position:absolute; right:16px; top:16px; padding:0; }
+  .about .about__title { margin-bottom:20px; }
+  .goal__text { font-size:28px; line-height:1.05; }
+  section.goal { padding:32px 0; }
+}
+@media (max-width:767px) {
+  .about .about__block--author { background-position:84% center; }
+  .about .about__block--director .text__big { font-size:clamp(72px,26vw,145px); }
+  .about .about__block--author .text__big { font-size:clamp(110px,40vw,180px); }
+  .about .about__block--entrepreneur .text__big { font-size:clamp(44px,14vw,96px); letter-spacing:-1.9px; }
+}
+
+/* Embedded page gutters must not change the fit of mobile cards or their text. */
+@media (max-width:767px) {
+  .about .about__block { container-type:inline-size; }
+  .about .about__block--director .text__big { font-size:clamp(64px,27cqw,145px); }
+  .about .about__block--author .text__big { font-size:clamp(90px,44cqw,180px); }
+  .about .about__block--entrepreneur .text__big { font-size:clamp(36px,16cqw,96px); }
+  .learn__list.owl-carousel { gap:0; }
+  .learn__list.owl-carousel .owl-item > .learn__item { width:100%; min-width:0; margin-top:0; }
+  .learn__list.owl-carousel .learn__description { width:100%; min-width:0; overflow-wrap:anywhere; }
+  .learn__list.owl-carousel .learn__picture { width:100%; }
+  .learn__list.owl-carousel .learn__img { height:auto; aspect-ratio:1; object-fit:cover; }
+  .section.info { padding:24px 0; }
+}
+
+/* Mobile case cards use the full rail width so their outline stays visible. */
+.cases__slider { width:100%; max-width:100%; min-width:0; }
+.cases__slider .owl-item > .cases__item { box-sizing:border-box; width:100%; min-width:0; }
+.cases-slider-dots { display:none; }
+@media (max-width:767px) {
+  .cases__slider .owl-stage-outer { overflow:hidden; }
+  .cases__slider .owl-stage { padding:0; }
+  .cases__slider .owl-item { flex:0 0 auto; margin-right:0 !important; }
+  .cases__slider .owl-item > .cases__item { margin:0; }
+  .cases-slider-dots { display:flex; justify-content:center; gap:12px; padding:16px 0 0; }
+  .cases-slider-dots button { width:10px; height:10px; flex:0 0 10px; border:0; border-radius:50%; padding:0; background:rgba(255,255,255,.38); cursor:pointer; }
+  .cases-slider-dots button[aria-current="true"] { background:#ffe491; transform:scale(1.2); }
+  .cases-slider-dots button:focus-visible { outline:2px solid #ffe491; outline-offset:4px; }
+}
+
+/* Equal spacing below section headings at each responsive size. */
+:root { --section-heading-gap:20px; }
+.lesson-demos__intro { gap:var(--section-heading-gap); }
+.section.kit { gap:var(--section-heading-gap); }
+.kit__tools { margin-top:0; }
+@media (max-width:767px) { .how__top { gap:var(--section-heading-gap); } }
+@media (min-width:768px) { :root { --section-heading-gap:33px; } }
+@media (min-width:1200px) { :root { --section-heading-gap:50px; } }

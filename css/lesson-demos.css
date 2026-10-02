@@ -1,7 +1,7 @@
 .section.lesson-demos { gap: 24px; }
 .lesson-demos__intro { display: grid; gap: 14px; }
 .lesson-demos__title { margin: 0; }
-.lesson-demos__description { max-width: 660px; margin: 0; font: 400 16px/1.6 Montserrat, sans-serif; color: #c5c5c5; }
+.lesson-demos__description { max-width: 660px; margin: 0; }
 .lesson-demos__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; width: 100%; }
 .lesson-demo { min-width: 0; }
 .lesson-demo__play { display: block; position: relative; width: 100%; padding: 0; border: 1px solid #444; border-radius: 0; background: #151515; color: #fff; cursor: pointer; overflow: hidden; aspect-ratio: 16 / 9; }
@@ -16,7 +16,6 @@
 @media (max-width: 767px) {
   .section.lesson-demos { gap: 20px; }
   .lesson-demos__grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .lesson-demos__description { font-size: 14px; }
   .lesson-demo__title { font-size: 29px; }
   .lesson-demo__icon { width: 54px; height: 54px; }
 }

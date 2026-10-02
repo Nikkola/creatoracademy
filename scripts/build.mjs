@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import sharp from 'sharp';
 export const base = 'https://Nikkola.github.io/creatoracademy/';
-export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.4/';
+export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.5/';
 export async function build() {
   let css = await readFile('index.css', 'utf8');
   const imports = [...css.matchAll(/@import url\((css\/[^)]+)\);/g)];
@@ -10,7 +10,7 @@ export async function build() {
     sections += (await readFile(path, 'utf8')).replaceAll('../images/', '../../images/');
     css = css.replace(statement, '');
   }
-  const target = 'assets/site-audit-v7';
+  const target = 'assets/site-audit-v8';
   await mkdir(target + '/fonts', { recursive: true });
   await cp('node_modules/owl.carousel/dist/assets/owl.video.play.png', target + '/owl.video.play.png');
   await cp('node_modules/@fontsource-variable/montserrat/files', target + '/fonts', { recursive: true });
@@ -50,5 +50,5 @@ export async function build() {
 }
 if (process.argv[1]?.endsWith('/build.mjs')) {
   await build();
-  console.log('Готово: dist/salebot.html; ресурсы: assets/site-audit-v7/');
+  console.log('Готово: dist/salebot.html; ресурсы: assets/site-audit-v8/');
 }
