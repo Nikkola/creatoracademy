@@ -1,5 +1,26 @@
 const { test, expect } = require('@playwright/test');
 
+test('all case cards fit beneath the mobile header at iPhone 13 mini width', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 635 });
+  await page.goto('/');
+  await expect(page.locator('.cases__slider')).toHaveClass(/owl-loaded/);
+  await page.evaluate(() => document.fonts.ready);
+  const cards = await page.locator('.cases__slider .owl-item:not(.cloned) .cases__item').evaluateAll(elements => elements.map(card => ({
+    name: card.querySelector('.cases__name').textContent,
+    height: card.getBoundingClientRect().height,
+    font: getComputedStyle(card.querySelector('.cases__text')).fontFamily,
+    clipped: card.scrollHeight > card.clientHeight + 2,
+  })));
+  expect(cards.length).toBeGreaterThan(0);
+  for (const card of cards) {
+    expect(card.height, card.name).toBeLessThanOrEqual(635 - 60 - 44);
+    expect(card.font).toContain('Montserrat');
+    expect(card.clipped, card.name).toBe(false);
+  }
+  await expect(page.locator('.rate__text').filter({ hasText: '7 модулей, 32 урока, больше 12 часов видео' })).toHaveCount(3);
+  await expect(page.locator('.lesson-demos__description')).toHaveText('Это фрагменты из нескольких уроков курса, чтобы вы могли ознакомиться с моей подачей материала. Почти 5 минут из более чем 12 часов материала.');
+});
+
 for (const width of [320, 375, 390]) {
   test(`case carousel shows one complete slide with working dots at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 812 });

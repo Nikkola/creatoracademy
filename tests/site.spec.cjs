@@ -129,8 +129,11 @@ test('unique IDs, local assets and no local analytics', async ({page}) => {
   expect(duplicates).toEqual([]); expect(remote).toEqual([]); expect(missing).toEqual([]);
 });
 test('release keeps legacy resources and landing copy intact', async () => {
-  for (const file of ['index.css','index.js',...fs.readdirSync('css').filter(f=>f!=='about.css').map(f=>'css/'+f)]) {
-    expect(fs.readFileSync(file)).toEqual(execFileSync('git',['show',`24fdecd:${file}`]));
+  for (const file of ['index.css','index.js',...fs.readdirSync('css').filter(f=>!['about.css','lesson-demos.css'].includes(f)).map(f=>'css/'+f)]) {
+    let current = fs.readFileSync(file,'utf8');
+    if (file === 'index.css') current = current.replace('@import url(css/lesson-demos.css);\n','');
+    if (file === 'css/how.css') current = current.split('\n.how__details {')[0];
+    expect(current).toEqual(execFileSync('git',['show',`24fdecd:${file}`]).toString());
   }
   const aboutCss=fs.readFileSync('css/about.css','utf8');
   expect(aboutCss).toContain('.about__block--director');
@@ -139,19 +142,24 @@ test('release keeps legacy resources and landing copy intact', async () => {
   const text=s=>s.replace(/<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g,'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
   // Section order may change; all existing copy must still be preserved.
   const words = html => text(html).replaceAll('–', '—').split(' ').sort();
-  const normalizedCurrent=current
+  const legacyCurrent=current
+    .replace(/<div class="container"><section class="section lesson-demos"[\s\S]*?<\/section><\/div>/,'')
+    .replace(/<div class="how__details">[\s\S]*?<\/div>/,'')
+    .replaceAll('7 модулей, 32 урока, больше 12 часов видео','32 видеоурока')
+    .replace('Чат-поддержки и сообщество на 100+ авторов','Чат-поддержки');
+  const normalizedCurrent=legacyCurrent
     .replace('180+ подкастов','170+ подкастов')
     .replace('где уже вышло 180+','где уже вышло больше 170')
     .replace('15 лет в digital и контент-маркетинге','14 лет в digital-индустрии и контент-маркетинге');
   expect(words(normalizedCurrent.replace('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>','').replace('<span>Записаться</span>','<span>Забронировать</span>'))).toEqual(words(old));
   expect(current).toContain('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>');
   const videoLinks=html=>[...html.matchAll(/data-link="([^"]+)"/g)].map(m=>m[1]);
-  expect(videoLinks(current).sort()).toEqual(videoLinks(old).sort());
-  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.3/';
+  expect(videoLinks(legacyCurrent).sort()).toEqual(videoLinks(old).sort());
+  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.4/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
-  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v6/site.css');
+  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v7/site.css');
 });
 
 test('bundled carousel leaves the host page jQuery in place', async ({ page }) => {
