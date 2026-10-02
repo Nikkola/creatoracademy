@@ -147,11 +147,11 @@ test('release keeps legacy resources and landing copy intact', async () => {
   expect(current).toContain('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>');
   const videoLinks=html=>[...html.matchAll(/data-link="([^"]+)"/g)].map(m=>m[1]);
   expect(videoLinks(current).sort()).toEqual(videoLinks(old).sort());
-  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.2.0/';
+  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.0/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
-  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v3/site.css');
+  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v4/site.css');
 });
 
 test('bundled carousel leaves the host page jQuery in place', async ({ page }) => {

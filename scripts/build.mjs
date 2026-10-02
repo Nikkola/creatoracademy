@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import sharp from 'sharp';
 export const base = 'https://Nikkola.github.io/creatoracademy/';
-export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.4.0/';
+export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.0/';
 export async function build() {
   let css = await readFile('index.css', 'utf8');
   const imports = [...css.matchAll(/@import url\((css\/[^)]+)\);/g)];
@@ -10,8 +10,9 @@ export async function build() {
     sections += (await readFile(path, 'utf8')).replaceAll('../images/', '../../images/');
     css = css.replace(statement, '');
   }
-  const target = 'assets/site-audit-v3';
+  const target = 'assets/site-audit-v4';
   await mkdir(target + '/fonts', { recursive: true });
+  await cp('node_modules/owl.carousel/dist/assets/owl.video.play.png', target + '/owl.video.play.png');
   await cp('node_modules/@fontsource-variable/montserrat/files', target + '/fonts', { recursive: true });
   const fontCss = (await readFile('node_modules/@fontsource-variable/montserrat/index.css', 'utf8')).replaceAll('Montserrat Variable', 'Montserrat').replaceAll('./files/', './fonts/');
   const carouselCss = await readFile('node_modules/owl.carousel/dist/assets/owl.carousel.min.css', 'utf8');
@@ -26,7 +27,7 @@ export async function build() {
   const external = [...css.matchAll(/@import url\("https:[^\n]+/g)].map(m => m[0]);
   for (const line of external) css = css.replace(line, '');
   css = css.replaceAll('url("fonts/', 'url("../../fonts/');
-  let output = [fontCss, carouselCss].join('\n') + '\n' + sections + '\n' + css + '\n' + await readFile('assets/site-audit-v3/fixes.css', 'utf8');
+  let output = [fontCss, carouselCss].join('\n') + '\n' + sections + '\n' + css + '\n' + await readFile('assets/site-audit-v4/fixes.css', 'utf8');
   await mkdir(target + '/images', {recursive:true});
   const backgrounds=[...new Set([...output.matchAll(/\.\.\/\.\.\/images\/[^"')\s]+/g)].map(m=>m[0]))];
   for(const url of backgrounds){
@@ -42,12 +43,12 @@ export async function build() {
       output=output.replaceAll(url,'./images/'+name);
     }
   }
-  await writeFile('assets/site-audit-v3/site.css', output.replace(/[\t ]+$/gm, ''));
+  await writeFile(target + '/site.css', output.replace(/[\t ]+$/gm, ''));
   await mkdir('dist', { recursive: true });
   const salebotHtml = (await readFile('index.html', 'utf8')).replaceAll(base, cdnBase);
   await writeFile('dist/salebot.html', salebotHtml);
 }
 if (process.argv[1]?.endsWith('/build.mjs')) {
   await build();
-  console.log('Готово: dist/salebot.html; ресурсы: assets/site-audit-v3/');
+  console.log('Готово: dist/salebot.html; ресурсы: assets/site-audit-v4/');
 }
