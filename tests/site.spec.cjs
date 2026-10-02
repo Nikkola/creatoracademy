@@ -138,7 +138,7 @@ test('release keeps legacy resources and landing copy intact', async () => {
   const current=fs.readFileSync('index.html','utf8');
   const text=s=>s.replace(/<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g,'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
   // Section order may change; all existing copy must still be preserved.
-  const words = html => text(html).split(' ').sort();
+  const words = html => text(html).replaceAll('–', '—').split(' ').sort();
   const normalizedCurrent=current
     .replace('180+ подкастов','170+ подкастов')
     .replace('где уже вышло 180+','где уже вышло больше 170')
