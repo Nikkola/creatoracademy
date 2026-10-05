@@ -158,7 +158,7 @@ test('release keeps legacy resources and landing copy intact', async () => {
   expect(current).toContain('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>');
   const videoLinks=html=>[...html.matchAll(/data-link="([^"]+)"/g)].map(m=>m[1]);
   expect(videoLinks(legacyCurrent).sort()).toEqual(videoLinks(old).sort());
-  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.7/';
+  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.6/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
