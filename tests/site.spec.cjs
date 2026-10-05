@@ -150,16 +150,18 @@ test('release keeps legacy resources and landing copy intact', async () => {
   const normalizedCurrent=legacyCurrent
     .replace('180+ подкастов','170+ подкастов')
     .replace('где уже вышло 180+','где уже вышло больше 170')
-    .replace('15 лет в digital и контент-маркетинге','14 лет в digital-индустрии и контент-маркетинге');
+    .replace('15 лет в digital и контент-маркетинге','14 лет в digital-индустрии и контент-маркетинге')
+    .replace('99 000₽','95 000₽').replace('16 500₽','15 833₽')
+    .replace('40 000₽','38 000₽').replace('6 667₽','6 333₽');
   expect(words(normalizedCurrent.replace('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>','').replace('<span>Записаться</span>','<span>Забронировать</span>'))).toEqual(words(old));
   expect(current).toContain('<h1 class="section__title dita portfolio__title" id="gallery">Научитесь делать</h1>');
   const videoLinks=html=>[...html.matchAll(/data-link="([^"]+)"/g)].map(m=>m[1]);
   expect(videoLinks(legacyCurrent).sort()).toEqual(videoLinks(old).sort());
-  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.5/';
+  const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.6/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
-  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v8/site.css');
+  expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v9/site.css');
 });
 
 test('bundled carousel leaves the host page jQuery in place', async ({ page }) => {

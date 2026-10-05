@@ -5,6 +5,7 @@
     "dev": "node scripts/dev.mjs",
     "build:salebot": "node scripts/build.mjs",
     "test": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test:compat": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test --config=playwright.compat.config.cjs",
     "test:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium webkit"
   },
   "devDependencies": {

@@ -1,0 +1,2 @@
+const path=require('path');const root=process.cwd();
+module.exports={testDir:path.join(root,'tests'),testMatch:['browser-layout.spec.cjs','site.spec.cjs'],timeout:45000,workers:2,reporter:[['line']],outputDir:path.join(root,'previews/extra-browser-results'),use:{baseURL:'http://127.0.0.1:4173',screenshot:'only-on-failure'},projects:[{name:'firefox',use:{browserName:'firefox'}},{name:'yandex',use:{browserName:'chromium',launchOptions:{executablePath:'/Applications/Yandex.app/Contents/MacOS/Yandex'}}}]};
