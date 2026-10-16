@@ -139,10 +139,19 @@ test('release keeps legacy resources and landing copy intact', async () => {
   expect(aboutCss).toContain('.about__block--director');
   const old=execFileSync('git',['show','24fdecd:index.html']).toString();
   const current=fs.readFileSync('index.html','utf8');
+  const addedWorks = current.match(/<li class="gallery__item" data-student-work="(?:valiullin|nikiforov|ukhlov)">[\s\S]*?<\/li>/g) || [];
+  expect(addedWorks).toHaveLength(3);
+  for (const work of addedWorks) {
+    expect(work).toContain(work.includes('data-student-work="valiullin"') ? 'Участник и победитель восьмого потока' : work.includes('data-student-work="ukhlov"') ? 'Индивидуальное годовое наставничество' : 'Участник восьмого потока');
+    expect(work).toContain('width="840" height="549"');
+  }
   const text=s=>s.replace(/<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g,'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
   // Section order may change; all existing copy must still be preserved.
   const words = html => text(html).replaceAll('–', '—').split(' ').sort();
   const legacyCurrent=current
+    .replace(/<li class="gallery__item" data-student-work="(?:valiullin|nikiforov|ukhlov)">[\s\S]*?<\/li>/g,'')
+    .replace('02.11.2026.', '19.10.2026.')
+    .replace('Индивидуальное годовое наставничество', 'Участник шестого потока')
     .replace(/<div class="container"><section class="section lesson-demos"[\s\S]*?<\/section><\/div>/,'')
     .replace(/<div class="how__details">[\s\S]*?<\/div>/,'')
     .replaceAll('7 модулей, 32 урока, больше 12 часов видео','32 видеоурока')
@@ -160,7 +169,10 @@ test('release keeps legacy resources and landing copy intact', async () => {
   expect(videoLinks(legacyCurrent).sort()).toEqual(videoLinks(old).sort());
   const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.6/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
-  expect(published).toBe(current.replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
+  expect(published).toBe(current
+    .replaceAll('https://Nikkola.github.io/creatoracademy/assets/student-works-ukhlov-2026-10-16/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@2c356a3/assets/student-works-ukhlov-2026-10-16/')
+    .replaceAll('https://Nikkola.github.io/creatoracademy/assets/student-works-2026-10-16-v2/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@770033f/assets/student-works-2026-10-16-v2/')
+    .replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));
   expect(published).not.toMatch(/(?:localhost|127\.0\.0\.1|file:\/\/)/i);
   expect(current).toContain('https://Nikkola.github.io/creatoracademy/assets/site-audit-v9/site.css');
 });

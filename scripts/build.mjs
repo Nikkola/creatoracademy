@@ -45,7 +45,10 @@ export async function build() {
   }
   await writeFile(target + '/site.css', output.replace(/[\t ]+$/gm, ''));
   await mkdir('dist', { recursive: true });
-  const salebotHtml = (await readFile('index.html', 'utf8')).replaceAll(base, cdnBase);
+  const salebotHtml = (await readFile('index.html', 'utf8'))
+    .replaceAll(base + 'assets/student-works-ukhlov-2026-10-16/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@2c356a3/assets/student-works-ukhlov-2026-10-16/')
+    .replaceAll(base + 'assets/student-works-2026-10-16-v2/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@770033f/assets/student-works-2026-10-16-v2/')
+    .replaceAll(base, cdnBase);
   await writeFile('dist/salebot.html', salebotHtml);
 }
 if (process.argv[1]?.endsWith('/build.mjs')) {
