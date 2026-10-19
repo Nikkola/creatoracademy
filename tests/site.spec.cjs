@@ -149,6 +149,7 @@ test('release keeps legacy resources and landing copy intact', async () => {
   // Section order may change; all existing copy must still be preserved.
   const words = html => text(html).replaceAll('–', '—').split(' ').sort();
   const legacyCurrent=current
+    .replace(/<li class="gallery__item" data-student-review="(?:valiullin|nikiforov)">[\s\S]*?<\/li>/g,'')
     .replace(/<li class="gallery__item" data-student-work="(?:valiullin|nikiforov|ukhlov)">[\s\S]*?<\/li>/g,'')
     .replace('02.11.2026.', '19.10.2026.')
     .replace('Индивидуальное годовое наставничество', 'Участник шестого потока')
@@ -170,6 +171,7 @@ test('release keeps legacy resources and landing copy intact', async () => {
   const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.6/';
   const published = fs.readFileSync('dist/salebot.html','utf8');
   expect(published).toBe(current
+    .replaceAll('https://Nikkola.github.io/creatoracademy/assets/student-reviews-2026-10-19/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@b1daab4/assets/student-reviews-2026-10-19/')
     .replaceAll('https://Nikkola.github.io/creatoracademy/assets/student-works-ukhlov-2026-10-16/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@2c356a3/assets/student-works-ukhlov-2026-10-16/')
     .replaceAll('https://Nikkola.github.io/creatoracademy/assets/student-works-2026-10-16-v2/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@770033f/assets/student-works-2026-10-16-v2/')
     .replaceAll('https://Nikkola.github.io/creatoracademy/',cdnBase));

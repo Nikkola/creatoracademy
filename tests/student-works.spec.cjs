@@ -30,3 +30,31 @@ for (const width of [390, 1440]) test(`new participant works at ${width}px`, asy
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
+
+for (const width of [390, 1440]) test(`updated testimonials at ${width}px`, async ({ page }, info) => {
+  await page.setViewportSize({ width, height: 900 });
+  await page.route('https://kinescope.io/**', route => route.fulfill({ contentType: 'text/html', body: '<html>Test player</html>' }));
+  await page.goto('/');
+  const list = page.locator('#video-reviews .gallery__list');
+  await expect(list).toHaveClass(/owl-loaded/);
+  const items = list.locator('.owl-item:not(.cloned) > li');
+  await expect(items).toHaveCount(8);
+  for (const [position, [key, name, description, video]] of [
+    ['valiullin', 'Нияз Валиуллин', 'Участник и победитель восьмого потока', 'sCWgjnD9DYLWmujL3ZAk81'],
+    ['nikiforov', 'Витя Никифоров', 'Участник восьмого потока', 'rUhTpT69rM5FVHLWhaHnjF'],
+  ].entries()) {
+    await expect(items.nth(position)).toHaveAttribute('data-student-review', key);
+    await list.evaluate((el, position) => window.creatorAcademyJQuery(el).trigger('to.owl.carousel', [position, 0]), position);
+    const card = list.locator(`.owl-item.active [data-student-review="${key}"]`).first();
+    await card.scrollIntoViewIfNeeded();
+    await expect(card.locator('.gallery__subtitle')).toHaveText(name);
+    await expect(card.locator('.gallery__description')).toHaveText(description);
+    await expect.poll(() => card.locator('img').evaluate(el => [el.naturalWidth, el.naturalHeight, Number(getComputedStyle(el).opacity)])).toEqual([840, 549, 1]);
+    await page.screenshot({ path: `previews/reviews-2026-10-19/${key}-${info.project.name}-${width}.png` });
+    await card.locator('button').click();
+    await expect(page.locator('#player')).toHaveAttribute('src', new RegExp(`kinescope.io/embed/${video}`));
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#player')).toHaveAttribute('src', 'about:blank');
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+});
