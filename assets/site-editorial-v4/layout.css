@@ -193,9 +193,9 @@ html,body,main,#begin,#lessons,#process,#tools,#about,#cases,#learn,#rates{backg
 #about .about__list{list-style:none;margin:0;padding:0}
 #about .about__block{height:clamp(600px,48vw,900px);width:100%;flex:0 0 100%;max-width:none;position:relative;container-type:inline-size;background-position:center;background-size:cover;background-repeat:no-repeat;isolation:isolate}
 #about .about__block:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0001 30%,#0003 50%,#000c 100%);z-index:-1}
-#about .about__block--director{background-image:url('/assets/site-audit-v3/images/bg-images-about-7.webp')}
-#about .about__block--author{background-image:url('/assets/site-audit-v3/images/bg-images-about-2.webp')}
-#about .about__block--entrepreneur{background-image:url('/assets/site-audit-v3/images/bg-images-about-1.webp')}
+#about .about__block--director{background-image:url('https://nikkola.github.io/creatoracademy/assets/site-audit-v3/images/bg-images-about-7.webp')}
+#about .about__block--author{background-image:url('https://nikkola.github.io/creatoracademy/assets/site-audit-v3/images/bg-images-about-2.webp')}
+#about .about__block--entrepreneur{background-image:url('https://nikkola.github.io/creatoracademy/assets/site-audit-v3/images/bg-images-about-1.webp')}
 #about .about__block>.container{position:relative;width:92%;height:100%;margin:auto;display:flex;flex-direction:column;justify-content:flex-end;padding:35px 0}
 #about .about__text{display:flex;gap:40px;align-items:flex-end;width:100%}
 #about .about__text-left{flex:1;min-width:0}

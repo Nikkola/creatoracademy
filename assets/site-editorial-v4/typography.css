@@ -20,7 +20,6 @@ h2,#process h2{font-size:var(--type-display)}
 @media(min-width:768px) and (max-width:1100px){:root{--type-display:56px;--type-hero:104px;--type-title:24px;--type-subhead:40px}}
 @media(max-width:767px){:root{--type-caption:14px;--type-meta:14px;--type-body:16px;--type-title:24px;--type-subhead:32px;--type-display:40px;--type-hero:80px;--quote-size:32px}.nav>.brand{font-size:var(--type-title)}}
 @media(max-width:350px){:root{--type-hero:64px}}
-
 /* A larger opening uses the site's existing 40 / 28 / 24 / 18 sizes. */
 @media(min-width:1200px){
  .hero{padding-top:48px}
@@ -37,7 +36,7 @@ h2,#process h2{font-size:var(--type-display)}
 @media(max-width:767px){.hero .hero-facts dt,.hero .hero-facts dd,.hero .btn,.nav #navlinks a,.menu-toggle{font-size:16px}.nav>.brand{font-size:24px}}
 
 /* Caveat by The Caveat Project Authors, SIL OFL 1.1; license: fonts/caveat/OFL.txt. */
-@font-face{font-family:HeroHandwriting;src:url('/assets/site-editorial-v4/fonts/caveat/hero-note-cyrillic.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:HeroHandwriting;src:url('https://nikkola.github.io/creatoracademy/assets/site-editorial-v4/fonts/caveat/hero-note-cyrillic.woff2') format('woff2');font-weight:400;font-display:swap}
 .hero-copy{container-type:inline-size;min-width:0}
 .hero{overflow:visible}
 .hero-brand{margin-bottom:48px}
@@ -48,3 +47,7 @@ h2,#process h2{font-size:var(--type-display)}
 @media(min-width:768px) and (max-width:1199px){.hero .hero-inner{gap:48px}}
 @media(min-width:768px) and (max-width:1199px){.hero .hero-author-note{left:-16px;top:auto;bottom:28px;width:260px;font-size:32px}}
 @media(max-width:767px){.hero-brand{margin-bottom:32px}.hero .hero-portrait{margin-top:40px}.hero .hero-author-note{left:8px;top:auto;bottom:18px;width:220px;font-size:24px;transform:rotate(-9deg)}}
+
+/* Keep this after all navigation rules: the wordmark is twice the prior 18px / 24px size. */
+.nav>.brand{font-size:36px!important}
+@media(max-width:767px){.nav>.brand{font-size:48px!important;letter-spacing:-1.8px}}
