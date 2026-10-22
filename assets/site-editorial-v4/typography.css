@@ -1,0 +1,50 @@
+/* A shared type scale for all editorial content. Brand lettering, device UI and
+   the author's original oversized composition retain their own optical sizing. */
+:root{--type-caption:14px;--type-meta:16px;--type-body:18px;--type-title:28px;--type-subhead:40px;--type-display:64px;--type-hero:128px;--type-number:64px;--quote-size:80px}
+body{font-size:var(--type-body)}
+h2,#process h2{font-size:var(--type-display)}
+.course-name{font-size:var(--type-hero)}
+.hero h1,#begin .audience-card h3,#skills-gallery h3,.programme-modules .module-scene h3,#process .process-card .process-copy h3,#process .process-cabinet .process-copy h3,#lessons #lessons-gallery h3,.cases__slider .case-journey h4,#tools .tool-copy h3,.review h3,.rate h3{font-size:var(--type-title)}
+#process .process-tagline,.portfolio-category>summary,.portfolio-category .portfolio-title{font-size:var(--type-subhead)}
+#begin .audience-card p,.programme-modules .module-scene .module-description,#process .process-card .process-copy p,#process .process-cabinet .process-copy p{font-size:var(--type-body)}
+.cases__slider .case-profile .person h3,#tools .tool-copy p,.rate-description,.rate li>span{font-size:var(--type-meta)}
+.hero .hero-facts dt,.btn,.rate .btn,.course-numbers .item__text,.cases__slider .case .case-points .kicker,.rate li>small{font-size:var(--type-caption)}
+.hero .hero-facts dd,#lessons #lessons-gallery p{font-size:var(--type-meta)}
+.course-numbers b{font-size:var(--type-number)}
+.rate-price{font-size:var(--type-display)}
+.case-before>p:last-child,.case-after>p:last-child{font-size:var(--type-meta)!important}
+.case-before .kicker,.case-after .kicker{font-size:var(--type-caption)!important}
+.editorial-quote,.author-manifesto,#source-quote-6 .editorial-quote{font-size:var(--quote-size)}
+.nav>.brand{font-size:var(--type-meta)}
+@media(min-width:1920px){:root{--type-number:80px;--quote-size:128px}.course-numbers .item__text,.btn,.rate .btn{font-size:var(--type-meta)}.nav>.brand{font-size:var(--type-title)}}
+@media(min-width:768px) and (max-width:1100px){:root{--type-display:56px;--type-hero:104px;--type-title:24px;--type-subhead:40px}}
+@media(max-width:767px){:root{--type-caption:14px;--type-meta:14px;--type-body:16px;--type-title:24px;--type-subhead:32px;--type-display:40px;--type-hero:80px;--quote-size:32px}.nav>.brand{font-size:var(--type-title)}}
+@media(max-width:350px){:root{--type-hero:64px}}
+
+/* A larger opening uses the site's existing 40 / 28 / 24 / 18 sizes. */
+@media(min-width:1200px){
+ .hero{padding-top:48px}
+ .hero .hero-inner{grid-template-columns:minmax(0,1fr) min(42%,550px);gap:96px}
+ .hero h1{font-size:var(--type-subhead);line-height:1.13;max-width:none}
+ .hero .hero-lead{font-size:18px;line-height:1.5;max-width:none;margin-top:24px}
+ .hero .course-name{margin-bottom:18px}
+ .hero .actions{margin-top:24px}
+}
+@media(min-width:768px) and (max-width:1199px){.hero h1{font-size:32px;line-height:1.2}.hero .hero-lead{font-size:18px;line-height:1.5}}
+@media(max-width:767px){.hero h1{font-size:24px;line-height:1.25}.hero .hero-lead{font-size:16px;line-height:1.5}}
+.hero .hero-facts dt,.hero .hero-facts dd,.hero .btn{font-size:18px}
+.nav>.brand,.nav #navlinks a{font-size:18px}
+@media(max-width:767px){.hero .hero-facts dt,.hero .hero-facts dd,.hero .btn,.nav #navlinks a,.menu-toggle{font-size:16px}.nav>.brand{font-size:24px}}
+
+/* Caveat by The Caveat Project Authors, SIL OFL 1.1; license: fonts/caveat/OFL.txt. */
+@font-face{font-family:HeroHandwriting;src:url('/assets/site-editorial-v4/fonts/caveat/hero-note-cyrillic.woff2') format('woff2');font-weight:400;font-display:swap}
+.hero-copy{container-type:inline-size;min-width:0}
+.hero{overflow:visible}
+.hero-brand{margin-bottom:48px}
+.hero .hero-brand .course-name{margin:0;width:100%;font-size:var(--hero-name-size,24.2cqw)}
+.hero .hero-author-note{position:absolute;z-index:3;left:calc(36% - 320px);top:12px;width:300px;font:400 40px/1.1 HeroHandwriting,cursive;letter-spacing:0;color:#fff;margin:0;text-align:center;transform:rotate(-12deg);transform-origin:center;white-space:nowrap;pointer-events:none}
+.hero-author-note>span{display:block}
+.hero-author-name>span{display:inline}
+@media(min-width:768px) and (max-width:1199px){.hero .hero-inner{gap:48px}}
+@media(min-width:768px) and (max-width:1199px){.hero .hero-author-note{left:-16px;top:auto;bottom:28px;width:260px;font-size:32px}}
+@media(max-width:767px){.hero-brand{margin-bottom:32px}.hero .hero-portrait{margin-top:40px}.hero .hero-author-note{left:8px;top:auto;bottom:18px;width:220px;font-size:24px;transform:rotate(-9deg)}}

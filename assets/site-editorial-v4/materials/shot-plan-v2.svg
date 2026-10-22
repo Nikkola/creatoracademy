@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" fill="none">
+<rect x="70" y="20" width="500" height="380" rx="14" fill="#e8ddcc"/>
+<g fill="#493b31" font-family="Arial,sans-serif"><text x="102" y="65" font-size="22">План кадров</text><text x="102" y="91" font-size="12" opacity=".6">Иллюстрация рабочего шаблона</text></g>
+<g stroke="#947d68" stroke-width="2"><path d="M100 110h440M100 193h440M100 276h440M100 359h440"/>
+<rect x="100" y="125" width="115" height="52" rx="3"/><path d="m109 168 23-27 17 20 18-13 39 20"/>
+<rect x="100" y="208" width="115" height="52" rx="3"/><circle cx="157" cy="225" r="9"/><path d="M138 253q0-22 19-22t19 22"/>
+<rect x="100" y="291" width="115" height="52" rx="3"/><circle cx="157" cy="317" r="18"/><circle cx="157" cy="317" r="10"/>
+<path d="M250 150h170m-170 15h225m-225 68h200m-200 15h240m-240 68h190m-190 15h225" opacity=".5"/>
+<rect x="510" y="144" width="16" height="16" rx="3"/><rect x="510" y="227" width="16" height="16" rx="3"/><rect x="510" y="310" width="16" height="16" rx="3"/></g></svg>

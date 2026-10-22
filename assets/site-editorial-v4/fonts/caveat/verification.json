@@ -1,0 +1,102 @@
+{
+  "checked_on": "2026-10-22",
+  "family": "Caveat",
+  "weight": 400,
+  "text": "Авторский курс Николая Чернобаева",
+  "required_characters": [
+    {
+      "character": " ",
+      "codepoint": "U+0020"
+    },
+    {
+      "character": "А",
+      "codepoint": "U+0410"
+    },
+    {
+      "character": "Н",
+      "codepoint": "U+041D"
+    },
+    {
+      "character": "Ч",
+      "codepoint": "U+0427"
+    },
+    {
+      "character": "а",
+      "codepoint": "U+0430"
+    },
+    {
+      "character": "б",
+      "codepoint": "U+0431"
+    },
+    {
+      "character": "в",
+      "codepoint": "U+0432"
+    },
+    {
+      "character": "е",
+      "codepoint": "U+0435"
+    },
+    {
+      "character": "и",
+      "codepoint": "U+0438"
+    },
+    {
+      "character": "й",
+      "codepoint": "U+0439"
+    },
+    {
+      "character": "к",
+      "codepoint": "U+043A"
+    },
+    {
+      "character": "л",
+      "codepoint": "U+043B"
+    },
+    {
+      "character": "н",
+      "codepoint": "U+043D"
+    },
+    {
+      "character": "о",
+      "codepoint": "U+043E"
+    },
+    {
+      "character": "р",
+      "codepoint": "U+0440"
+    },
+    {
+      "character": "с",
+      "codepoint": "U+0441"
+    },
+    {
+      "character": "т",
+      "codepoint": "U+0442"
+    },
+    {
+      "character": "у",
+      "codepoint": "U+0443"
+    },
+    {
+      "character": "я",
+      "codepoint": "U+044F"
+    }
+  ],
+  "missing_from_declared_unicode_range": [],
+  "license": "SIL OFL 1.1",
+  "copyright_preserved": true,
+  "source_css": "previews/hero-handwritten-2026-10-22/caveat-subset.css",
+  "files": {
+    "hero-note-cyrillic.woff2": {
+      "bytes": 11532,
+      "sha256": "683427be68fd31951ce6302f51ae95bbb3ab8787d80202de0af448ebac32ce53"
+    },
+    "Caveat-wght.ttf": {
+      "bytes": 403648,
+      "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988"
+    },
+    "OFL.txt": {
+      "bytes": 4385,
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+    }
+  }
+}
