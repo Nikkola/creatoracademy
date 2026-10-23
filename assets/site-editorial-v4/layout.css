@@ -828,3 +828,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 #clients .client-mobile-logo{filter:grayscale(1)}
 #clients .client-mobile-logo.mono{filter:grayscale(1) brightness(0) invert(1)}
 #clients .client-mobile-logo.invert{filter:grayscale(1) invert(1)}
+
+/* Cover fractional compositor edges so the still photo cannot bleed around playing video. */
+#begin .audience-card .scene-media{isolation:isolate}
+#begin .audience-card .scene-media>.ambient-video{inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);max-width:none;object-fit:cover}
+#begin .audience-card .scene-media>img{transition:opacity .6s ease}
+#begin .audience-card .scene-media:has(>.ambient-video.has-frame)>img{opacity:0}
