@@ -7,11 +7,11 @@ for(const width of [320,390,768,1440])test(`approved audience loops play only in
  const rail=page.locator('#audience-gallery');await expect(rail).toHaveClass(/owl-loaded/);
  await expect(rail.locator('.owl-item:not(.cloned) video')).toHaveCount(4);
  await rail.scrollIntoViewIfNeeded();
- const names=['bloggers','business','media','personal'];
+ const names=['bloggers-v1','business-v1','media-v2','personal-v1'];
  for(let i=0;i<names.length;i++){
   await page.locator('#begin .carousel-pagination button').nth(i).click();
   const current=rail.locator('.owl-item.center video');
-  await expect(current.locator('source')).toHaveAttribute('src',new RegExp(`audience-${names[i]}-v1.mp4$`));
+  await expect(current.locator('source')).toHaveAttribute('src',new RegExp(`audience-${names[i]}.mp4$`));
   await expect.poll(()=>current.evaluate(v=>!v.paused&&v.currentTime>0&&v.videoWidth===1280&&v.videoHeight===854)).toBe(true);
   await expect(current).toHaveClass(/has-frame/);
   expect(await rail.locator('video').evaluateAll(ns=>ns.filter(v=>!v.paused).length)).toBe(1);
