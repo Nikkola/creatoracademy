@@ -14,7 +14,7 @@ function publicAsset(path){
  }
  path=path.replace(/^\//,'');
  if(!/^(?:assets|fonts|images)\//.test(path))return original;
- const overrides=[['assets/student-reviews-2026-10-19/','b1daab4'],['assets/student-works-ukhlov-2026-10-16/','2c356a3'],['assets/student-works-2026-10-16-v2/','770033f']];
+ const overrides=[['assets/site-editorial-v4/media/audience-','v3.5.9'],['assets/student-reviews-2026-10-19/','b1daab4'],['assets/student-works-ukhlov-2026-10-16/','2c356a3'],['assets/student-works-2026-10-16-v2/','770033f']];
  for(const [prefix,commit] of overrides)if(path.startsWith(prefix))return `https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@${commit}/${path}`;
  return cdnBase+path;
 }

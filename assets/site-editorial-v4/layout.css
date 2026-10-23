@@ -2,6 +2,9 @@
 :root{--content-width:1320px;--media-width:1600px;--quote-size:80px;--bg:#000}
 html,body,main,#begin,#lessons,#process,#tools,#about,#cases,#learn,#rates{background:#000}
 .nav{background:#000e}
+/* SaleBot's overflow-hidden section prevents sticky navigation from following the viewport. */
+body.salebot-landing header.nav{position:fixed;inset:0 0 auto;width:100%}
+body.salebot-landing header.nav+main#top{padding-top:var(--hero-header-height,104px)}
 .wrap{width:min(var(--content-width),92%);max-width:var(--content-width)}
 .nav{padding-inline:0;border-bottom:0}
 .nav #navlinks{width:min(var(--media-width),92%);margin-inline:auto}
@@ -583,6 +586,9 @@ html,body,main,#begin,#lessons,#process,#tools,#about,#cases,#learn,#rates{backg
 #rates .included-tools{list-style:none}
 #rates .included-tools>li::before{content:'✓';display:block;position:absolute;left:0;color:var(--gold)}
 #rates .included-tools>li{position:relative;padding-left:22px}
+#rates .included-ai-mark{position:relative;display:inline-block;padding:3px 2px;white-space:nowrap;color:var(--text)}
+#rates .included-ai-mark svg{position:absolute;left:-12px;top:-6px;width:calc(100% + 24px);height:calc(100% + 12px);overflow:visible;pointer-events:none;transform:rotate(-3deg);fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#rates .included-ai-mark path{vector-effect:non-scaling-stroke}
 @media(max-width:767px){
  #skills-gallery .outcome-card{aspect-ratio:auto;height:auto;grid-template-rows:minmax(140px,auto) auto;align-content:start}
  #skills-gallery .card-copy{align-self:center;padding:28px 24px}

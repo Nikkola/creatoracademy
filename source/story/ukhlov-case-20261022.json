@@ -7,6 +7,7 @@
   "after": "Снял и опубликовал выпускную работу «Через весь Кыргызстан на шоссейниках по дороге, которой нет на картах!». На 22 октября 2026 года видео набрало 56 509 просмотров на YouTube.",
   "videoUrl": "https://www.youtube.com/watch?v=NnznsQwmNkg",
   "channelUrl": "https://www.youtube.com/channel/UC0u1ZOPXOZvGBE-fC-8BRyQ",
+  "channelHandle": "@konelshtein",
   "avatar": "assets/site-editorial-v4/sergey-ukhlov-avatar.webp",
   "checked": "2026-10-22",
   "verification": "vidIQ get_videos_by_ids; точное название совпадает с уже опубликованной выпускной работой Сергея на лендинге",

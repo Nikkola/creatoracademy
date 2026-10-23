@@ -1,0 +1,22 @@
+[
+  {
+    "name": "audience-bloggers-v1",
+    "label": "Запись собственного видео в домашней студии",
+    "duration": 9.2
+  },
+  {
+    "name": "audience-business-v1",
+    "label": "Работа за компьютером: детали и общий план",
+    "duration": 8.4
+  },
+  {
+    "name": "audience-media-v1",
+    "label": "Настройка света, работа с камерой и выбор объектива",
+    "duration": 9.2
+  },
+  {
+    "name": "audience-personal-v1",
+    "label": "Летняя прогулка и зимний лес",
+    "duration": 10.4
+  }
+]

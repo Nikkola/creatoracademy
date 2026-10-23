@@ -29,7 +29,7 @@ for(const [width,height] of [[320,800],[390,844],[768,1024],[1440,1000],[2048,11
  if(width<768)expect(await audience.evaluate(el=>creatorAcademyJQuery(el).data('owl.carousel').settings.loop)).toBe(true);
  await expect(page.locator('h1')).toContainText(width<768?'Продвигай себя и своё дело через контент.':'Научись продвигать себя и своё дело');await expect(page.locator('.hero .kicker')).toHaveCount(0);
  if(width<760){await page.locator('.menu-toggle').click();await expect(page.locator('.menu-toggle')).toHaveAttribute('aria-expanded','true');await page.locator('#navlinks a[href="#rates"]').click();await expect(page.locator('.menu-toggle')).toHaveAttribute('aria-expanded','false')}
- await page.locator('#rates').scrollIntoViewIfNeeded();expect(await page.locator('.included-tools li').count()).toBe(6);await expect(page.locator('.included')).toContainText('Все практические материалы остаются навсегда');
+ await page.locator('#rates').scrollIntoViewIfNeeded();expect(await page.locator('.included-tools li').count()).toBe(9);await expect(page.locator('.included')).toContainText('Все практические материалы остаются навсегда');
 });
 test('unchanged Owl loops, drag, focus-on-card and review rail',async({page})=>{
  await page.setViewportSize({width:1440,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');

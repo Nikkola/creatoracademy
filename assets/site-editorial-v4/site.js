@@ -241,8 +241,7 @@ if(siteJQ){
   const audiencePadding=()=>innerWidth<768?20:Math.round((innerWidth-Math.min(1240,innerWidth*.76))/2);
   const highlightGalleries=siteJQ('#audience-gallery,#lessons-gallery,#skills-gallery');
   highlightGalleries.each(function(){siteJQ(this).owlCarousel({items:1,center:true,loop:true,dots:false,nav:false,mouseDrag:true,touchDrag:true,autoplay:false,smartSpeed:reducedMotion.matches?0:500,margin:24,stagePadding:audiencePadding(),responsive:{0:{autoHeight:this.id!=='audience-gallery'},1200:{autoHeight:false}}})});
-  const skills=document.querySelector('#skills-gallery');
-  if(skills){
+  for(const skills of document.querySelectorAll('#skills-gallery,#audience-gallery')){
    let visible=false,moving=false,selected=null;
    function renderSkill(){
     const video=skills.querySelector('.owl-item.center [data-slide-ambient]');

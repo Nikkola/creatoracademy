@@ -95,15 +95,18 @@ def refine(body, src, Parser, Node, escape, image):
     section('course-facts', '<h2>Курс в цифрах</h2><ul class="course-numbers" aria-label="Курс в цифрах">'
             + ''.join(facts) + '</ul>')
 
-    # A full-width gallery keeps the original four photographs and complete copy.
+    # The four approved vlog loops keep the complete audience copy.
     audience = root.one(id='begin')
     audience.one(tag='h2').c = ['Кому подойдёт курс']
     audience_rail = audience.one(id='for-who-container')
     audience_rail.a.update({'id': 'audience-gallery', 'class': 'audience-gallery owl-carousel',
                             'aria-label': 'Кому подойдёт курс'})
-    for card in audience.all('audience-card'):
-        card.one(tag='img').a['loading'] = 'eager'
-        put(card, '<div class="scene-media">' + card.one(tag='img').html()
+    audience_loops = json.loads(Path('source/story/audience-loops-20261023.json').read_text())
+    for card, scene in zip(audience.all('audience-card'), audience_loops):
+        photo = card.one(tag='img')
+        photo.a['loading'] = 'eager'
+        put(card, '<div class="scene-media">' + photo.html()
+            + loop(scene['name'], photo.a['src'], scene['label'], 'data-slide-ambient')
             + '</div><div class="card-copy">' + card.one(tag='h3').html()
             + card.one(tag='p').html() + '</div>')
 
@@ -294,12 +297,14 @@ def refine(body, src, Parser, Node, escape, image):
             + '</div></div>')
 
     new_case = json.loads(Path('source/story/ukhlov-case-20261022.json').read_text())
-    new_card = Parser('<article class="case" data-case="sergey-ukhlov"><div class="case-profile">'
+    new_card = Parser('<article class="case cases__item" data-case="sergey-ukhlov"><div class="case-profile">'
         '<div class="person">' + image(new_case['avatar'], new_case['name'])
         + '<div><h3>' + escape(new_case['name']) + '</h3><p class="case-flow">'
         + escape(new_case['cohort']) + '</p></div></div><div class="case-links">'
-        '<a href="' + escape(new_case['videoUrl']) + '" target="_blank" rel="noopener noreferrer">Выпускная работа на YouTube ↗</a>'
-        '<a href="' + escape(new_case['channelUrl']) + '" target="_blank" rel="noopener noreferrer">Канал Сергея ↗</a></div>'
+        '<a class="cases__link" href="' + escape(new_case['channelUrl']) + '" target="_blank" rel="noopener noreferrer">'
+        + escape(new_case['channelHandle']) + '</a>'
+        '<a class="cases__link" href="' + escape(new_case['videoUrl']) + '" target="_blank" rel="noopener noreferrer">«'
+        + escape(new_case['video']['title']) + '»</a></div>'
         '</div><div class="case-journey"><h4>' + escape(new_case['result']) + '</h4><div class="case-points">'
         '<div class="case-before"><p class="kicker">Точка А</p><p>' + escape(new_case['before']) + '</p></div>'
         '<div class="case-after"><p class="kicker">Точка Б</p><p>' + escape(new_case['after']) + '</p></div>'
