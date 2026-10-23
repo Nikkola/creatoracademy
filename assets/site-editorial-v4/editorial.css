@@ -15,7 +15,6 @@ h3,h4{letter-spacing:-.02em}
 .nav>.brand{padding:15px 0}
 .nav nav>a{padding:13px 8px}
 .nav .nav-buy{color:var(--gold)}
-.menu-toggle{border-radius:4px}
 .hero{padding-top:42px;padding-bottom:48px}
 .hero-inner{grid-template-columns:1.15fr 1fr;gap:64px;align-items:center}
 .hero-copy{padding:0}

@@ -1,0 +1,2 @@
+const {defineConfig}=require('@playwright/test');
+module.exports=defineConfig({testDir:'tests/story',timeout:60000,workers:2,reporter:[['list']],use:{baseURL:'http://127.0.0.1:4177',screenshot:'only-on-failure'},projects:[{name:'chromium',use:{browserName:'chromium'}},{name:'webkit',use:{browserName:'webkit'}}],webServer:{command:'npm run dev',url:'http://127.0.0.1:4177',reuseExistingServer:!process.env.CI}});

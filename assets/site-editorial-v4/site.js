@@ -1,6 +1,18 @@
 const toggle=document.querySelector('.menu-toggle');const nav=document.querySelector('#navlinks');
-toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open)});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false')}));
+let menuScroll=0,menuOverflow='';
+function setMenu(open){
+ const wasOpen=toggle.getAttribute('aria-expanded')==='true';
+ if(open===wasOpen)return;
+ toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');
+ nav.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);
+ if(open){menuScroll=scrollY;menuOverflow=document.body.style.overflow;document.body.style.position='fixed';document.body.style.top=-menuScroll+'px';document.body.style.width='100%';document.body.style.overflow='hidden';nav.scrollTop=0}
+ else{document.body.style.position='';document.body.style.top='';document.body.style.width='';document.body.style.overflow=menuOverflow;window.scrollTo({top:menuScroll,behavior:'instant'})}
+}
+toggle.addEventListener('click',()=>setMenu(toggle.getAttribute('aria-expanded')!=='true'));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+nav.querySelector('[data-video]')?.addEventListener('click',()=>setMenu(false));
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&toggle.getAttribute('aria-expanded')==='true'){setMenu(false);toggle.focus()}});
+window.addEventListener('resize',()=>{if(innerWidth>767)setMenu(false)});
 const dialog=document.querySelector('#player');const host=dialog.querySelector('.video-host');let opener;
 // The fourth version keeps the complete source stories in accessible dialogs.
 const caseDialog=document.querySelector('#case-story');
@@ -8,6 +20,16 @@ const overlays=[dialog,caseDialog];
 const overlayOpen=()=>overlays.some(overlay=>overlay.open);
 function observeOverlays(render){const observer=new MutationObserver(render);overlays.forEach(overlay=>observer.observe(overlay,{attributes:true,attributeFilter:['open']}))}
 let caseOpener,casePreviousOverflow='';
+document.addEventListener('click',event=>{
+ const button=event.target.closest('.review-more');if(!button)return;
+ const card=button.closest('.review'),body=caseDialog.querySelector('.case-story-body');
+ const heading=document.createElement('h2');heading.id='case-story-title';heading.textContent=card.querySelector('h3').textContent;
+ const text=card.querySelector('.review-text').cloneNode(true);text.className='review-dialog-text';
+ body.replaceChildren(heading,text,card.querySelector('.person').cloneNode(true));
+ caseDialog.querySelector('.close-case').setAttribute('aria-label','Закрыть отзыв');
+ caseOpener=button;casePreviousOverflow=document.body.style.overflow;
+ caseDialog.showModal();document.body.style.overflow='hidden';caseDialog.scrollTop=0;caseDialog.querySelector('.close-case').focus();
+});
 document.addEventListener('click',event=>{
  const button=event.target.closest('.case-more');if(!button)return;
  const story=button.closest('.case')?.querySelector('.case-story-content');if(!story)return;
@@ -46,19 +68,30 @@ if(heroHeader){
 }
 const heroName=document.querySelector('.hero .course-name');
 const heroUtp=document.querySelector('.hero h1');
+if(heroUtp){
+ const originalHeading=heroUtp.textContent,lead=document.querySelector('.hero .hero-lead'),originalLead=lead?.textContent;let mobileHero=null;
+ function layoutMobileHero(){const mobile=innerWidth<768;if(mobile===mobileHero)return;mobileHero=mobile;
+  heroUtp.textContent=mobile?'Продвигай себя и своё дело через контент.':originalHeading;
+  if(lead)lead.textContent=mobile?'Освой все навыки от создания идей и историй до съемки и монтажа.':originalLead;
+ }
+ layoutMobileHero();window.addEventListener('resize',layoutMobileHero);
+}
 if(heroName&&heroUtp){
  let nameUnits=0;
  const fitHeroName=()=>{
-  if(!nameUnits)return;
+  if(!nameUnits||innerWidth<768)return;
   const range=document.createRange();range.selectNodeContents(heroUtp);
   const lines=[...range.getClientRects()];if(!lines.length)return;
   const left=heroName.getBoundingClientRect().left;
   const target=Math.min(heroUtp.clientWidth,Math.max(...lines.map(line=>line.right))-left);
   heroName.style.setProperty('--hero-name-size',`${target/nameUnits}px`);
+  const quote=heroName.querySelector('.hero__quotes-right'),actual=quote.getBoundingClientRect().right-heroName.getBoundingClientRect().left;
+  if(actual>0&&Math.abs(actual-target)>.25)heroName.style.setProperty('--hero-name-size',`${parseFloat(getComputedStyle(heroName).fontSize)*target/actual}px`);
  };
  document.fonts.ready.then(()=>{
   const quote=heroName.querySelector('.hero__quotes-right');if(!quote)return;
-  nameUnits=(quote.getBoundingClientRect().right-heroName.getBoundingClientRect().left)/parseFloat(getComputedStyle(heroName).fontSize);
+  const anchor=heroName.querySelector('.hero__quotes-anchor-right');
+  nameUnits=.35+(quote.getBoundingClientRect().right-anchor.getBoundingClientRect().left)/parseFloat(getComputedStyle(heroName).fontSize);
   fitHeroName();new ResizeObserver(fitHeroName).observe(heroUtp);
  });
 }
@@ -86,6 +119,7 @@ if(feedbackDemo){
  const video=feedbackDemo.querySelector('video');
  video.addEventListener('loadeddata',()=>video.classList.add('has-frame'));
  let visible=false;
+
  function render(){
   if(visible&&!reducedMotion.matches&&!document.hidden&&!overlayOpen()){video.play().catch(()=>{})}else video.pause();
  }
@@ -99,11 +133,12 @@ if(!reducedMotion.matches&&'IntersectionObserver' in window){
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target)}}),{threshold:.12});
  reveals.forEach(el=>{el.classList.add('reveal');observer.observe(el)});document.body.classList.add('motion-ready');
 }
-// Every quote enters on each visit; jumping past one must not pre-reveal it.
+// Quotes reveal once when they enter view. Replaying at the viewport edge
+// caused the text to flicker during small mobile scroll adjustments.
 if(!reducedMotion.matches&&'IntersectionObserver' in window){
  const quotes=[...document.querySelectorAll('.editorial-quote,.author-manifesto')];
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  entry.target.classList.toggle('quote-shown',entry.isIntersecting);
+  if(entry.isIntersecting){entry.target.classList.add('quote-shown');observer.unobserve(entry.target)}
  }),{threshold:0});
  quotes.forEach(quote=>quote.classList.add('quote-entrance'));
  // Establish the hidden style before any initially visible quote is revealed.
@@ -150,17 +185,16 @@ const processCards=new Set();
  document.addEventListener('visibilitychange',syncProcessMotion);reducedMotion.addEventListener('change',syncProcessMotion);observeOverlays(syncProcessMotion);
 }
 if(demo){
- const video=demo.querySelector('[data-demo-video]'),phoneLesson=demo.querySelector('[data-phone-lesson-video]'),phoneLighting=demo.querySelector('[data-phone-lighting-video]'),pause=demo.querySelector('.demo-motion');
+ const video=demo.querySelector('[data-demo-video]'),phoneLesson=demo.querySelector('[data-phone-lesson-video]'),phoneLighting=demo.querySelector('[data-phone-lighting-video]');
  const lessonVideos=[video,phoneLesson,phoneLighting];
  let phase=0,timer=null,visible=false,paused=reducedMotion.matches;
  lessonVideos.forEach(v=>v.addEventListener('loadeddata',()=>v.classList.add('has-frame')));
  function render(){demo.dataset.phase=String(phase);const play=visible&&!paused&&!document.hidden&&!overlayOpen();lessonVideos.forEach(v=>{const active=v===phoneLighting?phase===1||phase===2:phase===1;if(active&&play)v.play().catch(()=>{});else v.pause()})}
  function stop(){clearInterval(timer);timer=null;lessonVideos.forEach(v=>v.pause());demo.classList.add('is-paused')}
  function start(){stop();if(!visible||paused||document.hidden||overlayOpen())return;demo.classList.remove('is-paused');render();timer=setInterval(()=>{phase=(phase+1)%3;render()},6000)}
- pause.addEventListener('click',()=>{paused=!paused;pause.setAttribute('aria-pressed',String(paused));pause.setAttribute('aria-label',paused?'Продолжить анимацию обучения':'Остановить анимацию обучения');pause.querySelector('path').setAttribute('d',paused?'M8 5l11 7-11 7Z':'M9 6v12M15 6v12');if(paused)stop();else start()});
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)start();else stop()},{threshold:.2}).observe(demo);
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start()});
- reducedMotion.addEventListener('change',event=>{paused=event.matches;pause.setAttribute('aria-pressed',String(paused));if(paused){phase=0;render();stop()}else start()});
+ reducedMotion.addEventListener('change',event=>{paused=event.matches;if(paused){phase=0;render();stop()}else start()});
  observeOverlays(()=>{if(overlayOpen())stop();else start()});render();
 }
 
@@ -206,7 +240,7 @@ if(siteJQ){
  siteJQ(function(){
   const audiencePadding=()=>innerWidth<768?20:Math.round((innerWidth-Math.min(1240,innerWidth*.76))/2);
   const highlightGalleries=siteJQ('#audience-gallery,#lessons-gallery,#skills-gallery');
-  highlightGalleries.each(function(){siteJQ(this).owlCarousel({items:1,center:true,loop:true,dots:false,nav:false,mouseDrag:true,touchDrag:true,autoplay:false,smartSpeed:reducedMotion.matches?0:500,margin:24,stagePadding:audiencePadding()})});
+  highlightGalleries.each(function(){siteJQ(this).owlCarousel({items:1,center:true,loop:true,dots:false,nav:false,mouseDrag:true,touchDrag:true,autoplay:false,smartSpeed:reducedMotion.matches?0:500,margin:24,stagePadding:audiencePadding(),responsive:{0:{autoHeight:this.id!=='audience-gallery'},1200:{autoHeight:false}}})});
   const skills=document.querySelector('#skills-gallery');
   if(skills){
    let visible=false,moving=false,selected=null;
@@ -229,11 +263,12 @@ if(siteJQ){
   window.addEventListener('resize',()=>{clearTimeout(audienceResize);audienceResize=setTimeout(()=>{highlightGalleries.each(function(){const o=siteJQ(this).data('owl.carousel');if(o){o.options.stagePadding=audiencePadding();o.refresh()}})},150)});
   const rail=siteJQ('#casesSlider'),carousel=rail.data('owl.carousel');if(!carousel)return;
   carousel.options.autoHeight=false;
-  carousel.options.responsive={0:{items:1,margin:24,stagePadding:0,autoHeight:false},768:{items:1,margin:24,stagePadding:0,autoHeight:false},1200:{items:1,margin:24,stagePadding:0,autoHeight:false}};
+  carousel.options.responsive={0:{items:1,margin:24,stagePadding:0,autoHeight:true},768:{items:1,margin:24,stagePadding:0,autoHeight:false},1200:{items:1,margin:24,stagePadding:0,autoHeight:false}};
   carousel.refresh();
   let measuredWidth=0;
   function equalizeCases(){
    rail[0].style.removeProperty('--case-height');
+   if(innerWidth<768){measuredWidth=rail[0].clientWidth;requestAnimationFrame(()=>carousel._plugins.autoHeight.update());return}
    const cards=carousel.items().map(item=>item[0].querySelector('.case'));
    // Dmitry Kim is the reference. A longer story can raise the shared height,
    // so neither hidden text nor a scrollbar is needed at narrow widths.
@@ -282,6 +317,9 @@ if(reviewRail){
 const disclosures=new Map();
 document.querySelectorAll('details').forEach(details=>{
  const summary=details.querySelector('summary'),answer=details.querySelector('.faq-answer,.disclosure-content');if(!answer)return;
+ // A second Owl refresh on the native toggle event changed the height after
+ // the opening animation. Initialize once, then refresh only after a resize.
+ if(details.prepareDisclosure){const prepare=details.prepareDisclosure;let preparedWidth=0;details.prepareDisclosure=function(){const width=details.clientWidth;if(!details.open||width===preparedWidth)return;prepare.call(details);preparedWidth=width}}
  let expanded=details.open,animation=null,version=0,moving=false;summary.setAttribute('aria-expanded',String(expanded));
  function setExpanded(next){
   if(next===expanded)return;
@@ -300,7 +338,7 @@ document.querySelectorAll('details').forEach(details=>{
   answer.style.height='auto';const target=expanded?answer.getBoundingClientRect().height:0;answer.style.height=from+'px';
   requestAnimationFrame(()=>{
    if(turn!==version)return;
-   const current=answer.animate([{height:from+'px',opacity},{height:target+'px',opacity:expanded?1:0}],{duration:500,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});animation=current;
+   const current=answer.animate([{height:from+'px',opacity},{height:target+'px',opacity:expanded?1:0}],{duration:600,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});animation=current;
    current.onfinish=()=>{if(animation!==current)return;details.open=expanded;answer.style.height='';details.classList.remove('disclosure-moving');animation=null;moving=false;current.cancel()};
   });
  }
@@ -315,6 +353,21 @@ const clientMarquee=document.querySelector('.client-marquee');
 if(clientMarquee){
  clientMarquee.querySelectorAll('.client-marquee-track').forEach(track=>{const group=track.querySelector('.client-marquee-group'),copy=group.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.inert=true;track.append(copy)});
  let visible=false;
+ const mobilePages=[...clientMarquee.querySelectorAll('.client-mobile-page')],mobileDots=[...clientMarquee.querySelectorAll('.client-mobile-dots button')],mobileStage=clientMarquee.querySelector('.client-mobile-stage');let mobilePage=0,mobileFade=null,mobileSwap=0;
+ function applyMobileClients(index){mobilePage=index;mobilePages.forEach((page,i)=>{page.classList.toggle('is-active',i===index);page.setAttribute('aria-hidden',String(i!==index));page.inert=i!==index});mobileDots.forEach((dot,i)=>{if(i===index)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current')})}
+ function showMobileClients(index){
+  if(index===mobilePage&&!mobileFade)return;
+  const turn=++mobileSwap,opacity=Number(getComputedStyle(mobileStage).opacity);mobileFade?.cancel();
+  if(reducedMotion.matches){applyMobileClients(index);mobileStage.style.opacity='1';mobileFade=null;return}
+  const fadeOut=mobileStage.animate([{opacity},{opacity:0}],{duration:180,easing:'ease-in',fill:'both'});mobileFade=fadeOut;
+  fadeOut.onfinish=()=>{if(turn!==mobileSwap)return;mobileStage.style.opacity='0';applyMobileClients(index);fadeOut.cancel();
+   const fadeIn=mobileStage.animate([{opacity:0},{opacity:1}],{duration:250,easing:'ease-out',fill:'both'});mobileFade=fadeIn;
+   fadeIn.onfinish=()=>{if(turn!==mobileSwap)return;mobileStage.style.opacity='1';fadeIn.cancel();mobileFade=null};
+  };
+ }
+ mobileDots.forEach((dot,i)=>dot.addEventListener('click',()=>showMobileClients(i)));
+ applyMobileClients(0);
+ setInterval(()=>{if(innerWidth<768&&visible&&!document.hidden&&!overlayOpen()&&!reducedMotion.matches)showMobileClients((mobilePage+1)%mobilePages.length)},4500);
  const render=()=>clientMarquee.classList.toggle('is-offscreen',!visible||document.hidden||overlayOpen());
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;render()}).observe(clientMarquee);
  document.addEventListener('visibilitychange',render);observeOverlays(render);render();

@@ -1,58 +1,42 @@
-import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
-import sharp from 'sharp';
-export const base = 'https://Nikkola.github.io/creatoracademy/';
-export const cdnBase = 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.6/';
-export async function build() {
-  let css = await readFile('index.css', 'utf8');
-  const imports = [...css.matchAll(/@import url\((css\/[^)]+)\);/g)];
-  let sections = '';
-  for (const [statement, path] of imports) {
-    sections += (await readFile(path, 'utf8')).replaceAll('../images/', '../../images/');
-    css = css.replace(statement, '');
-  }
-  const target = 'assets/site-audit-v9';
-  await mkdir(target + '/fonts', { recursive: true });
-  await cp('node_modules/owl.carousel/dist/assets/owl.video.play.png', target + '/owl.video.play.png');
-  await cp('node_modules/@fontsource-variable/montserrat/files', target + '/fonts', { recursive: true });
-  const fontCss = (await readFile('node_modules/@fontsource-variable/montserrat/index.css', 'utf8')).replaceAll('Montserrat Variable', 'Montserrat').replaceAll('./files/', './fonts/');
-  const carouselCss = await readFile('node_modules/owl.carousel/dist/assets/owl.carousel.min.css', 'utf8');
-  const jquery = await readFile('node_modules/jquery/dist/jquery.min.js', 'utf8');
-  // OwlCarousel 2 hard-codes the global `jQuery` constructor in two instanceof
-  // checks. The bundled jQuery is deliberately kept off the host global so it
-  // cannot replace SaleBot's own copy; point those checks at Owl's jQuery alias.
-  const carousel = (await readFile('node_modules/owl.carousel/dist/owl.carousel.min.js', 'utf8'))
-    .replaceAll('instanceof jQuery', 'instanceof a');
-  await writeFile(target + '/vendors.js', jquery + '\n;\n' + carousel + '\n;window.creatorAcademyJQuery=window.jQuery.noConflict(true);');
-  // Remove external font imports.
-  const external = [...css.matchAll(/@import url\("https:[^\n]+/g)].map(m => m[0]);
-  for (const line of external) css = css.replace(line, '');
-  css = css.replaceAll('url("fonts/', 'url("../../fonts/');
-  let output = [fontCss, carouselCss].join('\n') + '\n' + sections + '\n' + css + '\n' + await readFile(target + '/fixes.css', 'utf8');
-  await mkdir(target + '/images', {recursive:true});
-  const backgrounds=[...new Set([...output.matchAll(/\.\.\/\.\.\/images\/[^"')\s]+/g)].map(m=>m[0]))];
-  for(const url of backgrounds){
-    const source=url.slice(6);
-    const name='bg-'+source.replaceAll('/','-').replace(/\.[^.]+$/,'.webp');
-    const image=await readFile(source);
-    if (source.startsWith('images/about/')) {
-      await sharp(image).resize({width:1200,withoutEnlargement:true}).webp({quality:90}).toFile(target+'/images/'+name.replace('.webp','-mobile.webp'));
-      await sharp(image).resize({width:3000,withoutEnlargement:true}).webp({quality:90}).toFile(target+'/images/'+name.replace('.webp','-wide.webp'));
-      output=output.replaceAll(url,'./images/'+name.replace('.webp','-mobile.webp'));
-    } else {
-      await sharp(image).resize({width:1200,withoutEnlargement:true}).webp({quality:82}).toFile(target+'/images/'+name);
-      output=output.replaceAll(url,'./images/'+name);
-    }
-  }
-  await writeFile(target + '/site.css', output.replace(/[\t ]+$/gm, ''));
-  await mkdir('dist', { recursive: true });
-  const salebotHtml = (await readFile('index.html', 'utf8'))
-    .replaceAll(base + 'assets/student-reviews-2026-10-19/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@b1daab4/assets/student-reviews-2026-10-19/')
-    .replaceAll(base + 'assets/student-works-ukhlov-2026-10-16/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@2c356a3/assets/student-works-ukhlov-2026-10-16/')
-    .replaceAll(base + 'assets/student-works-2026-10-16-v2/', 'https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@770033f/assets/student-works-2026-10-16-v2/')
-    .replaceAll(base, cdnBase);
-  await writeFile('dist/salebot.html', salebotHtml);
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import {homedir} from 'node:os';
+import {join} from 'node:path';
+export const base='https://nikkola.github.io/creatoracademy/';
+export const cdnBase='https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@v3.5.8/';
+function publicAsset(path){
+ const original=path;
+ if(/^(?:data:|blob:)/i.test(path))return path;
+ if(/^https?:\/\//i.test(path)){
+  const known=path.match(/^https?:\/\/(?:nikkola\.github\.io\/creatoracademy\/|cdn\.jsdelivr\.net\/gh\/Nikkola\/creatoracademy@[^/]+\/)(.*)$/i);
+  if(!known)return path;path=known[1];
+ }
+ path=path.replace(/^\//,'');
+ if(!/^(?:assets|fonts|images)\//.test(path))return original;
+ const overrides=[['assets/student-reviews-2026-10-19/','b1daab4'],['assets/student-works-ukhlov-2026-10-16/','2c356a3'],['assets/student-works-2026-10-16-v2/','770033f']];
+ for(const [prefix,commit] of overrides)if(path.startsWith(prefix))return `https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@${commit}/${path}`;
+ return cdnBase+path;
 }
-if (process.argv[1]?.endsWith('/build.mjs')) {
-  await build();
-  console.log('Готово: dist/salebot.html; ресурсы: assets/site-audit-v9/');
+export async function build(){
+ const localPython=join(homedir(),'.local','bin','python3.12');
+ execFileSync(process.env.PYTHON||(existsSync(localPython)?localPython:'python3'),['scripts/story_content.py'],{stdio:'inherit'});
+ let html=await readFile('index.html','utf8');
+ for(const filename of ['carousel.css','site.css','editorial.css','refinements.css','layout.css','typography.css']){
+  let css=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
+  css=css.replace(/url\((['"]?)([^)'"\s]+)\1\)/g,(_,quote,path)=>{
+   const resolved=/^(?:https?:\/\/|data:|blob:)/i.test(path)?path:path.startsWith('/assets/')?path.slice(1):path.startsWith('../')?'assets/'+path.slice(3):'assets/site-editorial-v4/'+path;
+   return `url("${publicAsset(resolved)}")`;
+  });
+  html=html.replace(new RegExp(`<link rel="stylesheet" href="/?assets/site-editorial-v4/${filename}">`),()=>`<style>${css}</style>`);
+ }
+ for(const filename of ['vendors.js','legacy-interactions.js','site.js']){
+  const js=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
+  html=html.replace(new RegExp(`<script src="/?assets/site-editorial-v4/${filename}"></script>`),()=>`<script>${js.replaceAll('</script','<\\/script')}</script>`);
+ }
+ html=html.replace(/\b(src|href|poster|data-local-video|data-src|data-portfolio-src)="([^"#]+)"/g,(_,attr,path)=>`${attr}="${publicAsset(path)}"`);
+ if(/(?:localhost|127\.0\.0\.1|file:\/\/|\.\.\/creatoracademy)/.test(html))throw Error('Local reference in SaleBot artifact');
+ await mkdir('dist',{recursive:true});await writeFile('dist/salebot.html',html);
+ console.log('Built dist/salebot.html: inline CSS/JS; existing public image/font paths.');
 }
+if(process.argv[1]?.endsWith('/build.mjs'))await build();

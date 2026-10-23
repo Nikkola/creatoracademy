@@ -1,0 +1,252 @@
+{
+  "verifiedFrom": "https://nickchernobaev.com/youtube",
+  "addedByUser": [
+    "Мовавика"
+  ],
+  "preservedOriginalBrands": [
+    "МТС",
+    "Яндекс"
+  ],
+  "clients": [
+    {
+      "id": "tbank",
+      "name": "Т-Банк",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/tbank.svg",
+      "tone": "",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "movavika",
+      "name": "Мовавика",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/movavika.svg",
+      "tone": "",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "yandex-delivery",
+      "name": "Яндекс Доставка",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/yandex-delivery.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "stroki",
+      "name": "Строки",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/stroki.svg",
+      "tone": "mono",
+      "label": "Строки",
+      "nativeVector": true
+    },
+    {
+      "id": "avito",
+      "name": "Авито Реклама",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/avito.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "selectel",
+      "name": "Selectel",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/selectel.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/notion.svg",
+      "tone": "",
+      "label": "Notion",
+      "nativeVector": true
+    },
+    {
+      "id": "tochka",
+      "name": "Точка",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/tochka.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "crello",
+      "name": "Crello",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/crello.svg",
+      "tone": "invert",
+      "label": "",
+      "nativeVector": false
+    },
+    {
+      "id": "skyeng",
+      "name": "Skyeng",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/skyeng.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "hollyland",
+      "name": "Hollyland",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/hollyland.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": false
+    },
+    {
+      "id": "yandex-direct",
+      "name": "Яндекс Директ",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/yandex-direct.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "alibra",
+      "name": "Alibra School",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/alibra.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "advance",
+      "name": "Advance",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/advance.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "aputure",
+      "name": "Aputure",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/aputure.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "deity",
+      "name": "Deity",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/deity.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "gigachat",
+      "name": "GigaChat",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/gigachat.svg",
+      "tone": "",
+      "label": "GigaChat",
+      "nativeVector": false
+    },
+    {
+      "id": "periodica",
+      "name": "Периодика",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/periodica.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "zigmund",
+      "name": "Zigmund.online",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/zigmund.svg",
+      "tone": "",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "usedesk",
+      "name": "Юздеск",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/usedesk.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "kontur",
+      "name": "Контур",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/kontur.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "netmonet",
+      "name": "НЕТМОНЕТ",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/netmonet.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "frameset",
+      "name": "Frame Set",
+      "asset": "assets/site-editorial-v4/logos/expanded-20261021/frameset.svg",
+      "tone": "",
+      "label": "Frame Set",
+      "nativeVector": false
+    },
+    {
+      "id": "bitrix",
+      "name": "Битрикс 24",
+      "asset": "assets/site-editorial-v4/logos/bitrix.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "ingosstrah",
+      "name": "Ингосстрах",
+      "asset": "assets/site-editorial-v4/logos/ingosstrah.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "kaspersky",
+      "name": "Kaspersky",
+      "asset": "assets/site-editorial-v4/logos/kaspersky.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "megamarket",
+      "name": "Мегамаркет",
+      "asset": "assets/site-editorial-v4/logos/megamarket.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "modulbank",
+      "name": "Модульбанк",
+      "asset": "assets/site-editorial-v4/logos/modulbank.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "mts",
+      "name": "МТС",
+      "asset": "assets/site-editorial-v4/logos/mts.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    },
+    {
+      "id": "yandex",
+      "name": "Яндекс",
+      "asset": "assets/site-editorial-v4/logos/yandex.svg",
+      "tone": "mono",
+      "label": "",
+      "nativeVector": true
+    }
+  ]
+}

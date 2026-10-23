@@ -1,12 +1,13 @@
 {
-  "name": "creatoracademy",
+  "name": "creatoracademy-editorial-v4",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build:salebot": "node scripts/build.mjs",
-    "test": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test --config=playwright.story.config.cjs",
     "test:compat": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test --config=playwright.compat.config.cjs",
-    "test:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium webkit"
+    "test:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium webkit",
+    "test:legacy": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test"
   },
   "devDependencies": {
     "@fontsource-variable/montserrat": "5.3.0",

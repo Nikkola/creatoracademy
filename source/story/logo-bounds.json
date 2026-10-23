@@ -1,0 +1,66 @@
+{
+  "yandex": {
+    "width": 430,
+    "height": 100,
+    "x": 158,
+    "y": 34,
+    "bw": 114,
+    "bh": 32
+  },
+  "tinkoff": {
+    "width": 430,
+    "height": 100,
+    "x": 133,
+    "y": 40,
+    "bw": 164,
+    "bh": 20
+  },
+  "ingosstrah": {
+    "width": 430,
+    "height": 100,
+    "x": 133,
+    "y": 41,
+    "bw": 164,
+    "bh": 18
+  },
+  "megamarket": {
+    "width": 430,
+    "height": 100,
+    "x": 124,
+    "y": 38,
+    "bw": 181,
+    "bh": 24
+  },
+  "mts": {
+    "width": 430,
+    "height": 100,
+    "x": 176,
+    "y": 39,
+    "bw": 78,
+    "bh": 22
+  },
+  "bitrix": {
+    "width": 430,
+    "height": 100,
+    "x": 128,
+    "y": 34,
+    "bw": 174,
+    "bh": 32
+  },
+  "kaspersky": {
+    "width": 430,
+    "height": 100,
+    "x": 133,
+    "y": 34,
+    "bw": 164,
+    "bh": 32
+  },
+  "modulbank": {
+    "width": 430,
+    "height": 100,
+    "x": 128,
+    "y": 37,
+    "bw": 174,
+    "bh": 26
+  }
+}
