@@ -34,6 +34,9 @@ export async function build(){
   const js=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
   html=html.replace(new RegExp(`<script src="/?assets/site-editorial-v4/${filename}"></script>`),()=>`<script>${js.replaceAll('</script','<\\/script')}</script>`);
  }
+ // SaleBot adds its own 16px mobile gutters around embedded HTML sections.
+ // The landing page already provides its own responsive content spacing.
+ html=html.replace('</head>','<style id="salebot-html-gutters">@media(max-width:640px){body.salebot-landing .html_section>.salebot-landing__section-inner{padding-left:0!important;padding-right:0!important}}</style></head>');
  html=html.replace(/\b(src|href|poster|data-local-video|data-src|data-portfolio-src)="([^"#]+)"/g,(_,attr,path)=>`${attr}="${publicAsset(path)}"`);
  if(/(?:localhost|127\.0\.0\.1|file:\/\/|\.\.\/creatoracademy)/.test(html))throw Error('Local reference in SaleBot artifact');
  await mkdir('dist',{recursive:true});await writeFile('dist/salebot.html',html);
