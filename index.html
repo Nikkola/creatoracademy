@@ -23,7 +23,23 @@
         ym(106221169, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
     </script>
 
-    <!-- /Yandex.Metrika counter --></head><body><noscript><div><img loading="lazy" decoding="async" src="https://top-fwz1.mail.ru/counter?id=3632078;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru"></div></noscript><noscript><div><img loading="lazy" decoding="async" src="https://mc.yandex.ru/watch/106221169" style="position:absolute; left:-9999px;" alt=""></div></noscript><header class="nav"><a class="brand" href="#top" aria-label="Академия Авторов, на главную">академия авторов</a><button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="navlinks">Меню</button><nav id="navlinks" aria-label="Основное меню"><div class="nav-primary"><a href="#about">Обо мне</a><a href="#author-works">Научитесь делать</a><a href="#programme">Содержание</a><a href="#cases">Кейсы</a><a href="#reviews">Отзывы</a><a href="#rates" class="nav-buy">Забронировать</a><a class="desktop-login" href="https://salebot.pro/courses" target="_blank" rel="noopener">Войти</a></div><div class="mobile-menu-extra"><div class="ham-menu__socials">
+    <!-- /Yandex.Metrika counter --><!-- Yandex.Metrika: цели по кнопкам тарифов -->
+    <script>
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href*="tariff="]');
+        if (!a || typeof ym !== 'function') return;
+        var m = a.href.match(/tariff=(\d+)/);
+        if (!m) return;
+        var goals = {
+          '25374': 'buy_solo',
+          '25376': 'buy_support',
+          '25375': 'buy_mentor',
+          '16888': 'buy_masterclass'
+        };
+        if (goals[m[1]]) ym(106221169, 'reachGoal', goals[m[1]]);
+      });
+    </script>
+    <!-- /Yandex.Metrika: цели по кнопкам тарифов --></head><body><noscript><div><img loading="lazy" decoding="async" src="https://top-fwz1.mail.ru/counter?id=3632078;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru"></div></noscript><noscript><div><img loading="lazy" decoding="async" src="https://mc.yandex.ru/watch/106221169" style="position:absolute; left:-9999px;" alt=""></div></noscript><header class="nav"><a class="brand" href="#top" aria-label="Академия Авторов, на главную">академия авторов</a><button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="navlinks">Меню</button><nav id="navlinks" aria-label="Основное меню"><div class="nav-primary"><a href="#about">Обо мне</a><a href="#author-works">Научитесь делать</a><a href="#programme">Содержание</a><a href="#cases">Кейсы</a><a href="#reviews">Отзывы</a><a href="#rates" class="nav-buy">Забронировать</a><a class="desktop-login" href="https://salebot.pro/courses" target="_blank" rel="noopener">Войти</a></div><div class="mobile-menu-extra"><div class="ham-menu__socials">
               <div class="fixed__auth nav-login">
                 <a class="" href="https://salebot.pro/courses" target="_blank" rel="noopener noreferrer">Войти</a>
               </div>

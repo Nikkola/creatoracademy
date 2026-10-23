@@ -266,6 +266,11 @@ html=html.replace('<div class="grid three"><article class="tool">', '<div class=
 baseline=(SITE/'source/story/baseline.html').read_text()
 meta=''.join(n.html() for n in src.all(tag='meta') if n.a.get('name')=='description' or n.a.get('property','').startswith('og:'))
 counters=''.join(re.findall(r'<!-- (?:Top.Mail.Ru counter|Yandex.Metrika counter) -->[\s\S]*?<!-- /(?:Top.Mail.Ru counter|Yandex.Metrika counter) -->',baseline))
+# Preserve the original checkout-click goals; they do not represent paid orders.
+tariff_goals=re.search(r'<!-- Yandex.Metrika: цели по кнопкам тарифов -->[\s\S]*?<!-- /Yandex.Metrika: цели по кнопкам тарифов -->',baseline)
+if tariff_goals is None:
+ raise RuntimeError('Original Yandex.Metrika tariff click handler is missing from baseline')
+counters+=tariff_goals.group(0)
 noscript=''.join(n.html() for n in src.all(tag='noscript'))
 html=html.replace('</head>',meta+counters+'</head>').replace('<body>','<body>'+noscript)
 
