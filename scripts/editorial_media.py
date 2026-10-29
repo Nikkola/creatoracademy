@@ -87,8 +87,8 @@ def refine(body, src, Parser, Node, escape, image):
     facts = []
     for i, item in enumerate(src.one('info').all('info__item')):
         description = ('<p class="item__text">Месяца обучения в удобном темпе</p>'
-                       if i == 0 else item.one('item__text').html())
-        number = '3+' if i == 0 else escape(item.one('item__num').text())
+                       if i == 0 else '<p class="item__text">Видеоурока</p>' if i == 2 else item.one('item__text').html())
+        number = {0: '3+', 2: '34', 3: '13+'}.get(i, escape(item.one('item__num').text()))
         facts.append('<li><b>' + number + '</b>'
                      + re.sub(r'<br\s*/?>', ' ', description) + '</li>')
     assert len(facts) == 6

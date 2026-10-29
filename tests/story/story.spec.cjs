@@ -241,7 +241,7 @@ test('latest refinements preserve film order, vector logos, signature and aligne
 
 test('requested media refinements preserve metrics, sound-first lessons and smooth disclosure icons',async({page})=>{
  await page.setViewportSize({width:1440,height:1000});await page.goto('/');await page.evaluate(()=>document.fonts.ready);
- expect(await page.locator('.course-numbers b').allTextContents()).toEqual(['3+','7','32+','12+','85%','100+']);
+ expect(await page.locator('.course-numbers b').allTextContents()).toEqual(['3+','7','34','13+','85%','100+']);
  await expect(page.locator('#course-facts')).toContainText('Участников считают, что этот курс');
  await expect(page.locator('.hero-facts dt')).toHaveText(['Старт','Рассрочка']);
  await expect(page.locator('.hero-facts dd')).toHaveText(['2 ноября','От 5 000 ₽/мес.']);
