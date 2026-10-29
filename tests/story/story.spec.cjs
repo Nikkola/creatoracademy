@@ -244,7 +244,7 @@ test('requested media refinements preserve metrics, sound-first lessons and smoo
  expect(await page.locator('.course-numbers b').allTextContents()).toEqual(['3+','7','32+','12+','85%','100+']);
  await expect(page.locator('#course-facts')).toContainText('Участников считают, что этот курс');
  await expect(page.locator('.hero-facts dt')).toHaveText(['Старт','Рассрочка']);
- await expect(page.locator('.hero-facts dd')).toHaveText(['2 ноября','От 4 666 ₽/мес.']);
+ await expect(page.locator('.hero-facts dd')).toHaveText(['2 ноября','От 5 000 ₽/мес.']);
  expect(await page.locator('.course-name .quotes').count()).toBe(2);expect(await page.locator('h1').evaluate(el=>getComputedStyle(el).color)).toBe('rgb(255, 255, 255)');
  expect(await page.locator('#lessons video').count()).toBe(0);await expect(page.locator('#lessons .sound-lesson-copy p')).toHaveCount(0);
  await expect(page.locator('#tools')).toContainText('Памятки и шпаргалки');await expect(page.locator('#tools .preset-tool a').first()).toHaveAttribute('href','https://nickchernobaev.com/shop/film-emulation-pack');

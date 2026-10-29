@@ -62,11 +62,11 @@ def refine(body, src, Parser, Node, escape, image):
     fine.t = 'dl'
     fine.a['class'] = 'fine hero-facts'
     put(fine, '<div><dt>Старт</dt><dd>2 ноября</dd></div>'
-              '<div><dt>Рассрочка</dt><dd>От 4 666 ₽/мес.</dd></div>')
+              '<div><dt>Рассрочка</dt><dd>От 5 000 ₽/мес.</dd></div>')
     fine.parent.c.remove(fine)
     hero_actions = root.one('hero-copy').one('actions')
     hero_actions.c.insert(0, fine)
-    mobile_meta = Parser('<p class="hero-mobile-meta">Старт 2 ноября · от 4 666 ₽/мес.</p>').root.one('hero-mobile-meta')
+    mobile_meta = Parser('<p class="hero-mobile-meta">Старт 2 ноября · от 5 000 ₽/мес.</p>').root.one('hero-mobile-meta')
     hero_actions.c.insert(0, mobile_meta)
     mobile_meta.parent = hero_actions
     fine.parent = hero_actions
