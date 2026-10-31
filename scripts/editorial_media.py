@@ -113,7 +113,7 @@ def refine(body, src, Parser, Node, escape, image):
     skills_rail = root.one(id='learn-container')
     skills_rail.a.update({'id': 'skills-gallery', 'class': 'skills-gallery owl-carousel',
                           'aria-label': 'Чему ты научишься'})
-    outcome_loops = {0: 'skill-voice-v4', 1: 'skill-story-v3', 2: 'skill-light-v2', 3: 'skill-gear-v2', 4: 'skill-cinematic-v6',
+    outcome_loops = {0: 'skill-voice-v4', 1: 'skill-story-v3', 2: 'skill-light-v2', 3: 'skill-gear-v2', 4: 'skill-cinematic-v7',
                      5: 'skill-podcast-v2', 6: 'skill-editing-v2'}
     for i, card in enumerate(root.one(id='learn').all('outcome-card')):
         photo = card.one(tag='img')
@@ -425,4 +425,6 @@ def refine(body, src, Parser, Node, escape, image):
     finish_copy.a['class'] = 'finish-invitation'
     put(finish_copy, '<span class="finish-title">Записывайся на ближайший 9-й поток.</span> '
         '<span class="finish-date">Старт 2 ноября 2026 года</span>')
+    from hero_layout import apply_hero
+    apply_hero(root, Parser)
     return markup(root).replace('в одно из будущих видео Николая', 'в одно из моих будущих видео').replace('Фото- и видеопресеты', 'Фото и видеопресеты')

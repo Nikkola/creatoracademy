@@ -1,8 +1,8 @@
 const {test,expect}=require('@playwright/test');
 
-test('all twenty-six ambient videos decode, play silently and seek near their loop seam',async({page})=>{
+test('all twenty-seven ambient videos decode, play silently and seek near their loop seam',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
- const urls=await page.locator('video source').evaluateAll(nodes=>[...new Set(nodes.map(el=>el.src))]);expect(urls).toHaveLength(26);
+ const urls=await page.locator('video source').evaluateAll(nodes=>[...new Set(nodes.map(el=>el.src))]);expect(urls).toHaveLength(27);
  for(let start=0;start<urls.length;start+=3){
   const checks=await page.evaluate(async urls=>Promise.all(urls.map(async url=>{
    const video=document.createElement('video');video.muted=true;video.playsInline=true;video.loop=true;
@@ -14,7 +14,7 @@ test('all twenty-six ambient videos decode, play silently and seek near their lo
     return {url,width:video.videoWidth,height:video.videoHeight,duration:video.duration,advanced,readyState:video.readyState,muted:video.muted};
    }finally{video.pause();video.removeAttribute('src');video.load();video.remove()}
   })),urls.slice(start,start+3));
-  for(const check of checks){expect(check.width,check.url).toBe(1280);expect(check.height,check.url).toBe(check.url.includes('/audience-')?854:720);expect(check.duration,check.url).toBeGreaterThan(3);expect(check.advanced,check.url).toBe(true);expect(check.readyState,check.url).toBeGreaterThanOrEqual(2);expect(check.muted,check.url).toBe(true)}
+  for(const check of checks){expect(check.width,check.url).toBe(check.url.includes('hero-unified')?960:1280);expect(check.height,check.url).toBe(check.url.includes('hero-unified')?540:check.url.includes('/audience-')?854:720);expect(check.duration,check.url).toBeGreaterThan(3);expect(check.advanced,check.url).toBe(true);expect(check.readyState,check.url).toBeGreaterThanOrEqual(2);expect(check.muted,check.url).toBe(true)}
  }
 });
 

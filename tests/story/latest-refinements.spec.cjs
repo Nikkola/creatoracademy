@@ -1,32 +1,27 @@
 const {test,expect}=require('@playwright/test');
 
-test('hero preserves its text hierarchy and breathing room at every breakpoint',async({page})=>{
+test('responsive hero keeps its approved pyramid, full portrait and first-screen action',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
  for(const width of [320,390,768,1100,1280,1440,1920,2048]){
   await page.setViewportSize({width,height:1000});await page.evaluate(()=>document.fonts.ready);
-  if(width>=768)await expect.poll(()=>page.locator('.hero').evaluate(el=>{const r=document.createRange();r.selectNodeContents(el.querySelector('h1'));return Math.abs(el.querySelector('.hero__quotes-right').getBoundingClientRect().right-Math.max(...[...r.getClientRects()].map(line=>line.right)))})).toBeLessThan(1);
   const m=await page.locator('.hero').evaluate(el=>{
-   const rect=s=>el.querySelector(s).getBoundingClientRect(),name=rect('.course-name'),utp=rect('h1'),copy=rect('.hero-copy'),photo=rect('.hero-portrait');
-   return {sizes:[...new Set([...el.querySelectorAll('*')].filter(e=>e.children.length===0&&e.textContent.trim()&&!e.closest('svg,.hero-author-note')).map(e=>getComputedStyle(e).fontSize))],titleGap:utp.top-name.bottom,photoGap:photo.left-copy.right,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,title:parseFloat(getComputedStyle(el.querySelector('.course-name')).fontSize)};
+   const rect=s=>el.querySelector(s).getBoundingClientRect(),film=rect('.hero-preview-film'),button=rect('.actions>.btn'),h=rect('h1');
+   const copy=el.querySelector(innerWidth<768?'.hero-mobile-copy':'.hero-desktop-copy');
+   const widths=[...copy.children].map(n=>{const r=document.createRange();r.selectNodeContents(n);return r.getBoundingClientRect().width});
+   return {ratio:film.width/film.height,overflow:document.documentElement.scrollWidth-innerWidth,buttonBottom:button.bottom,center:Math.abs(h.x+h.width/2-innerWidth/2),widths};
   });
-  expect(m.sizes,JSON.stringify({width,...m})).toHaveLength(width<768?4:3);expect(m.overflow,JSON.stringify({width,...m})).toBe(0);expect(m.titleGap).toBeGreaterThanOrEqual(width<768?15:47);
-  const action=await page.locator('.hero .actions').evaluate(el=>{const a=el.querySelector('.btn').getBoundingClientRect(),facts=el.querySelector('.hero-facts').getBoundingClientRect(),r=el.getBoundingClientRect(),utp=document.querySelector('.hero h1').getBoundingClientRect();return{buttonRight:a.right,parentRight:r.right,buttonLeft:a.left,factsRight:facts.right,groupCenter:r.left+r.width/2,utpCenter:utp.left+utp.width/2,buttonCenter:a.left+a.width/2}});
-  expect(Math.abs(action.groupCenter-action.utpCenter)).toBeLessThan(1);if(width>=1200){expect(Math.abs(action.buttonRight-action.parentRight)).toBeLessThan(1);expect(action.buttonLeft).toBeGreaterThan(action.factsRight+20)}else expect(Math.abs(action.buttonCenter-action.groupCenter)).toBeLessThan(1);
-  if(width>=768)expect(await page.locator('#course-facts').evaluate(el=>el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(999);
-  else expect(await page.locator('.hero .btn').evaluate(el=>el.getBoundingClientRect().bottom)).toBeLessThan(988);
-  if(width>=1200){expect(m.photoGap).toBeGreaterThanOrEqual(95);expect(m.title).toBeGreaterThan(128);expect(action.buttonLeft-action.factsRight).toBeLessThanOrEqual(32)}
+  expect(m.overflow,JSON.stringify({width,...m})).toBeLessThanOrEqual(1);expect(m.ratio).toBeCloseTo(16/9,2);
+  if(width<768){expect(m.center).toBeLessThan(1);expect(m.buttonBottom).toBeLessThan(1000);expect(m.widths[0]).toBeGreaterThan(m.widths.at(-1));await expect(page.locator('.hero-mobile-portrait')).toBeVisible()}
+  else {await expect(page.locator('.hero-mobile-portrait')).toBeHidden();await expect(page.locator('.hero-preview-footer .hero-author-note')).toBeVisible()}
  }
 });
 
-test('author course note fades once on its first viewport entry and respects reduced motion',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/');await page.evaluate(()=>document.fonts.ready);
- const note=page.locator('.hero-author-note');
- await expect(note).toHaveText('Авторский курс Николая Чернобаева');await expect(note.locator('svg')).toHaveCount(0);
- expect(await note.getAttribute('data-note-revealed')).toBe(null);await note.scrollIntoViewIfNeeded();await expect(note).toHaveAttribute('data-note-revealed','true');
- await expect.poll(()=>note.evaluate(n=>{const x=parseFloat(getComputedStyle(n).opacity);return x>.05&&x<.95})).toBe(true);
- await expect.poll(()=>note.evaluate(n=>getComputedStyle(n).opacity==='1'&&n.getAnimations().length===0)).toBe(true);
- await page.locator('#finish').scrollIntoViewIfNeeded();await note.scrollIntoViewIfNeeded();expect(await note.evaluate(n=>n.getAnimations().length)).toBe(0);
- await page.emulateMedia({reducedMotion:'reduce'});await page.reload();expect(await note.evaluate(n=>getComputedStyle(n).opacity==='1'&&n.getAnimations().length===0)).toBe(true);
+test('author signature remains readable with and without reduced motion',async({page})=>{
+ for(const width of [390,1440])for(const reducedMotion of ['reduce','no-preference']){
+  await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion});await page.goto('/');
+  const note=page.locator(width<768?'.hero-mobile-portrait .hero-author-note':'.hero-preview-footer .hero-author-note');
+  await note.scrollIntoViewIfNeeded();await expect(note).toHaveText('Авторский курс Николая Чернобаева');await expect(note).toBeVisible();expect(await note.evaluate(n=>getComputedStyle(n).opacity)).toBe('1');
+ }
 });
 
 test('FAQ closes the previous answer smoothly and keeps one selected through quick keyboard changes',async({page})=>{
@@ -45,7 +40,7 @@ test('FAQ closes the previous answer smoothly and keeps one selected through qui
 test('player has the original plain cross and half-black backdrop with rounded video corners',async({page})=>{
  await page.route('https://kinescope.io/**',r=>r.fulfill({contentType:'text/html',body:'Player layout check'}));await page.goto('/');
  for(const width of [390,900,1440]){
-  await page.setViewportSize({width,height:1000});const opener=page.locator('.intro-video-button');await opener.click();
+  await page.setViewportSize({width,height:1000});const opener=page.locator(width<768?'.hero-mobile-portrait .intro-video-button':'.hero-preview-footer .intro-video-button');await opener.click();
   const m=await page.locator('#player').evaluate(el=>{const b=el.querySelector('.close-player'),s=getComputedStyle(b),p=getComputedStyle(b,'::before'),d=getComputedStyle(el,'::backdrop'),r=el.getBoundingClientRect();return {width:r.width,ratio:r.width/r.height,bw:b.clientWidth,bh:b.clientHeight,bg:s.backgroundColor,border:s.borderWidth,radius:s.borderRadius,crossWidth:p.width,blur:d.backdropFilter,backdrop:d.backgroundColor,videoRadius:getComputedStyle(el.querySelector('iframe')).borderRadius}});
   expect(m.width).toBeCloseTo(width===900?600:Math.min(width*.8,800),0);expect(m.ratio).toBeCloseTo(16/9,2);expect(m.bw).toBe(44);expect(m.bh).toBe(44);expect(m.bg).toBe('rgba(0, 0, 0, 0)');expect(m.border).toBe('0px');expect(m.radius).toBe('0px');expect(m.crossWidth).toBe('1px');expect(m.blur).toBe('none');expect(m.backdrop).toBe('rgba(0, 0, 0, 0.5)');expect(m.videoRadius).toBe('12px');
   await page.keyboard.press('Escape');await expect(opener).toBeFocused();await expect.poll(()=>page.locator('body').evaluate(el=>el.style.overflow)).toBe('');
@@ -93,7 +88,7 @@ test('finish invitation gives both sentences the same typography',async({page})=
 
 test('hero gives the outcome briefly and the course facts have a separate two-row rhythm',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
- await expect(page.locator('.hero-lead')).toHaveText('Освой все необходимые творческие навыки для создания кинематографичных фото, рилз, подкастов и влогов.');expect((await page.locator('.hero-lead').innerText()).split(/\s+/).length).toBeLessThanOrEqual(30);
+ await expect(page.locator('.hero-lead .hero-desktop-copy')).toHaveText('Научись создавать кинематографичные рилз,подкасты и влоги с единой системойзнаний, практикой и поддержкой.');
  await expect(page.locator('#course-facts h2')).toHaveText('Курс в цифрах');
  for(const width of [320,390,768,1440,1920]){await page.setViewportSize({width,height:1000});const m=await page.locator('#course-facts').evaluate(el=>{const cards=[...el.querySelectorAll('.course-numbers>li')].map(n=>n.getBoundingClientRect()),groups=new Map();cards.forEach(r=>{const y=Math.round(r.top);groups.set(y,(groups.get(y)||0)+1)});return{rows:[...groups.values()],widths:cards.map(r=>r.width),gap:el.querySelector('h2').getBoundingClientRect().top-document.querySelector('.hero').getBoundingClientRect().bottom}});expect(m.rows).toEqual(width<768?[2,2,2]:[3,3]);expect(Math.max(...m.widths)-Math.min(...m.widths)).toBeLessThan(1);expect(m.gap).toBeGreaterThanOrEqual(width<768?47:79)}
 });

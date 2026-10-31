@@ -103,10 +103,10 @@ test('client page transitions never paint two generations of logos together',asy
 test('mobile editorial hero keeps one compact identity, a dominant promise and a visible action',async({page})=>{
  await page.goto('/');for(const width of [320,375,390,430]){
   await page.setViewportSize({width,height:667});await page.evaluate(()=>document.fonts.ready);
-  await expect(page.locator('.hero h1')).toHaveText('Продвигай себя и своё дело через контент.');
-  await expect(page.locator('.hero .hero-lead')).toHaveText('Освой все навыки от создания идей и историй до съемки и монтажа.');
+  await expect(page.locator('.hero h1 .hero-mobile-copy')).toHaveText('Открой в себе автора.Развивай свой блог.Находи своюаудиторию.');
+  await expect(page.locator('.hero .hero-lead .hero-mobile-copy')).toHaveText('Научись создавать кинематографичныевидео с единой системой знаний,практикой и поддержкой.');
   const m=await page.locator('.hero').evaluate(el=>{const name=el.querySelector('.course-name'),h=el.querySelector('h1'),lead=el.querySelector('.hero-lead');return{nameHeight:name.getBoundingClientRect().height,title:parseFloat(getComputedStyle(h).fontSize),body:parseFloat(getComputedStyle(lead).fontSize),overflow:document.documentElement.scrollWidth-innerWidth,buttonBottom:el.querySelector('.btn').getBoundingClientRect().bottom}});
-  expect(m.nameHeight).toBeLessThan(60);expect(m.title).toBeGreaterThanOrEqual(26);expect(m.title).toBeGreaterThan(m.body);expect(m.body).toBeGreaterThanOrEqual(16);expect(m.overflow).toBeLessThanOrEqual(1);expect(m.buttonBottom).toBeLessThan(655);
+  expect(m.nameHeight).toBeLessThan(60);expect(m.title).toBeGreaterThanOrEqual(19);expect(m.title).toBeGreaterThan(m.body);expect(m.body).toBeGreaterThanOrEqual(12);expect(m.overflow).toBeLessThanOrEqual(1);expect(m.buttonBottom).toBeLessThan(655);
  }
- await page.setViewportSize({width:1440,height:1000});await expect(page.locator('.hero h1')).toHaveText('Научись продвигать себя и своё дело через создание стильных и душевных видео.');
+ await page.setViewportSize({width:1440,height:1000});await expect(page.locator('.hero h1 .hero-desktop-copy')).toHaveText('Открой в себе автора. Развивай свой блог.Находи свою аудиторию.');
 });

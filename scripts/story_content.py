@@ -287,6 +287,8 @@ for sentence in ['Хочется рассказывать о своём деле
 # Repair local references in preserved baseline markup, retaining original remote video/payment URLs.
 html=html.replace('https://Nikkola.github.io/creatoracademy/','/')
 html='\n'.join(line.rstrip() for line in html.split('\n'))
+html=html.replace('</head>', '<link rel="stylesheet" href="/assets/site-editorial-v4/hero-v3.css"></head>')
+html=html.replace('</body>', '<script src="/assets/site-editorial-v4/hero-v3.js"></script></body>')
 (HERE/'index.html').write_text(html)
 expected={'videos':sorted({n.a.get('data-link') for n in src.all('play-btn') if n.a.get('data-link')} | {'https://www.youtube-nocookie.com/embed/0HvvxPjGvBE?rel=0'} | {item['video'] for item in podcast_additions+vlog_additions+vrev}),'payments':sorted({n.a.get('href') for n in src.all(tag='a') if 'get_form/' in n.a.get('href','') and any('tariff='+t in n.a.get('href','') for t in ['25374','25376','25375'])}),'counts':{'cases':len(case_cards)+1,'works':len(works),'video_reviews':len(vrev),'portfolio':len(portfolio)+1+len(podcast_additions)+len(vlog_additions),'written_reviews':len(rev_cards),'lessons':len(lessons)}}
 (SITE/'source/story/expected.json').write_text(json.dumps(expected,ensure_ascii=False,indent=2))

@@ -21,7 +21,7 @@ for(const width of [320,390,768,1440])test(`approved audience loops play only in
   await expect(current.locator('..').locator('img')).toHaveCSS('opacity','0');expect(fit.muted).toBe(true);expect(fit.inline).toBe(true);
  }
  await page.emulateMedia({reducedMotion:'reduce'});
- await expect.poll(()=>rail.locator('video').evaluateAll(ns=>ns.every(v=>v.paused&&!v.classList.contains('has-frame')))).toBe(true);
+ await expect.poll(()=>rail.locator('video').evaluateAll(ns=>ns.filter(v=>!v.paused||v.classList.contains('has-frame')).map(v=>({paused:v.paused,frame:v.classList.contains('has-frame'),slide:v.closest('.owl-item').className,rm:matchMedia('(prefers-reduced-motion: reduce)').matches})))).toEqual([]);
  await page.emulateMedia({reducedMotion:'no-preference'});await page.locator('.hero').scrollIntoViewIfNeeded();
  await expect.poll(()=>rail.locator('video').evaluateAll(ns=>ns.every(v=>v.paused))).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);

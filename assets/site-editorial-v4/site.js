@@ -68,7 +68,7 @@ if(heroHeader){
 }
 const heroName=document.querySelector('.hero .course-name');
 const heroUtp=document.querySelector('.hero h1');
-if(heroUtp){
+if(heroUtp&&!document.querySelector('[data-hero-showreel]')){
  const originalHeading=heroUtp.textContent,lead=document.querySelector('.hero .hero-lead'),originalLead=lead?.textContent;let mobileHero=null;
  function layoutMobileHero(){const mobile=innerWidth<768;if(mobile===mobileHero)return;mobileHero=mobile;
   heroUtp.textContent=mobile?'Продвигай себя и своё дело через контент.':originalHeading;
@@ -99,7 +99,7 @@ if(heroName&&heroUtp){
 // Motion is progressive enhancement; the original Owl slider code is untouched.
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const handwrittenNote=document.querySelector('.hero-author-note');
-if(handwrittenNote&&!reducedMotion.matches){
+if(handwrittenNote&&!document.querySelector('[data-hero-showreel]')&&!reducedMotion.matches){
  let played=false,observer,animation;
  const showHandwriting=()=>{handwrittenNote.style.opacity='1';animation?.cancel();observer?.disconnect()};
  handwrittenNote.style.opacity='0';
