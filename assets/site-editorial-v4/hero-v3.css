@@ -15,8 +15,8 @@
  .hero{width:calc(100% - 36px);padding:12px 0 18px}
  .hero .hero-inner{display:flex;flex-direction:column;gap:0;width:100%}
  .hero .hero-copy{display:contents}
- .hero .hero-brand{order:0;margin:0 auto 14px}
- .hero .hero-brand .course-name{font-size:clamp(27px,8.2vw,34px);line-height:1.15}
+ .hero .hero-brand{order:0;width:100%;margin:0 auto 14px}
+ .hero .hero-brand .course-name{font-size:clamp(30px,9.2vw,40px);line-height:1.15;max-width:none;flex-shrink:0}
  .hero-preview-film{order:1;width:min(100%,calc(29svh * 1.777777778));height:auto;aspect-ratio:16/9;border-radius:6px;margin:0 auto 18px}
  .hero h1{order:2;font-size:clamp(20px,6.1vw,26px);line-height:1.15;letter-spacing:-.035em;max-width:100%;width:100%;margin:0}
  .hero .hero-lead{order:3;font-size:clamp(12px,3.65vw,15.5px);line-height:1.5;letter-spacing:-.01em;max-width:100%;width:100%;margin:14px auto 0}

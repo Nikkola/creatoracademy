@@ -11,3 +11,11 @@ for(const width of [390,1440])test(`hero plays its complete 16:9 showreel and pa
  const img=film.locator('img');await img.evaluate(im=>im.decode());await expect(img).toBeVisible();expect(await img.evaluate(im=>im.naturalWidth)).toBeGreaterThan(0);
  if(width>=768)expect(await img.evaluate(im=>im.currentSrc)).toContain('hero-portrait-wide-v1.webp');
 });
+
+test('mobile course name restores the previous size and centers its actual lettering',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
+ for(const width of [320,375,390,430]){await page.setViewportSize({width,height:667});await page.evaluate(()=>document.fonts.ready);
+ const m=await page.locator('.course-name').evaluate(n=>{const a=n.querySelector('.hero__quotes-anchor-left').getBoundingClientRect(),b=n.querySelector('.hero__quotes-anchor-right').getBoundingClientRect();return{center:(a.left+b.right)/2,target:innerWidth/2,size:parseFloat(getComputedStyle(n).fontSize),buttonBottom:document.querySelector('.hero .actions>.btn').getBoundingClientRect().bottom}});
+ expect(Math.abs(m.center-m.target),JSON.stringify(m)).toBeLessThan(1);expect(m.size).toBeCloseTo(Math.min(40,Math.max(30,width*.092)),1);expect(m.buttonBottom).toBeLessThan(667);
+ }
+});
