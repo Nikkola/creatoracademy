@@ -854,3 +854,6 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 #process .practice-demo .practice-live>video{inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);max-width:none;object-fit:cover}
 #process .practice-demo .practice-live>img{transition:opacity .6s ease}
 #process .practice-demo .practice-live:has(>video.has-frame)>img{opacity:0}
+
+/* Match the practice still to the live fourth panel at every viewport. */
+#process .practice-demo .practice-live>img{inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);max-width:none;object-fit:cover}

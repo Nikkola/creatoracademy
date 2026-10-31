@@ -51,3 +51,10 @@
 .hero-mobile-copy{display:none}.hero-desktop-copy{display:block}@media(max-width:767px){.hero-desktop-copy{display:none}.hero-mobile-copy{display:block}}
 
 .hero-preview-film picture{display:block;width:100%;height:100%}
+
+/* Cover fractional video edges in Safari without exposing the still underneath. */
+.hero-preview-film{isolation:isolate}
+.hero-preview-film video{inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);max-width:none;object-fit:cover}
+.hero-preview-film picture{transition:opacity .65s ease}
+.hero-preview-film.is-playing picture{opacity:0}
+@media(prefers-reduced-motion:reduce){.hero-preview-film picture{transition:none}}
