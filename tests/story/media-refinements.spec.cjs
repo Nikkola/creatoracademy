@@ -51,7 +51,8 @@ test('video cards keep original type, complete covers, centered Play and eight c
    const card=page.locator(`${section} .owl-item:not(.cloned) .film`).first();
    expect(await card.locator('h3').evaluate(el=>getComputedStyle(el).fontFamily)).toContain('Bebas');
    const frame=await card.locator('.media').evaluate(el=>{const r=el.getBoundingClientRect(),p=el.querySelector('.play').getBoundingClientRect();return{radius:parseFloat(getComputedStyle(el).borderRadius),fit:getComputedStyle(el.querySelector('img')).objectFit,dx:Math.abs(p.x+p.width/2-r.x-r.width/2),dy:Math.abs(p.y+p.height/2-r.y-r.height/2)}});
-   expect(frame.radius).toBeGreaterThan(0);expect(frame.fit).toBe(section==='#reviews'?'cover':'contain');expect(frame.dx).toBeLessThan(1);expect(frame.dy).toBeLessThan(1);
+   const croppedNiyaz=await card.evaluate(el=>el.classList.contains('niyaz-review'));
+   expect(frame.radius).toBeGreaterThan(0);expect(frame.fit).toBe(croppedNiyaz?'cover':'contain');expect(frame.dx).toBeLessThan(1);expect(frame.dy).toBeLessThan(1);
   }
  }
  const peter=page.locator('#author-works .owl-item:not(.cloned) .film').filter({has:page.locator('h3',{hasText:'Питер на плёнку'})});

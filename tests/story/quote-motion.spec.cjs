@@ -45,5 +45,5 @@ test('quotes stay readable with reduced motion, a changed preference and no Java
  await expect.poll(()=>page.locator('.quote-copy').last().evaluate(el=>Number(getComputedStyle(el).opacity))).toBe(0);
  await page.emulateMedia({reducedMotion:'reduce'});expect(await visible()).toBe(true);
  const context=await browser.newContext({javaScriptEnabled:false});
- try{const tab=await context.newPage();await tab.goto('http://127.0.0.1:4177/');expect(await tab.locator('.quote-copy').evaluateAll(nodes=>nodes.length===7&&nodes.every(el=>getComputedStyle(el).opacity==='1'))).toBe(true)}finally{await context.close()}
+ try{const tab=await context.newPage();await tab.goto(page.url());expect(await tab.locator('.quote-copy').evaluateAll(nodes=>nodes.length===7&&nodes.every(el=>getComputedStyle(el).opacity==='1'))).toBe(true)}finally{await context.close()}
 });

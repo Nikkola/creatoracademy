@@ -1,0 +1,10 @@
+{
+  "first": {"title":"Сергей Ухлов","desc":"Индивидуальное годовое наставничество","img":"assets/student-reviews-2026-10-31/images/videoreview-ukhlov.webp","video":"https://kinescope.io/embed/vJXFgL6yzTPcvNmWUkBRn4"},
+  "second": "Витя Никифоров",
+  "cover_replacements": [{"title":"Максим Поярче","img":"assets/student-reviews-2026-10-31/images/videoreview-poyarche.webp"}],
+  "append": [
+    {"title":"Анна Адамец","desc":"Участница курса","img":"assets/student-reviews-2026-10-31/images/videoreview-adamets.webp","video":"https://kinescope.io/embed/8h4yBYJAn8TSR6nbex8Pyz"},
+    {"title":"Тимур Сафин","desc":"Участник курса","img":"assets/student-reviews-2026-10-31/images/videoreview-safin.webp","video":"https://kinescope.io/embed/65SxUiHd4Lg3yfaLU5wViL"},
+    {"title":"Александр Панкратов","desc":"Участник курса","img":"assets/student-reviews-2026-10-31/images/videoreview-pankratov.webp","video":"https://kinescope.io/embed/wToAmgMaWFcLYRNDChG75e"}
+  ]
+}

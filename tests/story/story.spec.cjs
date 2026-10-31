@@ -141,7 +141,7 @@ test('proof geometry: all requested readable logos, round avatars, quotes and le
 });
 test('all carousel types expose synchronized position bullets',async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
- for(const [selector,count] of [['#gallery .carousel-pagination',19],['#reviews .gallery__block .carousel-pagination',8],['#learn .carousel-pagination',8],['#begin .carousel-pagination',4],['#tools .carousel-pagination',7],['#reviews-container+.carousel-pagination',20]])await expect(page.locator(selector).locator('button')).toHaveCount(count);
+ for(const [selector,count] of [['#gallery .carousel-pagination',19],['#reviews .gallery__block .carousel-pagination',12],['#learn .carousel-pagination',8],['#begin .carousel-pagination',4],['#tools .carousel-pagination',7],['#reviews-container+.carousel-pagination',20]])await expect(page.locator(selector).locator('button')).toHaveCount(count);
  const dots=page.locator('#gallery .carousel-pagination');await dots.locator('button').nth(5).click();await expect.poll(()=>page.locator('#gallery .owl-carousel').evaluate(el=>{const o=creatorAcademyJQuery(el).data('owl.carousel');return o.relative(o.current())})).toBe(5);await expect(dots.locator('button').nth(5)).toHaveAttribute('aria-current','true');
  const category=page.locator('.portfolio-category').first();await category.locator('summary').click();expect(await category.locator('.carousel-pagination button').count()).toBe(await category.locator('.owl-item:not(.cloned)').count());
  await page.locator('#reviews-container+.carousel-pagination button').nth(4).click();await expect.poll(()=>page.locator('#reviews-container').evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);

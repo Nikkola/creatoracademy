@@ -75,6 +75,11 @@ def gallery(root):
  return out
 works=gallery(src.one(id='students-works'));vrev=gallery(src.one(id='video-reviews'))
 portfolio=[x for x in gallery(src) if x not in works and x not in vrev]
+review_additions=json.loads((SITE/'source/story/review-additions-20261031.json').read_text())
+for replacement in review_additions['cover_replacements']:
+ next(x for x in vrev if x['title']==replacement['title'])['img']=replacement['img']
+second_review=next(x for x in vrev if x['title']==review_additions['second'])
+vrev=[review_additions['first'],second_review]+[x for x in vrev if x is not second_review]+review_additions['append']
 podcast_additions=json.loads((SITE/'source/story/podcast-additions-20261022.json').read_text())
 vlog_additions=json.loads((SITE/'source/story/vlog-additions-20261022.json').read_text())
 niyaz=next(x for x in works if 'Нияз' in x['title'])
@@ -283,7 +288,7 @@ for sentence in ['Хочется рассказывать о своём деле
 html=html.replace('https://Nikkola.github.io/creatoracademy/','/')
 html='\n'.join(line.rstrip() for line in html.split('\n'))
 (HERE/'index.html').write_text(html)
-expected={'videos':sorted({n.a.get('data-link') for n in src.all('play-btn') if n.a.get('data-link')} | {'https://www.youtube-nocookie.com/embed/0HvvxPjGvBE?rel=0'} | {item['video'] for item in podcast_additions+vlog_additions}),'payments':sorted({n.a.get('href') for n in src.all(tag='a') if 'get_form/' in n.a.get('href','') and any('tariff='+t in n.a.get('href','') for t in ['25374','25376','25375'])}),'counts':{'cases':len(case_cards)+1,'works':len(works),'video_reviews':len(vrev),'portfolio':len(portfolio)+1+len(podcast_additions)+len(vlog_additions),'written_reviews':len(rev_cards),'lessons':len(lessons)}}
+expected={'videos':sorted({n.a.get('data-link') for n in src.all('play-btn') if n.a.get('data-link')} | {'https://www.youtube-nocookie.com/embed/0HvvxPjGvBE?rel=0'} | {item['video'] for item in podcast_additions+vlog_additions+vrev}),'payments':sorted({n.a.get('href') for n in src.all(tag='a') if 'get_form/' in n.a.get('href','') and any('tariff='+t in n.a.get('href','') for t in ['25374','25376','25375'])}),'counts':{'cases':len(case_cards)+1,'works':len(works),'video_reviews':len(vrev),'portfolio':len(portfolio)+1+len(podcast_additions)+len(vlog_additions),'written_reviews':len(rev_cards),'lessons':len(lessons)}}
 (SITE/'source/story/expected.json').write_text(json.dumps(expected,ensure_ascii=False,indent=2))
 
 (SITE/'source/story/inventory.json').write_text(json.dumps(dict(student_works=len(works),video_reviews=len(vrev),portfolio=len(portfolio)+1+len(podcast_additions)+len(vlog_additions),cases=len(case_cards)+1,written_reviews=len(rev_cards),lessons=len(lessons),missing_assets=missing),ensure_ascii=False,indent=2))
