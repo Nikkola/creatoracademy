@@ -61,7 +61,7 @@
 
 /* Restore the larger desktop opening without changing the phone composition. */
 @media(min-width:768px){
- .hero{width:min(1800px,96%);max-width:1800px;padding:24px 0 36px;align-content:start}
+ .hero{width:min(1800px,96%);max-width:1800px;padding:24px 0;align-content:center}
  .hero .hero-inner{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:32px;align-items:center}
  .hero .hero-copy{padding:0}
  .hero .hero-brand{margin-bottom:24px}
