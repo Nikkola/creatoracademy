@@ -58,3 +58,31 @@
 .hero-preview-film picture{transition:opacity .65s ease}
 .hero-preview-film.is-playing picture{opacity:0}
 @media(prefers-reduced-motion:reduce){.hero-preview-film picture{transition:none}}
+
+/* Restore the larger desktop opening without changing the phone composition. */
+@media(min-width:768px){
+ .hero{width:min(1800px,96%);max-width:1800px;padding:24px 0 36px;align-content:start}
+ .hero .hero-inner{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:32px;align-items:center}
+ .hero .hero-copy{padding:0}
+ .hero .hero-brand{margin-bottom:24px}
+ .hero .hero-brand .course-name{font-size:clamp(80px,9vw,144px);padding-left:.35em}
+ .hero .course-name .hero__quotes-left{left:0}
+ .hero h1{font-size:clamp(24px,2.8vw,40px);line-height:1.15}
+ .hero h1 .utp-preview-line{white-space:normal;text-wrap:balance}
+ .hero .hero-lead{font-size:clamp(16px,1.4vw,22px);line-height:1.5;margin-top:22px}
+ .hero .hero-lead .utp-preview-line{white-space:normal;text-wrap:balance}
+ .hero .actions{margin-top:26px;column-gap:24px}
+ .hero .actions>.btn{font-size:20px;padding:16px 24px;min-height:56px}
+ .hero .hero-facts dt,.hero .hero-facts dd{font-size:18px}
+ .hero-preview-footer{min-height:112px;padding:18px 92px 0 16px}
+ .hero .hero-preview-footer .hero-author-note{font-size:36px;width:310px}
+}
+@media(min-width:768px) and (max-width:1199px){
+ .hero .hero-inner{gap:24px}
+ .hero .hero-brand .course-name{font-size:clamp(64px,8.4vw,100px)}
+ .hero h1{font-size:clamp(22px,2.7vw,32px)}
+ .hero .actions>.btn{font-size:17px;padding:13px 20px}
+ .hero .hero-facts dt,.hero .hero-facts dd{font-size:16px}
+ .hero-preview-footer{padding-right:64px;gap:10px;min-height:90px}
+ .hero .hero-preview-footer .hero-author-note{width:clamp(170px,23vw,260px);font-size:clamp(22px,2.7vw,30px)}
+}
