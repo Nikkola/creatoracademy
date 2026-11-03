@@ -4,12 +4,13 @@ for(const width of [1440,390])test(`paired slider moves continuously and handles
  const section=page.locator('#sequence-proof'),grid=section.locator('.sequence-proof-grid').first(),next=section.locator('.sequence-proof-next');
  await section.scrollIntoViewIfNeeded();await expect.poll(()=>section.locator('video').evaluateAll(vs=>vs.every(v=>v.currentTime>0))).toBe(true);
  const height=await section.evaluate(e=>e.getBoundingClientRect().height);
+ await section.evaluate(e=>{
+  window.__sequenceFrames=[];const start=performance.now();
+  function sample(){const panel=e.querySelector('.sequence-proof-pending');if(panel?.getAnimations().length){const x=new DOMMatrix(getComputedStyle(panel).transform).m41;window.__sequenceFrames.push({x,width:panel.getBoundingClientRect().width,videos:e.querySelectorAll('video').length})}if(performance.now()-start<20000)requestAnimationFrame(sample)}requestAnimationFrame(sample);
+ });
  await next.click();
- await expect.poll(()=>section.evaluate(e=>e.querySelector('.sequence-proof-pending')?.getAnimations().length||0),{intervals:[30],timeout:20000}).toBe(1);
- await page.waitForTimeout(120);
- const middle=await section.locator('.sequence-proof-pending').evaluate(e=>({x:new DOMMatrix(getComputedStyle(e).transform).m41,width:e.getBoundingClientRect().width}));
- expect(middle.x).toBeGreaterThan(0);expect(middle.x).toBeLessThan(middle.width);
- expect(await section.locator('video').count()).toBe(4);
+ await expect.poll(()=>page.evaluate(()=>window.__sequenceFrames.filter(f=>f.x>0&&f.x<f.width).length),{timeout:20000}).toBeGreaterThan(1);
+ const frames=await page.evaluate(()=>window.__sequenceFrames);expect(frames.every(f=>f.videos===4)).toBe(true);
  await expect(section.locator('.sequence-proof-pending')).toHaveCount(0);
  expect(Math.abs(await section.evaluate(e=>e.getBoundingClientRect().height)-height)).toBeLessThan(1);
  // Every input is counted, without overlapping transitions or reloading the outgoing player.
