@@ -52,8 +52,8 @@
   const old=snapshot();viewport.append(old);viewport.classList.add("is-transitioning");grid.style.visibility="hidden";
   try{
    const pair=pairs[target];
-   await Promise.race([Promise.all([poster(pair.head.poster),poster(pair.story.poster)]),new Promise(resolve=>setTimeout(resolve,800))]);
-   applyPair(target);grid.style.visibility="";
+   await Promise.all([poster(pair.head.poster),poster(pair.story.poster)]);
+   applyPair(target);await Promise.all(covers.map(img=>img.decode().catch(()=>{})));grid.style.visibility="";
    if(!motion.matches){
     const options={duration:500,easing:"cubic-bezier(.25,.1,.25,1)",fill:"both"};
     const incoming=grid.animate([{transform:`translateX(${direction*100}%)`},{transform:"translateX(0)"}],options);
