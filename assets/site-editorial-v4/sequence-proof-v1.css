@@ -1,0 +1,30 @@
+#sequence-proof{padding:96px 0 80px}
+#sequence-proof h2{max-width:1000px;font-size:clamp(48px,5.6vw,88px);line-height:1.06;letter-spacing:-.04em}
+#sequence-proof .sequence-proof-lead{max-width:780px;margin-top:28px;font-size:20px;line-height:1.6;color:#b4b4ad}
+.sequence-proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
+.sequence-proof-grid figure{min-width:0;margin:0}
+.sequence-proof-grid{touch-action:pan-y;outline-offset:6px}
+.sequence-proof-grid:focus-visible{outline:1px solid #e8cc94}
+.sequence-proof-controls{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:36px}
+.sequence-proof-controls button{display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid #ffffff60;border-radius:50%;background:transparent;color:#fff;cursor:pointer;transition:color .2s,border-color .2s}
+.sequence-proof-controls button:hover{color:#e8cc94;border-color:#e8cc94}
+.sequence-proof-controls button:focus-visible{outline:2px solid #e8cc94;outline-offset:4px}
+.sequence-proof-controls button:disabled{opacity:.3;cursor:default}
+.sequence-proof-controls svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.sequence-proof-count{font-size:14px;font-variant-numeric:tabular-nums;min-width:58px;text-align:center;color:#b4b4ad}
+.sequence-proof-media{position:relative;aspect-ratio:3/2;overflow:hidden;isolation:isolate;border-radius:10px;background:#171716}
+.sequence-proof-media video{display:block;width:100%;height:100%;object-fit:contain}
+#sequence-proof figcaption{padding:24px 0 0}
+#sequence-proof figcaption h3{font:500 26px/1.25 Mont,sans-serif;letter-spacing:-.035em;color:#fff}
+#sequence-proof figcaption p{font-size:16px;margin-top:10px;line-height:1.5}
+@media(max-width:767px){
+ #sequence-proof{padding:56px 0}
+ #sequence-proof .wrap{width:calc(100% - 36px)}
+ #sequence-proof h2{font-size:clamp(32px,8.4vw,46px);line-height:1.1}
+ #sequence-proof .sequence-proof-lead{font-size:16px;line-height:1.55;margin-top:20px}
+ .sequence-proof-grid{grid-template-columns:1fr;gap:32px;margin-top:30px}
+ #sequence-proof figcaption{padding-top:16px}
+ #sequence-proof figcaption h3{font-size:22px}
+ #sequence-proof figcaption p{font-size:14px;margin-top:7px}
+ .sequence-proof-controls{margin-top:28px;gap:24px}
+}

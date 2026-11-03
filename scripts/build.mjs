@@ -14,7 +14,7 @@ function publicAsset(path){
  }
  path=path.replace(/^\//,'');
  if(!/^(?:assets|fonts|images)\//.test(path))return original;
- const overrides=[['assets/site-editorial-v4/media/hero-unified-v4.mp4','v3.5.18'],['assets/site-editorial-v4/media/hero-portrait-wide-v1.webp','v3.5.16'],['assets/site-editorial-v4/media/hero-unified-v3.mp4','v3.5.16'],['assets/site-editorial-v4/media/skill-cinematic-v7','v3.5.16'],['assets/student-reviews-2026-10-31/','v3.5.15'],['assets/site-editorial-v4/media/audience-','v3.5.9'],['assets/student-reviews-2026-10-19/','b1daab4'],['assets/student-works-ukhlov-2026-10-16/','2c356a3'],['assets/student-works-2026-10-16-v2/','770033f']];
+ const overrides=[['assets/sequence-proof-20261103/','v3.5.21'],['assets/site-editorial-v4/media/hero-unified-v4.mp4','v3.5.18'],['assets/site-editorial-v4/media/hero-portrait-wide-v1.webp','v3.5.16'],['assets/site-editorial-v4/media/hero-unified-v3.mp4','v3.5.16'],['assets/site-editorial-v4/media/skill-cinematic-v7','v3.5.16'],['assets/student-reviews-2026-10-31/','v3.5.15'],['assets/site-editorial-v4/media/audience-','v3.5.9'],['assets/student-reviews-2026-10-19/','b1daab4'],['assets/student-works-ukhlov-2026-10-16/','2c356a3'],['assets/student-works-2026-10-16-v2/','770033f']];
  for(const [prefix,commit] of overrides)if(path.startsWith(prefix))return `https://cdn.jsdelivr.net/gh/Nikkola/creatoracademy@${commit}/${path}`;
  return cdnBase+path;
 }
@@ -22,7 +22,7 @@ export async function build(){
  const localPython=join(homedir(),'.local','bin','python3.12');
  execFileSync(process.env.PYTHON||(existsSync(localPython)?localPython:'python3'),['scripts/story_content.py'],{stdio:'inherit'});
  let html=await readFile('index.html','utf8');
- for(const filename of ['carousel.css','site.css','editorial.css','refinements.css','layout.css','typography.css','hero-v3.css']){
+ for(const filename of ['carousel.css','site.css','editorial.css','refinements.css','layout.css','typography.css','hero-v3.css','sequence-proof-v1.css']){
   let css=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
   css=css.replace(/url\((['"]?)([^)'"\s]+)\1\)/g,(_,quote,path)=>{
    const resolved=/^(?:https?:\/\/|data:|blob:)/i.test(path)?path:path.startsWith('/assets/')?path.slice(1):path.startsWith('../')?'assets/'+path.slice(3):'assets/site-editorial-v4/'+path;
@@ -30,10 +30,15 @@ export async function build(){
   });
   html=html.replace(new RegExp(`<link rel="stylesheet" href="/?assets/site-editorial-v4/${filename}">`),()=>`<style>${css}</style>`);
  }
- for(const filename of ['vendors.js','legacy-interactions.js','site.js','hero-v3.js']){
+ for(const filename of ['vendors.js','legacy-interactions.js','site.js','hero-v3.js','sequence-proof-v1.js']){
   const js=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
   html=html.replace(new RegExp(`<script src="/?assets/site-editorial-v4/${filename}"></script>`),()=>`<script>${js.replaceAll('</script','<\\/script')}</script>`);
  }
+ // Resolve only this comparison's embedded manifest, preserving other tracking/configuration.
+ html=html.replace(/(<script id="sequence-proof-data" type="application\/json">)([\s\S]*?)(<\/script>)/,(_,start,json,end)=>{
+  const pairs=JSON.parse(json);for(const pair of pairs)for(const kind of ['head','story'])for(const key of ['src','poster'])pair[kind][key]=publicAsset(pair[kind][key]);
+  return start+JSON.stringify(pairs).replaceAll('</','<\\/')+end;
+ });
  // SaleBot adds its own 16px mobile gutters around embedded HTML sections.
  // The landing page already provides its own responsive content spacing.
  html=html.replace('</head>','<style id="salebot-html-gutters">@media(max-width:640px){body.salebot-landing .html_section>.salebot-landing__section-inner{padding-left:0!important;padding-right:0!important}}</style></head>');

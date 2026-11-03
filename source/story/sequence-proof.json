@@ -1,0 +1,282 @@
+[
+  {
+    "id": "01",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/talking-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/talking-head-v1.jpg",
+      "duration": 5
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/visual-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/visual-story-v1.jpg",
+      "duration": 15
+    }
+  },
+  {
+    "id": "02",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-02-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-02-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02-story-v1.jpg",
+      "duration": 14.0
+    }
+  },
+  {
+    "id": "02b",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-02b-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02b-head-v1.jpg",
+      "duration": 7
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-02b-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02b-story-v1.jpg",
+      "duration": 14
+    }
+  },
+  {
+    "id": "02c",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-02c-head-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02c-head-v2.jpg",
+      "duration": 16
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-02c-story-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-02c-story-v2.jpg",
+      "duration": 21
+    }
+  },
+  {
+    "id": "03",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-03-head-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-03-head-v2.jpg",
+      "duration": 9.76
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-03-story-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-03-story-v2.jpg",
+      "duration": 10.76
+    }
+  },
+  {
+    "id": "04",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-04-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-04-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-04-story-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-04-story-v2.jpg",
+      "duration": 6.0
+    }
+  },
+  {
+    "id": "05",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-05-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-05-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-05-story-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-05-story-v2.jpg",
+      "duration": 21.0
+    }
+  },
+  {
+    "id": "12",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-12-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-12-head-v1.jpg",
+      "duration": 9.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-12-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-12-story-v1.jpg",
+      "duration": 7.6
+    }
+  },
+  {
+    "id": "14",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-14-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-14-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-14-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-14-story-v1.jpg",
+      "duration": 18.0
+    }
+  },
+  {
+    "id": "16",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-16-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-16-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-16-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-16-story-v1.jpg",
+      "duration": 14.0
+    }
+  },
+  {
+    "id": "17",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-17-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-17-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-17-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-17-story-v1.jpg",
+      "duration": 22.0
+    }
+  },
+  {
+    "id": "18",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-18-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-18-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-18-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-18-story-v1.jpg",
+      "duration": 16.0
+    }
+  },
+  {
+    "id": "19",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-19-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-19-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-19-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-19-story-v1.jpg",
+      "duration": 15.0
+    }
+  },
+  {
+    "id": "22",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-22-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-22-head-v1.jpg",
+      "duration": 16.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-22-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-22-story-v1.jpg",
+      "duration": 16.0
+    }
+  },
+  {
+    "id": "23",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-23-head-v4.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-23-head-v4.jpg",
+      "duration": 10
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-23-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-23-story-v1.jpg",
+      "duration": 15.0
+    }
+  },
+  {
+    "id": "24",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-24-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-24-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-24-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-24-story-v1.jpg",
+      "duration": 18.0
+    }
+  },
+  {
+    "id": "26",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-26-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-26-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-26-story-v3.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-26-story-v3.jpg",
+      "duration": 21.0
+    }
+  },
+  {
+    "id": "27",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-27-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-27-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-27-story-v2.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-27-story-v2.jpg",
+      "duration": 31.6
+    }
+  },
+  {
+    "id": "28",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-28-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-28-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-28-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-28-story-v1.jpg",
+      "duration": 18.0
+    }
+  },
+  {
+    "id": "29",
+    "ratio": 1.5,
+    "head": {
+      "src": "/assets/sequence-proof-20261103/pair-29-head-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-29-head-v1.jpg",
+      "duration": 10.0
+    },
+    "story": {
+      "src": "/assets/sequence-proof-20261103/pair-29-story-v1.mp4",
+      "poster": "/assets/sequence-proof-20261103/pair-29-story-v1.jpg",
+      "duration": 18.0
+    }
+  }
+]
