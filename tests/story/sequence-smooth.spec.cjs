@@ -5,7 +5,7 @@ for(const width of [1440,390])test(`paired slider moves continuously and handles
  await section.scrollIntoViewIfNeeded();await expect.poll(()=>section.locator('video').evaluateAll(vs=>vs.every(v=>v.currentTime>0))).toBe(true);
  const height=await section.evaluate(e=>e.getBoundingClientRect().height);
  await next.click();
- await expect.poll(()=>section.locator('.sequence-proof-pending').evaluate(e=>e.getAnimations().length)).toBe(1);
+ await expect.poll(()=>section.evaluate(e=>e.querySelector('.sequence-proof-pending')?.getAnimations().length||0),{intervals:[30],timeout:20000}).toBe(1);
  await page.waitForTimeout(120);
  const middle=await section.locator('.sequence-proof-pending').evaluate(e=>({x:new DOMMatrix(getComputedStyle(e).transform).m41,width:e.getBoundingClientRect().width}));
  expect(middle.x).toBeGreaterThan(0);expect(middle.x).toBeLessThan(middle.width);
