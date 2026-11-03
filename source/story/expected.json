@@ -1,6 +1,7 @@
 {
   "videos": [
     "https://kinescope.io/embed/0YUYhPWoo9vHaDQJchdXBy",
+    "https://kinescope.io/embed/0YuA5j6AVdkHx9NFwqx6t2",
     "https://kinescope.io/embed/3M5YkMRpR2CJnJyWwXzeqZ",
     "https://kinescope.io/embed/3S6hkWbXGq6Ub3DzMgPvtZ",
     "https://kinescope.io/embed/5AWybmQ4MrQPEoZMZGhPJk",
@@ -21,6 +22,7 @@
     "https://kinescope.io/embed/dwaSyydArzwefxubFLmg88",
     "https://kinescope.io/embed/fwv1MzT7Y5KDfLrNpu8zs3",
     "https://kinescope.io/embed/jCnZ6JvgKDVcX1kD2tK1P1",
+    "https://kinescope.io/embed/jebbevNFqr1P4x1wjTsTPS",
     "https://kinescope.io/embed/mmVh9vYYj2L8D24sxGAJbw",
     "https://kinescope.io/embed/oUNUYggezHkVR4t4t3Rkru",
     "https://kinescope.io/embed/pmHQ1meZ1Q5PG3a7eVoLg9",
@@ -95,7 +97,7 @@
   "counts": {
     "cases": 13,
     "works": 19,
-    "video_reviews": 12,
+    "video_reviews": 14,
     "portfolio": 50,
     "written_reviews": 20,
     "lessons": 4

@@ -80,6 +80,7 @@ for replacement in review_additions['cover_replacements']:
  next(x for x in vrev if x['title']==replacement['title'])['img']=replacement['img']
 second_review=next(x for x in vrev if x['title']==review_additions['second'])
 vrev=[review_additions['first'],second_review]+[x for x in vrev if x is not second_review]+review_additions['append']
+vrev[2:2]=json.loads((SITE/'source/story/review-additions-20261103.json').read_text())
 podcast_additions=json.loads((SITE/'source/story/podcast-additions-20261022.json').read_text())
 vlog_additions=json.loads((SITE/'source/story/vlog-additions-20261022.json').read_text())
 niyaz=next(x for x in works if 'Нияз' in x['title'])
