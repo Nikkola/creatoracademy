@@ -1,20 +1,24 @@
 const {test,expect}=require('@playwright/test');
-for(const width of [1440,390])test(`new videos stay covered through the slide and reveal only after playing at ${width}`,async({page})=>{
+for(const width of [1440,390])test(`keeps both real decoded players intact across the transition at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});
- await page.route('**/pair-02-*.jpg',async route=>{await new Promise(resolve=>setTimeout(resolve,1600));await route.continue()});
- await page.route('**/pair-02-*.mp4',async route=>{await new Promise(resolve=>setTimeout(resolve,900));await route.continue()});
- await page.goto('/');const section=page.locator('#sequence-proof'),grid=section.locator('.sequence-proof-grid');await section.scrollIntoViewIfNeeded();
- await expect.poll(()=>grid.locator('video').evaluateAll(vs=>vs.every(v=>v.currentTime>0&&!v.paused))).toBe(true);
- await expect(grid.locator('.sequence-proof-cover.is-playing')).toHaveCount(2,{timeout:20000});
+ await page.route('**/pair-02-*.mp4',async route=>{await new Promise(resolve=>setTimeout(resolve,1200));await route.continue()});
+ await page.goto('/');const section=page.locator('#sequence-proof');await section.scrollIntoViewIfNeeded();
+ await expect.poll(()=>section.locator('.sequence-proof-grid video').evaluateAll(vs=>vs.every(v=>v.currentTime>0&&!v.paused))).toBe(true);
+ const old=await section.locator('.sequence-proof-grid').elementHandle();const original=await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime})));
  await section.locator('.sequence-proof-next').click();
- await expect.poll(()=>grid.evaluate(e=>e.getAnimations().length)).toBe(1);
- expect(await grid.locator('video').evaluateAll(vs=>vs.every(v=>v.paused))).toBe(true);
- expect(await grid.locator('.sequence-proof-cover').evaluateAll(imgs=>imgs.every(i=>i.complete&&i.naturalWidth>0&&getComputedStyle(i).opacity==='1'))).toBe(true);
- await expect(section.locator('.sequence-proof-outgoing')).toHaveCount(0);
- await expect(grid.locator('.sequence-proof-cover.is-playing')).toHaveCount(2,{timeout:20000});
- await expect.poll(()=>grid.locator('video').evaluateAll(vs=>vs.every(v=>!v.paused&&v.currentTime>0))).toBe(true);
- // Revisited media also stays covered until its own frame has been presented.
- await section.locator('.sequence-proof-prev').click();await expect(section).toHaveAttribute('data-sequence-index','0');
- await expect(section.locator('.sequence-proof-outgoing')).toHaveCount(0);await expect(grid.locator('.sequence-proof-cover.is-playing')).toHaveCount(2,{timeout:20000});
+ await expect(section.locator('.sequence-proof-pending')).toHaveCount(1);
+ const frozen=await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime,paused:v.paused})));
+ expect(frozen.map(v=>v.src)).toEqual(original.map(v=>v.src));expect(frozen.every(v=>v.paused)).toBe(true);
+ await expect(section).toHaveAttribute('data-sequence-index','0');
+ const incoming=await section.locator('.sequence-proof-pending').elementHandle();
+ await expect.poll(()=>incoming.evaluate(e=>e.getAnimations().length),{intervals:[30],timeout:10000}).toBe(1);
+ const prepared=await incoming.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime,paused:v.paused,ready:v.readyState,width:v.videoWidth})));
+ expect(prepared.every(v=>v.paused&&v.ready>=2&&v.time>=0&&v.width===960)).toBe(true);
+ expect(await section.locator('canvas,.sequence-proof-cover').count()).toBe(0);
+ await expect(section).toHaveAttribute('data-sequence-index','1');
+ expect(await old.evaluate(e=>e.isConnected)).toBe(false);
+ expect(await incoming.evaluate(e=>e.isConnected&&e.classList.contains('sequence-proof-grid'))).toBe(true);
+ await expect.poll(()=>incoming.evaluate(e=>[...e.querySelectorAll('video')].every(v=>!v.paused&&v.currentTime>0))).toBe(true);
+ expect(await incoming.evaluate(e=>[...e.querySelectorAll('video')].map(v=>v.currentSrc))).toEqual(prepared.map(v=>v.src));
  expect(await section.locator('video').count()).toBe(2);
 });
