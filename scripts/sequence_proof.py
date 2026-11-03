@@ -11,6 +11,6 @@ def apply_sequence_proof(html):
     assert len(pairs)==20
     config=json.dumps(pairs,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
     html=html.replace(marker,block+'<script id="sequence-proof-data" type="application/json">'+config+'</script>'+marker)
-    html=html.replace('</head>','<link rel="stylesheet" href="/assets/site-editorial-v4/sequence-proof-v1.css"></head>')
-    html=html.replace('</body>','<script src="/assets/site-editorial-v4/sequence-proof-v1.js"></script></body>')
+    html=html.replace('</head>','<link rel="stylesheet" href="/assets/site-editorial-v4/sequence-proof-v2.css"></head>')
+    html=html.replace('</body>','<script src="/assets/site-editorial-v4/sequence-proof-v2.js"></script></body>')
     return html
