@@ -22,7 +22,7 @@ export async function build(){
  const localPython=join(homedir(),'.local','bin','python3.12');
  execFileSync(process.env.PYTHON||(existsSync(localPython)?localPython:'python3'),['scripts/story_content.py'],{stdio:'inherit'});
  let html=await readFile('index.html','utf8');
- for(const filename of ['carousel.css','site.css','editorial.css','refinements.css','layout.css','typography.css','hero-v3.css','sequence-proof-v4.css']){
+ for(const filename of ['carousel.css','site.css','editorial.css','refinements.css','layout.css','typography.css','hero-v3.css','sequence-proof-v4.css','tariff-help.css']){
   let css=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
   css=css.replace(/url\((['"]?)([^)'"\s]+)\1\)/g,(_,quote,path)=>{
    const resolved=/^(?:https?:\/\/|data:|blob:)/i.test(path)?path:path.startsWith('/assets/')?path.slice(1):path.startsWith('../')?'assets/'+path.slice(3):'assets/site-editorial-v4/'+path;

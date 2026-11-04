@@ -294,6 +294,11 @@ html=html.replace('</head>', '<link rel="stylesheet" href="/assets/site-editoria
 html=html.replace('</body>', '<script src="/assets/site-editorial-v4/hero-v3.js"></script></body>')
 from sequence_proof import apply_sequence_proof
 html=apply_sequence_proof(html)
+# Optional personal help stays after the tariff terms, outside the payment flow.
+tariff_help=(HERE/'assets/site-editorial-v4/tariff-help.html').read_text()
+assert len(re.findall(r'<p class="rate-note">[\s\S]*?</p>',html))==1
+html=re.sub(r'<p class="rate-note">[\s\S]*?</p>',lambda m:m[0]+'\n'+tariff_help,html,count=1)
+html=html.replace('</head>','<link rel="stylesheet" href="/assets/site-editorial-v4/tariff-help.css"></head>')
 html=html.replace('</body>', '<script src="/assets/site-editorial-v4/checkout-attribution.js"></script></body>')
 (HERE/'index.html').write_text(html)
 expected={'videos':sorted({n.a.get('data-link') for n in src.all('play-btn') if n.a.get('data-link')} | {'https://www.youtube-nocookie.com/embed/0HvvxPjGvBE?rel=0'} | {item['video'] for item in podcast_additions+vlog_additions+vrev}),'payments':sorted({n.a.get('href') for n in src.all(tag='a') if 'get_form/' in n.a.get('href','') and any('tariff='+t in n.a.get('href','') for t in ['25374','25376','25375'])}),'counts':{'cases':len(case_cards)+1,'works':len(works),'video_reviews':len(vrev),'portfolio':len(portfolio)+1+len(podcast_additions)+len(vlog_additions),'written_reviews':len(rev_cards),'lessons':len(lessons)}}
