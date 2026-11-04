@@ -113,6 +113,23 @@
       /\b50[234]\b|bad gateway|gateway timeout|service unavailable/i.test(String(message || ''));
   }
 
+  function contactIssue(phone, email) {
+    const raw = String(phone || '').trim(), digits = raw.replace(/\D/g, '');
+    if (raw && /^[+\d\s().-]+$/.test(raw) &&
+        (digits.length < 8 || digits.length > 15 || /^\+?[17]/.test(raw) && digits.length !== 11)) return 'phone';
+    const address = String(email || '').trim();
+    if (address && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(address)) return 'email';
+    return null;
+  }
+
+  function permanentLinkIssue(status, message) {
+    const text = String(message || '');
+    if (/телефон|phone/i.test(text) && /некоррект|невер|invalid|incorrect|required|обязател|долж|wrong/i.test(text)) return 'phone';
+    if (/email|e-mail|почт/i.test(text) && /некоррект|невер|invalid|incorrect|required|обязател|долж|wrong/i.test(text)) return 'email';
+    if ([401,403].includes(Number(status)) || /proxy.{0,30}expir|signature.{0,30}invalid|ссылк.{0,30}устар/i.test(text)) return 'expired';
+    return null;
+  }
+
   function installPaymentFrame(frameWindow, controls) {
     const jq = frameWindow.jQuery;
     const doc = frameWindow.document;
@@ -129,6 +146,7 @@
     if (!button.hasAttribute('tabindex')) button.tabIndex = 0;
     const managed = 'ca-link-' + root.crypto.randomUUID();
     const disabled = new Map();
+    const markedFields = new Map();
     const pointer = button.style.pointerEvents;
     let operation = null, disposed = false, timer = null;
 
@@ -152,9 +170,31 @@
         disabled.clear();
       }
     }
-    function failed(job) {
+    function clearIssues() {
+      for (const [field, previous] of markedFields) {
+        field.style.borderBottom = previous.border;
+        if (previous.aria === null) field.removeAttribute('aria-invalid');
+        else field.setAttribute('aria-invalid', previous.aria);
+      }
+      markedFields.clear(); status.setAttribute('role','status');
+    }
+    function showIssue(kind) {
+      busy(false); status.setAttribute('role','alert');
+      status.textContent = kind === 'phone' ? 'Укажи полный номер телефона с кодом страны — нажми на карандаш рядом с номером.' :
+        kind === 'email' ? 'Проверь адрес почты — нажми на карандаш рядом с ним и исправь адрес.' :
+        'Эта попытка оформления устарела. Начни заново — выбранный тариф сохранится.';
+      button.textContent = kind === 'expired' ? 'Начать заново' : 'Оплатить';
+      const field = doc.querySelector(kind === 'phone' ? '.payment_phone_data' : kind === 'email' ? '.payment_email_data' : '[data-ca-no-field]');
+      if (field) {
+        if (!markedFields.has(field)) markedFields.set(field,{border:field.style.borderBottom,aria:field.getAttribute('aria-invalid')});
+        field.setAttribute('aria-invalid','true');field.style.borderBottom='2px solid #b3261e';
+      }
+      button.scrollIntoView({block:'nearest'});
+    }
+    function failed(job, kind) {
       if (!active() || operation !== job) return;
-      job.running = false; busy(false);
+      job.running = false; job.issue = kind || null; busy(false);
+      if (kind) { showIssue(kind); announce('failed', job.attempt); return; }
       status.textContent = 'Не получилось открыть оплату. Попробуй ещё раз — данные сохранены.';
       button.textContent = 'Попробовать ещё раз';
       button.scrollIntoView({ block: 'nearest' });
@@ -170,6 +210,8 @@
         controls.redirect(destination);
         return;
       }
+      const issue = permanentLinkIssue(xhr?.status, data?.error_message);
+      if (issue) { failed(job, issue); return; }
       const transient = retryableLinkFailure(xhr?.status, textStatus, data?.error_message);
       if (transient && job.attempt < 3 && Date.now() < job.deadline) {
         const delay = job.attempt === 1 ? 1500 : 3500;
@@ -188,6 +230,9 @@
     }
     widget.addEventListener('click', event => {
       if (operation?.running) { event.preventDefault(); event.stopImmediatePropagation(); }
+      else if (operation?.issue === 'expired' && button.contains(event.target)) {
+        event.preventDefault(); event.stopImmediatePropagation(); controls.restart();
+      }
     }, true);
     button.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -202,6 +247,10 @@
           url.protocol !== 'https:' || String(options.type || options.method).toUpperCase() !== 'POST') return;
       if (options.__caManagedLink === managed) return;
       if (!active() || operation?.running) { xhr.abort('duplicate'); return; }
+      clearIssues();
+      const issue = contactIssue(doc.querySelector('.payment_phone_data > span')?.textContent,
+        doc.querySelector('.payment_email_data > span')?.textContent);
+      if (issue) { operation = null; showIssue(issue); xhr.abort('invalid_contact'); return; }
       const job = { attempt: 1, deadline: Date.now() + 30000, running: true, xhr };
       operation = job; busy(true);
       status.textContent = 'Готовим страницу оплаты…';
@@ -260,9 +309,13 @@
     let clientId = '';
     try { if (typeof root.ym === 'function') root.ym(106221169, 'getClientID', v => { clientId = v; }); } catch (_) {}
     if (!root.HTMLDialogElement) return;
+    let currentCheckout = null;
 
     function openCheckout(original) {
-      if (root.document.querySelector('#ca-native-checkout')) return;
+      if (currentCheckout) {
+        if (currentCheckout.href === original.href) return;
+        currentCheckout.close();
+      }
       const dialog = root.document.createElement('dialog');
       dialog.id = 'ca-native-checkout';
       dialog.setAttribute('aria-label', 'Оформление участия в курсе');
@@ -271,6 +324,8 @@
       close.type = 'button'; close.textContent = 'Закрыть';
       close.style.cssText = 'position:absolute;right:12px;top:8px;z-index:2;padding:8px 12px;color:#111;background:#fff;border:1px solid #ccc;border-radius:6px;font:14px sans-serif;cursor:pointer';
       const iframe = root.document.createElement('iframe');
+      // A fresh browsing-context name prevents WebKit restoring an old tariff document after Back.
+      iframe.name = 'ca-checkout-' + root.crypto.randomUUID();
       iframe.title = 'Штатная форма оформления курса';
       iframe.style.cssText = 'width:100%;height:100%;border:0;visibility:hidden';
       const loading = root.document.createElement('p');
@@ -282,13 +337,19 @@
       let fallbackTimer;
       const controllers = [];
       const cleanup = () => {
+        if (closed) return;
         closed = true; root.clearTimeout(fallbackTimer);
-        for (const controller of controllers) controller.dispose();
+        root.removeEventListener('pagehide', leavePage);
+        root.removeEventListener('pageshow', restorePage);
+        for (const controller of controllers) { try { controller.dispose(); } catch (_) {} }
         dialog.close(); dialog.remove();
+        if (currentCheckout?.close === cleanup) currentCheckout = null;
         if (checkoutFromHash(root.location.hash, root.location.href)) {
-          root.history.replaceState(root.history.state, '', root.location.pathname + root.location.search);
+          try { root.history.replaceState(root.history.state, '', root.location.pathname + root.location.search); } catch (_) {}
         }
       };
+      const leavePage = () => cleanup();
+      const restorePage = event => { if (event.persisted) cleanup(); };
       const fallback = () => {
         if (closed) return;
         let destination = original.href;
@@ -310,10 +371,17 @@
         if (closed) return;
         let installed = false;
         try {
+          const frameUrl = new URL(iframe.contentWindow.location.href);
+          const restoredTariff = frameUrl.pathname === '/cs/get_form/form_input_custom_data' ? frameUrl.searchParams.get('tariff') :
+            /^\/cs\/[a-f0-9]{32}$/.test(frameUrl.pathname) ? frameUrl.searchParams.get('tariff_to_pay') : null;
+          if (restoredTariff && restoredTariff !== original.searchParams.get('tariff')) {
+            loadingFrame(); iframe.contentWindow.location.replace(url.href); return;
+          }
           const installedDocument = iframe.contentDocument;
           const controller = installPaymentFrame(iframe.contentWindow, {
             isActive: () => !closed && iframe.contentDocument === installedDocument,
-            redirect: destination => { if (!closed && iframe.contentDocument === installedDocument) root.location.href = destination; }
+            redirect: destination => { if (!closed && iframe.contentDocument === installedDocument) root.location.href = destination; },
+            restart: () => { if (!closed) { cleanup(); openCheckout(original); } }
           });
           if (controller) { controllers.push(controller); installed = true; }
           else installed = installFrame(iframe.contentWindow,
@@ -324,6 +392,13 @@
       });
       iframe.src = url.href;
       dialog.append(close, loading, iframe); root.document.body.append(dialog); dialog.showModal();
+      currentCheckout = { href: original.href, close: cleanup };
+      root.addEventListener('pagehide', leavePage);
+      root.addEventListener('pageshow', restorePage);
+      // A checkout deep link is a one-time entry, not a state to reopen on Back/reload.
+      if (checkoutFromHash(root.location.hash, root.location.href)) {
+        root.history.replaceState(root.history.state, '', root.location.pathname + root.location.search);
+      }
       fallbackTimer = root.setTimeout(fallback, 15000);
     }
 
@@ -358,6 +433,7 @@
 
   const api = { capture, touch, orderVariables, enrichData, installFrame, installPaymentFrame,
     prodamusDestination, retryableLinkFailure,
+    contactIssue, permanentLinkIssue,
     nativeCheckout, wrappedCheckout, checkoutFromHash, install };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CAAttribution = api;
