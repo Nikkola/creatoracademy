@@ -300,12 +300,77 @@
     return nativeCheckout(new URLSearchParams(hash.replace(/^#/, '')).get('ca-checkout') || '', base);
   }
 
+let checkoutFontFaces;
+function applyCheckoutTheme(dialog, frame){
+ const owner=dialog.ownerDocument,doc=frame.contentDocument;
+ dialog.style.background='#171715';dialog.style.color='#f5f2ec';dialog.style.borderRadius='5px';dialog.style.boxShadow='0 0 0 1px #373632';dialog.querySelector('button').style.color='#f5f2ec';
+ doc.documentElement.classList.add('ca-checkout-brand');doc.documentElement.style.setProperty('background','#171715','important');doc.body.style.setProperty('background','#171715','important');
+ const faces=checkoutFontFaces??=Array.from(owner.querySelectorAll('style')).flatMap(e=>e.textContent.match(/@font-face\s*\{[^}]+\}/g)||[]).filter(s=>/font-family\s*:\s*Mont[;\s]/.test(s)).join('\n');
+ const style=doc.getElementById('ca-checkout-brand')||doc.createElement('style');style.id='ca-checkout-brand';
+ style.textContent=faces+`
+ :root{color-scheme:dark;--salebot_brand-color:232,204,148;--salebot_brand:rgb(232,204,148);--salebot_brand_accent:#24231e;--text-primary:#f5f2ec;--body_color:#171715;--background-main:#171715;--background-tariff:#171715;--text-primary-invert:#17150f}
+ html,body,main{background:#171715!important;color:#f5f2ec!important}
+ body,input,button,select,textarea,.payment_information{font-family:Mont,Arial,sans-serif!important;-webkit-font-smoothing:antialiased}
+ h1,.payment_information__header{font-family:Mont,Arial,sans-serif!important;font-size:24px!important;font-weight:500!important;letter-spacing:-.035em!important;color:#f5f2ec!important}
+ .students-sessions{background:transparent!important}
+ .students-sessions__info{background:#10100f!important;border:1px solid #373632!important;border-radius:4px!important;color:#f5f2ec!important}
+ .students-sessions__info__product{color:#f5f2ec!important;font-size:15px!important}
+ .students-sessions__info__tariff{color:#e8cc94!important;font-size:12px!important;letter-spacing:.04em}
+ .students-sessions__info__price{color:#f5f2ec!important;font-size:22px!important;font-weight:500!important}
+ input:not([type=checkbox]):not([type=hidden]),select,textarea,.select-mask__trigger,.phone_input_flex_container,.input-phone-wrapper{background:#10100f!important;color:#f5f2ec!important;border-color:#373632!important;border-radius:4px!important}
+ input::placeholder{color:#8f8e86!important;opacity:1!important}
+ input::placeholder{-webkit-text-fill-color:#8f8e86!important}
+ input:focus,select:focus,textarea:focus{outline:1px solid #e8cc94!important;outline-offset:0!important;border-color:#e8cc94!important;box-shadow:none!important}
+ .select-mask,.select-mask__select,.select-mask__search,.select-mask__item{background:#1b1b19!important;color:#f5f2ec!important;border-color:#373632!important}
+ .select-mask-svg{background:#10100f!important;color:#e8cc94!important;border-color:#373632!important}
+ .mask-spinner{border-color:#373632!important;border-top-color:#e8cc94!important}
+ .select-mask__item:hover{background:#292820!important}
+ .select_mask_code,.select_mask_country{color:#f5f2ec!important}
+ .promocode-button{background:transparent!important;color:#e8cc94!important;border:1px solid #373632!important;border-radius:4px!important;box-shadow:none!important}
+ input[type=checkbox]{appearance:auto!important;accent-color:#e8cc94!important;background:transparent!important}
+ .salebot-privacy__label-text,.salebot-checkbox{color:#aaa79e!important;font-size:13px!important;line-height:19px!important}
+ .salebot-checkbox *{color:inherit!important}
+ .salebot-checkbox a{color:#e8cc94!important}
+ .salebot-checkbox,.salebot-checkbox *{-webkit-text-fill-color:inherit!important}
+ .salebot-checkbox{-webkit-text-fill-color:#aaa79e!important}
+ .salebot-checkbox a{-webkit-text-fill-color:#e8cc94!important}
+ a{color:#e8cc94!important}
+ .form-actions p{font-size:13px!important;line-height:18px!important;color:#aaa79e!important}
+ .form-actions strong{color:#f5f2ec!important}
+ .students-sessions__button,.payment_information__btn{background:#e8cc94!important;color:#17150f!important;border:0!important;border-radius:4px!important;box-shadow:none!important;font-family:Mont,Arial,sans-serif!important;font-size:16px!important;font-weight:600!important;width:100%!important;max-width:none!important;transition:none!important}
+ .students-sessions__button:hover,.payment_information__btn:hover{background:#f6dfb0!important}
+ input.students-sessions__button[type=submit]{background:#e8cc94!important;color:#17150f!important;-webkit-text-fill-color:#17150f!important}
+ [aria-disabled=true],button:disabled{opacity:.6}
+ .payment_information,.payment_information__container,.payment_information__body,.payment_information__order,.payment_information__payer{background:#171715!important;color:#f5f2ec!important;border:0!important;border-radius:0!important}
+ .ca-checkout-brand .main.new-style,.ca-checkout-brand .payment_information__block{background:#171715!important}
+ .ca-checkout-brand .payment_information::before,.ca-checkout-brand footer.footer::before{background:transparent!important;opacity:0!important}
+ .payment_information__order-header,.payment_information__payer-header{font-size:18px!important;font-weight:500!important;letter-spacing:-.02em;color:#f5f2ec!important}
+ .payment_information__title{font-size:14px!important;color:#aaa79e!important}
+ .payment_information__text{font-size:15px!important;color:#f5f2ec!important}
+ .payment-information--edit,.payment-information--save,.payment-information--close{color:#e8cc94!important}
+ .payment-information--edit *,.payment-information--save *,.payment-information--close *{color:#e8cc94!important}
+ .ca-checkout-brand .payment_promocode_data,.ca-checkout-brand .payment_promocode_data *{color:#e8cc94!important}
+ .ca-checkout-brand .payment_information__payer ::after{color:#e8cc94!important;-webkit-text-fill-color:#e8cc94!important}
+ .payment-information--edit svg [stroke],.payment-information--save svg [stroke],.payment-information--close svg [stroke]{stroke:#e8cc94!important}
+ .payment-information--edit svg [fill]:not([fill=none]),.payment-information--save svg [fill]:not([fill=none]),.payment-information--close svg [fill]:not([fill=none]){fill:#e8cc94!important}
+ .ca-payment-link-status{color:#aaa79e!important;font-size:14px!important}
+ .ca-payment-link-status[role=alert]{color:#efb29b!important}
+ footer.footer{background:#171715!important;color:#8f8e86!important;padding:14px 24px!important}
+ footer.footer p,footer.footer a{color:#8f8e86!important}
+ footer.footer *{color:#8f8e86!important}
+ footer.footer svg [fill]:not([fill=none]){fill:#8f8e86!important}
+ footer.footer img,footer.footer svg{opacity:.55;max-height:22px}
+ @media(max-width:500px){h1,.payment_information__header{font-size:22px!important}.students-sessions__info__price{font-size:20px!important}.payment_information__text{font-size:14px!important}.payment_information__title{font-size:13px!important}}
+ `;
+ if(!style.parentNode)doc.head.append(style);
+}
+
 function applyCheckoutLayout(dialog, frame){
  const owner=dialog.ownerDocument,doc=frame.contentDocument;
  dialog.style.maxWidth='calc(100vw - 16px)';
  const close=dialog.querySelector('button');
  close.setAttribute('aria-label','Закрыть');close.title='Закрыть';
- close.style.cssText='position:absolute;right:8px;top:8px;z-index:2;display:grid;place-items:center;width:44px;height:44px;padding:0;color:#30343b;background:transparent;border:0;border-radius:50%;cursor:pointer;box-sizing:border-box;touch-action:manipulation';
+ close.style.cssText='position:absolute;right:8px;top:8px;z-index:2;display:grid;place-items:center;width:44px;height:44px;padding:0;color:#f5f2ec;background:transparent;border:0;border-radius:50%;cursor:pointer;box-sizing:border-box;touch-action:manipulation';
  const icon=owner.createElementNS('http://www.w3.org/2000/svg','svg');
  icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('width','20');icon.setAttribute('height','20');icon.setAttribute('aria-hidden','true');icon.setAttribute('focusable','false');
  const strokes=owner.createElementNS('http://www.w3.org/2000/svg','path');
@@ -349,22 +414,23 @@ function applyCheckoutLayout(dialog, frame){
  `;
  if(!style.parentNode)doc.head.append(style);
  if(!doc.body||!doc.querySelector('.students-sessions,.payment_information'))return;
- const view=owner.defaultView;
+ applyCheckoutTheme(dialog, frame);
+ const view=owner.defaultView;let disposed=false,fontsReady=false;
  const fit=()=>{
-  if(!dialog.isConnected||frame.contentDocument!==doc)return;
+  if(disposed||!fontsReady||!dialog.isConnected||frame.contentDocument!==doc)return;
   const desktop=view.matchMedia('(min-width:768px)').matches;
   doc.documentElement.classList.toggle('ca-checkout-desktop',desktop);
   dialog.style.maxHeight=desktop?'calc(100dvh - 32px)':'calc(100dvh - 16px)';
   const height=desktop?Math.min(Math.ceil(doc.body.getBoundingClientRect().height),Math.max(0,(view.visualViewport?.height||view.innerHeight)-32))+'px':'calc(100dvh - 16px)';
   if(dialog.style.height!==height)dialog.style.height=height;
  };
- fit();
+ const ready=Promise.resolve(doc.fonts?Promise.all([doc.fonts.load('16px Mont','Оформить заказ Email 1234567890'),doc.fonts.load('600 16px Mont','Перейти к оплате')]).then(()=>doc.fonts.ready):undefined).catch(()=>{}).then(()=>{fontsReady=true;fit()});
  const observer=view.ResizeObserver?new view.ResizeObserver(fit):null;observer?.observe(doc.body);
  view.addEventListener('resize',fit);view.visualViewport?.addEventListener('resize',fit);
  // Start at the form heading instead of drawing the close button's focus ring on open.
  const heading=doc.querySelector('h1,.payment_information__header');
  if(owner.activeElement===close&&heading){heading.tabIndex=-1;heading.style.outline='none';heading.focus({preventScroll:true});}
- return{dispose(){observer?.disconnect();view.removeEventListener('resize',fit);view.visualViewport?.removeEventListener('resize',fit)}};
+ return{ready,dispose(){disposed=true;observer?.disconnect();view.removeEventListener('resize',fit);view.visualViewport?.removeEventListener('resize',fit)}};
 }
 
   function install() {
@@ -388,7 +454,7 @@ function applyCheckoutLayout(dialog, frame){
       const dialog = root.document.createElement('dialog');
       dialog.id = 'ca-native-checkout';
       dialog.setAttribute('aria-label', 'Оформление участия в курсе');
-      dialog.style.cssText = 'padding:0;border:0;border-radius:12px;width:min(760px,96vw);height:min(160px,calc(100dvh - 32px));max-width:96vw;max-height:calc(100dvh - 16px);background:#fff';
+      dialog.style.cssText = 'padding:0;border:0;border-radius:5px;width:min(760px,96vw);height:min(160px,calc(100dvh - 32px));max-width:96vw;max-height:calc(100dvh - 16px);background:#171715;color:#f5f2ec;box-shadow:0 0 0 1px #373632';
       const close = root.document.createElement('button');
       close.type = 'button'; close.textContent = 'Закрыть';
       close.style.cssText = 'position:absolute;right:12px;top:8px;z-index:2;padding:8px 12px;color:#111;background:#fff;border:1px solid #ccc;border-radius:6px;font:14px sans-serif;cursor:pointer';
@@ -400,7 +466,7 @@ function applyCheckoutLayout(dialog, frame){
       const loading = root.document.createElement('p');
       loading.textContent = 'Загружаем форму…';
       loading.setAttribute('role', 'status');
-      loading.style.cssText = 'position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);margin:0;color:#111;text-align:center;font:16px/1.45 sans-serif';
+      loading.style.cssText = 'position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);margin:0;color:#aaa79e;text-align:center;font:16px/1.45 Mont,Arial,sans-serif';
       const url = new URL(original.pathname + original.search, root.location.origin);
       let closed = false;
       let fallbackTimer;
@@ -457,15 +523,14 @@ function applyCheckoutLayout(dialog, frame){
             () => orderVariables(state, clientId, original.searchParams.get('tariff'), Date.now()), loadingFrame);
         } catch (_) {}
         if (!installed) { fallback(); return; }
-        root.clearTimeout(fallbackTimer);
         const readyDocument=iframe.contentDocument;
         const layout=applyCheckoutLayout(dialog, iframe);if(layout)controllers.push(layout);
-        root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>{
+        Promise.resolve(layout?.ready).then(()=>root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>{
           if(closed||iframe.contentDocument!==readyDocument)return;
-          loading.hidden=true;iframe.style.visibility='visible';
+          root.clearTimeout(fallbackTimer);loading.hidden=true;iframe.style.visibility='visible';
           const heading=readyDocument.querySelector('h1,.payment_information__header');
           if(root.document.activeElement===close&&heading){heading.tabIndex=-1;heading.style.outline='none';heading.focus({preventScroll:true});}
-        }));
+        })));
       });
       iframe.src = url.href;
       dialog.append(close, loading, iframe); root.document.body.append(dialog); applyCheckoutLayout(dialog, iframe); dialog.showModal();
