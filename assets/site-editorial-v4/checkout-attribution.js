@@ -342,11 +342,29 @@ function applyCheckoutLayout(dialog, frame){
  .payment_information__btn-container{margin-top:12px!important;padding:0!important}
  .payment_information__btn{min-height:48px!important}
  .ca-payment-link-status:empty{display:none}
+ html.ca-checkout-desktop{min-height:0!important;height:auto!important}
+ .ca-checkout-desktop body{display:flow-root!important;min-height:0!important;height:auto!important;padding:0!important}
+ .ca-checkout-desktop .students-sessions{max-height:none!important}
+ .ca-checkout-desktop main{margin-top:0!important;margin-bottom:0!important}
  `;
  if(!style.parentNode)doc.head.append(style);
+ if(!doc.body||!doc.querySelector('.students-sessions,.payment_information'))return;
+ const view=owner.defaultView;
+ const fit=()=>{
+  if(!dialog.isConnected||frame.contentDocument!==doc)return;
+  const desktop=view.matchMedia('(min-width:768px)').matches;
+  doc.documentElement.classList.toggle('ca-checkout-desktop',desktop);
+  dialog.style.maxHeight=desktop?'calc(100dvh - 32px)':'calc(100dvh - 16px)';
+  const height=desktop?Math.min(Math.ceil(doc.body.getBoundingClientRect().height),Math.max(0,(view.visualViewport?.height||view.innerHeight)-32))+'px':'calc(100dvh - 16px)';
+  if(dialog.style.height!==height)dialog.style.height=height;
+ };
+ fit();
+ const observer=view.ResizeObserver?new view.ResizeObserver(fit):null;observer?.observe(doc.body);
+ view.addEventListener('resize',fit);view.visualViewport?.addEventListener('resize',fit);
  // Start at the form heading instead of drawing the close button's focus ring on open.
  const heading=doc.querySelector('h1,.payment_information__header');
  if(owner.activeElement===close&&heading){heading.tabIndex=-1;heading.style.outline='none';heading.focus({preventScroll:true});}
+ return{dispose(){observer?.disconnect();view.removeEventListener('resize',fit);view.visualViewport?.removeEventListener('resize',fit)}};
 }
 
   function install() {
@@ -440,7 +458,7 @@ function applyCheckoutLayout(dialog, frame){
         } catch (_) {}
         if (!installed) { fallback(); return; }
         root.clearTimeout(fallbackTimer); loading.hidden = true; iframe.style.visibility = 'visible';
-        applyCheckoutLayout(dialog, iframe);
+        const layout=applyCheckoutLayout(dialog, iframe);if(layout)controllers.push(layout);
       });
       iframe.src = url.href;
       dialog.append(close, loading, iframe); root.document.body.append(dialog); applyCheckoutLayout(dialog, iframe); dialog.showModal();
