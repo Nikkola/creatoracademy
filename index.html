@@ -26,9 +26,9 @@
     <!-- /Yandex.Metrika counter --><!-- Yandex.Metrika: цели по кнопкам тарифов -->
     <script>
       document.addEventListener('click', function (e) {
-        var a = e.target.closest('a[href*="tariff="]');
+        var a = e.target.closest('a[href*="tariff="], a[data-ca-native-checkout]');
         if (!a || typeof ym !== 'function') return;
-        var m = a.href.match(/tariff=(\d+)/);
+        var m = (a.dataset.caNativeCheckout || a.href).match(/tariff=(\d+)/);
         if (!m) return;
         var goals = {
           '25374': 'buy_solo',
@@ -523,4 +523,4 @@
             </button>
           </div>
 
-          </div><dialog id="case-story" aria-labelledby="case-story-title"><button class="close-case" aria-label="Закрыть историю">×</button><div class="case-story-body"></div></dialog><dialog id="player"><button class="close-player" aria-label="Закрыть видео">×</button><div class="video-host"></div></dialog><script src="/assets/site-editorial-v4/vendors.js"></script><script src="/assets/site-editorial-v4/legacy-interactions.js"></script><script src="/assets/site-editorial-v4/site.js"></script><script src="/assets/site-editorial-v4/hero-v3.js"></script><script src="/assets/site-editorial-v4/sequence-proof-v4.js"></script></body></html>
+          </div><dialog id="case-story" aria-labelledby="case-story-title"><button class="close-case" aria-label="Закрыть историю">×</button><div class="case-story-body"></div></dialog><dialog id="player"><button class="close-player" aria-label="Закрыть видео">×</button><div class="video-host"></div></dialog><script src="/assets/site-editorial-v4/vendors.js"></script><script src="/assets/site-editorial-v4/legacy-interactions.js"></script><script src="/assets/site-editorial-v4/site.js"></script><script src="/assets/site-editorial-v4/hero-v3.js"></script><script src="/assets/site-editorial-v4/sequence-proof-v4.js"></script><script src="/assets/site-editorial-v4/checkout-attribution.js"></script></body></html>

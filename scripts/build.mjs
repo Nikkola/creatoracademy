@@ -30,7 +30,7 @@ export async function build(){
   });
   html=html.replace(new RegExp(`<link rel="stylesheet" href="/?assets/site-editorial-v4/${filename}">`),()=>`<style>${css}</style>`);
  }
- for(const filename of ['vendors.js','legacy-interactions.js','site.js','hero-v3.js','sequence-proof-v4.js']){
+ for(const filename of ['vendors.js','legacy-interactions.js','site.js','hero-v3.js','sequence-proof-v4.js','checkout-attribution.js']){
   const js=await readFile(`assets/site-editorial-v4/${filename}`,'utf8');
   html=html.replace(new RegExp(`<script src="/?assets/site-editorial-v4/${filename}"></script>`),()=>`<script>${js.replaceAll('</script','<\\/script')}</script>`);
  }

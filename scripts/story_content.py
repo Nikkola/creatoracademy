@@ -277,7 +277,9 @@ counters=''.join(re.findall(r'<!-- (?:Top.Mail.Ru counter|Yandex.Metrika counter
 tariff_goals=re.search(r'<!-- Yandex.Metrika: цели по кнопкам тарифов -->[\s\S]*?<!-- /Yandex.Metrika: цели по кнопкам тарифов -->',baseline)
 if tariff_goals is None:
  raise RuntimeError('Original Yandex.Metrika tariff click handler is missing from baseline')
-counters+=tariff_goals.group(0)
+# Preserve one click goal when native checkout hrefs become same-origin wrapper links.
+checkout_goals=tariff_goals.group(0).replace('a[href*="tariff="]', 'a[href*="tariff="], a[data-ca-native-checkout]').replace('a.href.match(', '(a.dataset.caNativeCheckout || a.href).match(')
+counters+=checkout_goals
 noscript=''.join(n.html() for n in src.all(tag='noscript'))
 html=html.replace('</head>',meta+counters+'</head>').replace('<body>','<body>'+noscript)
 
@@ -292,6 +294,7 @@ html=html.replace('</head>', '<link rel="stylesheet" href="/assets/site-editoria
 html=html.replace('</body>', '<script src="/assets/site-editorial-v4/hero-v3.js"></script></body>')
 from sequence_proof import apply_sequence_proof
 html=apply_sequence_proof(html)
+html=html.replace('</body>', '<script src="/assets/site-editorial-v4/checkout-attribution.js"></script></body>')
 (HERE/'index.html').write_text(html)
 expected={'videos':sorted({n.a.get('data-link') for n in src.all('play-btn') if n.a.get('data-link')} | {'https://www.youtube-nocookie.com/embed/0HvvxPjGvBE?rel=0'} | {item['video'] for item in podcast_additions+vlog_additions+vrev}),'payments':sorted({n.a.get('href') for n in src.all(tag='a') if 'get_form/' in n.a.get('href','') and any('tariff='+t in n.a.get('href','') for t in ['25374','25376','25375'])}),'counts':{'cases':len(case_cards)+1,'works':len(works),'video_reviews':len(vrev),'portfolio':len(portfolio)+1+len(podcast_additions)+len(vlog_additions),'written_reviews':len(rev_cards),'lessons':len(lessons)}}
 (SITE/'source/story/expected.json').write_text(json.dumps(expected,ensure_ascii=False,indent=2))
