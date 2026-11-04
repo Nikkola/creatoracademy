@@ -78,6 +78,57 @@
     return { ...data, order: { ...data.order, variables: enriched } };
   }
 
+  let nativePromoBridge;
+  function requestNativePromo(tariff, code) {
+    const origin = 'https://skillhub.salebot.pro';
+    if (!nativePromoBridge) {
+      const frame = root.document.createElement('iframe'), nonce = root.crypto.randomUUID();
+      const bridge = {frame, nonce, ready:false, jobs:new Map()};
+      nativePromoBridge = bridge;
+      frame.title = 'Проверка промокода курса'; frame.hidden = true; frame.tabIndex = -1;
+      frame.setAttribute('aria-hidden','true'); frame.id = 'ca-native-promo-bridge';
+      bridge.receive = event => {
+        const data = event.data;
+        if (event.origin !== origin || event.source !== frame.contentWindow || !data || data.nonce !== nonce) return;
+        if (data.type === 'ca:promo:ready') {
+          bridge.ready = true;
+          for (const job of bridge.jobs.values()) job.send();
+        } else if (data.type === 'ca:promo:result') {
+          const job = bridge.jobs.get(data.id);
+          if (job) job.finish(data.error || typeof data.response?.success !== 'boolean' ? new Error('promo_unavailable') : null, data.response);
+        }
+      };
+      root.addEventListener('message', bridge.receive);
+      frame.src = origin + '/md/7e5f0bc5c81a9ca702a886e6e04acc3f?ca-promo-bridge=' + nonce;
+      root.document.body.append(frame);
+    }
+    const bridge = nativePromoBridge, id = root.crypto.randomUUID();
+    let cancel;
+    const promise = new Promise((resolve,reject) => {
+      let sent = false;
+      const finish = (error, data) => {
+        if (!bridge.jobs.has(id)) return;
+        root.clearTimeout(timer); bridge.jobs.delete(id);
+        if (error && !bridge.jobs.size && nativePromoBridge === bridge &&
+            (!bridge.ready || error.message === 'promo_timeout')) {
+          root.removeEventListener('message', bridge.receive); bridge.frame.remove(); nativePromoBridge = null;
+        }
+        if (error) reject(error); else resolve(data);
+      };
+      const send = () => {
+        if (sent || !bridge.jobs.has(id)) return;
+        sent = true; bridge.frame.contentWindow.postMessage({type:'ca:promo:request', nonce:bridge.nonce, id, tariff, code}, origin);
+      };
+      const timer = root.setTimeout(() => finish(new Error('promo_timeout')), 9500);
+      cancel = () => {
+        if (sent) bridge.frame.contentWindow.postMessage({type:'ca:promo:cancel', nonce:bridge.nonce, id}, origin);
+        finish(new Error('promo_cancelled'));
+      };
+      bridge.jobs.set(id,{send,finish}); if (bridge.ready) send();
+    });
+    return {promise, cancel:() => cancel?.()};
+  }
+
   function checkoutPhone(frameWindow, input) {
     const raw = input.value.trim(), digits = raw.replace(/\D/g, '');
     const container = input.closest('.phone_input_container, .payment_information__wrapper');
@@ -100,6 +151,24 @@
     const doc = frameWindow.document, jq = frameWindow.jQuery;
     if (!jq || frameWindow.__caCheckoutFields) return;
     frameWindow.__caCheckoutFields = true;
+    const hostFrame = frameWindow.frameElement;
+    jq.ajaxTransport('+json', options => {
+      if (!options.__caNativePromo) return;
+      let request, aborted = false;
+      return {
+        send(_headers, complete) {
+          const data = new URLSearchParams(options.data);
+          request = requestNativePromo(data.get('tariff_id'), data.get('code'));
+          request.promise.then(result => {
+            if (!aborted) {
+              if (hostFrame?.isConnected && hostFrame.contentDocument === doc) complete(200,'success',{json:result},'Content-Type: application/json');
+              else complete(0,'abort');
+            }
+          }, () => { if (!aborted) complete(0,'error'); });
+        },
+        abort() { aborted = true; request?.cancel(); }
+      };
+    });
     const form = doc.querySelector('form.input_custom_data');
     const widget = doc.querySelector('.payment_information');
     const emailValid = value => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
@@ -246,7 +315,7 @@
       options.timeout = 10000;
       const data = new URLSearchParams(options.data), row = isSave ? activeRow :
         widget?.querySelector('.payment-information--edit-wrapper:not(.hidden)')?.closest('.payment_information__wrapper');
-      if (isPromo) { data.set('code', (data.get('code') || '').trim().toUpperCase()); options.data = data.toString(); options.dataType = 'json'; }
+      if (isPromo) { data.set('code', (data.get('code') || '').trim().toUpperCase()); options.data = data.toString(); options.dataType = 'json'; options.__caNativePromo = true; }
       if (form && isPromo) {
         firstPromoPending = true;
         const button = form.querySelector('#apply-promocode'), input = form.querySelector('#promocode'); button.disabled = true; input.readOnly = true;
@@ -254,9 +323,9 @@
         options.complete = function(...args) { firstPromoPending = false; input.readOnly = false; if (!input.disabled) button.disabled = false; complete?.apply(this,args); };
         const error = options.error;
         options.error = function(...args) { error?.apply(this,args); const message = form.querySelector('.promocode-message'); message.textContent = 'Не удалось проверить промокод. Попробуй ещё раз.'; message.style.display = 'block'; };
-        return;
+        return 'json';
       }
-      if (!row) return;
+      if (!row) return isPromo ? 'json' : undefined;
       // Native save hides its editor before sending; keep the row captured by its action.
       if (isSave) {
         const input = row.querySelector('.payment-information--input');
@@ -278,6 +347,7 @@
       };
       options.error = function(...args) { fail(isPromo ? 'Не удалось проверить промокод. Прежняя скидка сохранена.' : 'Не удалось сохранить изменения. Повтори сохранение.'); if (!isPromo) error?.apply(this,args); };
       options.complete = function(...args) { busy(row,-1); if (!failed && !pending.size && fieldStatus.getAttribute('role') !== 'alert') notice(''); complete?.apply(this,args); };
+      return isPromo ? 'json' : undefined;
     });
   }
 
