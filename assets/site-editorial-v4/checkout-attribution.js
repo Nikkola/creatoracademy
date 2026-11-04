@@ -302,7 +302,7 @@
 
 function applyCheckoutLayout(dialog, frame){
  const owner=dialog.ownerDocument,doc=frame.contentDocument;
- dialog.style.height='calc(100dvh - 16px)';dialog.style.maxHeight='calc(100dvh - 16px)';dialog.style.maxWidth='calc(100vw - 16px)';
+ dialog.style.maxWidth='calc(100vw - 16px)';
  const close=dialog.querySelector('button');
  close.setAttribute('aria-label','Закрыть');close.title='Закрыть';
  close.style.cssText='position:absolute;right:8px;top:8px;z-index:2;display:grid;place-items:center;width:44px;height:44px;padding:0;color:#30343b;background:transparent;border:0;border-radius:50%;cursor:pointer;box-sizing:border-box;touch-action:manipulation';
@@ -388,7 +388,7 @@ function applyCheckoutLayout(dialog, frame){
       const dialog = root.document.createElement('dialog');
       dialog.id = 'ca-native-checkout';
       dialog.setAttribute('aria-label', 'Оформление участия в курсе');
-      dialog.style.cssText = 'padding:0;border:0;border-radius:12px;width:min(760px,96vw);height:92vh;max-width:96vw;max-height:96vh;background:#fff';
+      dialog.style.cssText = 'padding:0;border:0;border-radius:12px;width:min(760px,96vw);height:min(160px,calc(100dvh - 32px));max-width:96vw;max-height:calc(100dvh - 16px);background:#fff';
       const close = root.document.createElement('button');
       close.type = 'button'; close.textContent = 'Закрыть';
       close.style.cssText = 'position:absolute;right:12px;top:8px;z-index:2;padding:8px 12px;color:#111;background:#fff;border:1px solid #ccc;border-radius:6px;font:14px sans-serif;cursor:pointer';
@@ -396,11 +396,11 @@ function applyCheckoutLayout(dialog, frame){
       // A fresh browsing-context name prevents WebKit restoring an old tariff document after Back.
       iframe.name = 'ca-checkout-' + root.crypto.randomUUID();
       iframe.title = 'Штатная форма оформления курса';
-      iframe.style.cssText = 'width:100%;height:100%;border:0;visibility:hidden';
+      iframe.style.cssText = 'display:block;width:100%;height:100%;border:0;visibility:hidden';
       const loading = root.document.createElement('p');
       loading.textContent = 'Загружаем форму…';
       loading.setAttribute('role', 'status');
-      loading.style.cssText = 'padding:56px 24px;color:#111';
+      loading.style.cssText = 'position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);margin:0;color:#111;text-align:center;font:16px/1.45 sans-serif';
       const url = new URL(original.pathname + original.search, root.location.origin);
       let closed = false;
       let fallbackTimer;
@@ -457,8 +457,15 @@ function applyCheckoutLayout(dialog, frame){
             () => orderVariables(state, clientId, original.searchParams.get('tariff'), Date.now()), loadingFrame);
         } catch (_) {}
         if (!installed) { fallback(); return; }
-        root.clearTimeout(fallbackTimer); loading.hidden = true; iframe.style.visibility = 'visible';
+        root.clearTimeout(fallbackTimer);
+        const readyDocument=iframe.contentDocument;
         const layout=applyCheckoutLayout(dialog, iframe);if(layout)controllers.push(layout);
+        root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>{
+          if(closed||iframe.contentDocument!==readyDocument)return;
+          loading.hidden=true;iframe.style.visibility='visible';
+          const heading=readyDocument.querySelector('h1,.payment_information__header');
+          if(root.document.activeElement===close&&heading){heading.tabIndex=-1;heading.style.outline='none';heading.focus({preventScroll:true});}
+        }));
       });
       iframe.src = url.href;
       dialog.append(close, loading, iframe); root.document.body.append(dialog); applyCheckoutLayout(dialog, iframe); dialog.showModal();
