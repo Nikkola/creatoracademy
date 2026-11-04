@@ -1,24 +1,20 @@
 const {test,expect}=require('@playwright/test');
-for(const width of [1440,390])test(`keeps both real decoded players intact across the transition at ${width}`,async({page})=>{
+for(const width of [1440,390])test(`navigation starts immediately while delayed video stays covered at ${width}`,async({page})=>{
  await page.setViewportSize({width,height:900});
- await page.route('**/pair-02-*.mp4',async route=>{await new Promise(resolve=>setTimeout(resolve,1200));await route.continue()});
+ await page.route('**/pair-02-*.mp4',async route=>{await new Promise(resolve=>setTimeout(resolve,1800));await route.continue()});
  await page.goto('/');const section=page.locator('#sequence-proof');await section.scrollIntoViewIfNeeded();
  await expect.poll(()=>section.locator('.sequence-proof-grid video').evaluateAll(vs=>vs.every(v=>v.currentTime>0&&!v.paused))).toBe(true);
- const old=await section.locator('.sequence-proof-grid').elementHandle();const original=await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime})));
- await section.locator('.sequence-proof-next').click();
- await expect(section.locator('.sequence-proof-pending')).toHaveCount(1);
- const frozen=await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime,paused:v.paused})));
- expect(frozen.map(v=>v.src)).toEqual(original.map(v=>v.src));expect(frozen.every(v=>v.paused)).toBe(true);
- await expect(section).toHaveAttribute('data-sequence-index','0');
+ const old=await section.locator('.sequence-proof-grid').elementHandle();const original=await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>v.currentSrc));
+ await section.evaluate(e=>{window.__slideStart=0;new MutationObserver(()=>{const p=e.querySelector('.sequence-proof-pending');if(p?.getAnimations().length&&!window.__slideStart)window.__slideStart=performance.now()}).observe(e,{childList:true,subtree:true});window.__clickTime=performance.now();e.querySelector('.sequence-proof-next').click()});
+ await expect.poll(()=>page.evaluate(()=>window.__slideStart),{timeout:700,intervals:[20]}).toBeGreaterThan(0);
+ expect(await page.evaluate(()=>__slideStart-__clickTime)).toBeLessThan(200);
  const incoming=await section.locator('.sequence-proof-pending').elementHandle();
- await expect.poll(()=>incoming.evaluate(e=>e.getAnimations().length),{intervals:[30],timeout:10000}).toBe(1);
- const prepared=await incoming.evaluate(e=>[...e.querySelectorAll('video')].map(v=>({src:v.currentSrc,time:v.currentTime,paused:v.paused,ready:v.readyState,width:v.videoWidth})));
- expect(prepared.every(v=>v.paused&&v.ready>=2&&v.time>=0&&v.width===960)).toBe(true);
- expect(await section.locator('canvas,.sequence-proof-cover').count()).toBe(0);
- await expect(section).toHaveAttribute('data-sequence-index','1');
+ expect(await old.evaluate(e=>[...e.querySelectorAll('video')].map(v=>v.currentSrc))).toEqual(original);
+ await expect(section).toHaveAttribute('data-sequence-index','1',{timeout:1000});
  expect(await old.evaluate(e=>e.isConnected)).toBe(false);
  expect(await incoming.evaluate(e=>e.isConnected&&e.classList.contains('sequence-proof-grid'))).toBe(true);
- await expect.poll(()=>incoming.evaluate(e=>[...e.querySelectorAll('video')].every(v=>!v.paused&&v.currentTime>0))).toBe(true);
- expect(await incoming.evaluate(e=>[...e.querySelectorAll('video')].map(v=>v.currentSrc))).toEqual(prepared.map(v=>v.src));
+ await expect(section.locator('.sequence-proof-cover:not(.is-ready)')).toHaveCount(2);
  expect(await section.locator('video').count()).toBe(2);
+ await expect.poll(()=>section.locator('.sequence-proof-cover.is-ready').count()).toBe(2);
+ await expect.poll(()=>incoming.evaluate(e=>[...e.querySelectorAll('video')].every(v=>!v.paused&&v.currentTime>0))).toBe(true);
 });
