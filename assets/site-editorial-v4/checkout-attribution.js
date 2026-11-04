@@ -78,7 +78,7 @@
     return { ...data, order: { ...data.order, variables: enriched } };
   }
 
-  function installFrame(frameWindow, metadata) {
+  function installFrame(frameWindow, metadata, onSubmit) {
     if (!frameWindow.jQuery || frameWindow.__caOrderAttribution) return false;
     const form = frameWindow.document.querySelector('form.input_custom_data');
     if (!form) return false;
@@ -90,10 +90,142 @@
         options.data = enrichData(options.data, typeof metadata === 'function' ? metadata() : metadata);
       }
     });
-    // Keep the native legal controls and native payment handler; leave iframe on submission.
-    form.target = '_top';
+    // Keep both native steps in the dialog; leave it only for a valid Prodamus URL.
+    form.target = '_self';
+    frameWindow.jQuery(form).on('submit.caCheckout', event => {
+      if (!event.isDefaultPrevented() && onSubmit) onSubmit();
+    });
     frameWindow.__caOrderAttribution = true;
     return true;
+  }
+
+  function prodamusDestination(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && !url.username && !url.password &&
+        ['payform.ru', 'contentcourse.payform.ru'].includes(url.hostname) ? url.href : null;
+    } catch (_) { return null; }
+  }
+
+  function retryableLinkFailure(status, textStatus, message) {
+    return [502, 503, 504].includes(Number(status)) || textStatus === 'timeout' ||
+      (Number(status) === 0 && textStatus === 'error') ||
+      /\b50[234]\b|bad gateway|gateway timeout|service unavailable/i.test(String(message || ''));
+  }
+
+  function installPaymentFrame(frameWindow, controls) {
+    const jq = frameWindow.jQuery;
+    const doc = frameWindow.document;
+    const button = doc.querySelector('.payment_information__btn');
+    if (!jq || !button) return null;
+    if (frameWindow.__caPaymentLinkController) return frameWindow.__caPaymentLinkController;
+    const widget = button.closest('.payment_information') || button.parentElement;
+    const status = doc.createElement('p');
+    status.className = 'ca-payment-link-status';
+    status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite');
+    status.style.cssText = 'font:inherit;color:inherit;line-height:1.45;margin:12px 0';
+    button.before(status);
+    button.setAttribute('role', 'button');
+    if (!button.hasAttribute('tabindex')) button.tabIndex = 0;
+    const managed = 'ca-link-' + root.crypto.randomUUID();
+    const disabled = new Map();
+    const pointer = button.style.pointerEvents;
+    let operation = null, disposed = false, timer = null;
+
+    function active() {
+      try { return !disposed && controls.isActive(); } catch (_) { return false; }
+    }
+    function announce(phase, attempt) {
+      root.document.dispatchEvent(new root.CustomEvent('ca:payment-link', { detail: { phase, attempt } }));
+    }
+    function busy(value) {
+      widget.setAttribute('aria-busy', String(value));
+      button.setAttribute('aria-disabled', String(value));
+      button.style.pointerEvents = value ? 'none' : pointer;
+      if (value) {
+        for (const field of widget.querySelectorAll('input,button,select,textarea')) {
+          if (!disabled.has(field)) disabled.set(field, field.disabled);
+          field.disabled = true;
+        }
+      } else {
+        for (const [field, previous] of disabled) field.disabled = previous;
+        disabled.clear();
+      }
+    }
+    function failed(job) {
+      if (!active() || operation !== job) return;
+      job.running = false; busy(false);
+      status.textContent = 'Не получилось открыть оплату. Попробуй ещё раз — данные сохранены.';
+      button.textContent = 'Попробовать ещё раз';
+      button.scrollIntoView({ block: 'nearest' });
+      announce('failed', job.attempt);
+    }
+    function result(job, data, xhr, textStatus) {
+      if (!active() || operation !== job) return;
+      const destination = data && data.error !== true && prodamusDestination(data.payment_link);
+      if (destination) {
+        job.running = false;
+        status.textContent = 'Открываем страницу оплаты…';
+        announce('redirecting', job.attempt);
+        controls.redirect(destination);
+        return;
+      }
+      const transient = retryableLinkFailure(xhr?.status, textStatus, data?.error_message);
+      if (transient && job.attempt < 3 && Date.now() < job.deadline) {
+        const delay = job.attempt === 1 ? 1500 : 3500;
+        if (Date.now() + delay >= job.deadline) { failed(job); return; }
+        status.textContent = 'Готовим страницу оплаты…';
+        announce('retrying', job.attempt);
+        timer = root.setTimeout(() => {
+          timer = null;
+          if (!active() || operation !== job) return;
+          job.attempt += 1;
+          const options = { ...job.options, __caManagedLink: managed,
+            timeout: Math.max(1, Math.min(10000, job.deadline - Date.now())) };
+          job.xhr = jq.ajax(options);
+        }, delay);
+      } else failed(job);
+    }
+    widget.addEventListener('click', event => {
+      if (operation?.running) { event.preventDefault(); event.stopImmediatePropagation(); }
+    }, true);
+    button.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault(); if (!operation?.running) button.click();
+      }
+    });
+    jq.ajaxPrefilter((options, originalOptions, xhr) => {
+      const url = new URL(options.url, frameWindow.location.href);
+      const match = url.pathname.match(/^\/courses\/create_payment_links\/(\d+)$/);
+      if (!match || !TARIFFS.has(match[1]) ||
+          !['skillhub.salebot.pro', 'creatoracademy.ru'].includes(url.hostname) ||
+          url.protocol !== 'https:' || String(options.type || options.method).toUpperCase() !== 'POST') return;
+      if (options.__caManagedLink === managed) return;
+      if (!active() || operation?.running) { xhr.abort('duplicate'); return; }
+      const job = { attempt: 1, deadline: Date.now() + 30000, running: true, xhr };
+      operation = job; busy(true);
+      status.textContent = 'Готовим страницу оплаты…';
+      button.textContent = 'Готовим оплату…';
+      button.scrollIntoView({ block: 'nearest' });
+      // This is only the native URL generator. Never retry a bank charge or paid callback.
+      options.global = false;
+      options.timeout = 10000;
+      options.success = (data, textStatus, xhr) => result(job, data, xhr, textStatus);
+      options.error = (xhr, textStatus) => result(job, null, xhr, textStatus);
+      job.options = { ...options };
+      announce('preparing', 1);
+    });
+    function cancel() {
+      const job = operation; operation = null;
+      if (timer !== null) root.clearTimeout(timer);
+      timer = null; busy(false);
+      status.textContent = ''; button.textContent = 'Оплатить';
+      if (job?.xhr?.readyState !== 4) job?.xhr?.abort('checkout_left');
+    }
+    frameWindow.addEventListener('pagehide', cancel);
+    const controller = { dispose() { disposed = true; cancel(); } };
+    frameWindow.__caPaymentLinkController = controller;
+    return controller;
   }
 
   function nativeCheckout(value, base) {
@@ -148,23 +280,48 @@
       const url = new URL(original.pathname + original.search, root.location.origin);
       let closed = false;
       let fallbackTimer;
+      const controllers = [];
       const cleanup = () => {
-        closed = true; root.clearTimeout(fallbackTimer); dialog.close(); dialog.remove();
+        closed = true; root.clearTimeout(fallbackTimer);
+        for (const controller of controllers) controller.dispose();
+        dialog.close(); dialog.remove();
         if (checkoutFromHash(root.location.hash, root.location.href)) {
           root.history.replaceState(root.history.state, '', root.location.pathname + root.location.search);
         }
       };
-      const fallback = () => { if (closed) return; cleanup(); root.location.href = original.href; };
+      const fallback = () => {
+        if (closed) return;
+        let destination = original.href;
+        try {
+          const current = new URL(iframe.contentWindow.location.href);
+          if (current.origin === root.location.origin && /^\/cs\/[a-f0-9]{32}$/.test(current.pathname)) destination = current.href;
+        } catch (_) {}
+        cleanup(); root.location.href = destination;
+      };
+      const loadingFrame = () => {
+        if (closed) return;
+        iframe.style.visibility = 'hidden';
+        loading.textContent = 'Открываем оформление…'; loading.hidden = false;
+        root.clearTimeout(fallbackTimer); fallbackTimer = root.setTimeout(fallback, 15000);
+      };
       close.addEventListener('click', cleanup);
       dialog.addEventListener('cancel', event => { event.preventDefault(); cleanup(); });
       iframe.addEventListener('load', () => {
         if (closed) return;
         let installed = false;
-        try { installed = installFrame(iframe.contentWindow,
-          () => orderVariables(state, clientId, original.searchParams.get('tariff'), Date.now())); } catch (_) {}
+        try {
+          const installedDocument = iframe.contentDocument;
+          const controller = installPaymentFrame(iframe.contentWindow, {
+            isActive: () => !closed && iframe.contentDocument === installedDocument,
+            redirect: destination => { if (!closed && iframe.contentDocument === installedDocument) root.location.href = destination; }
+          });
+          if (controller) { controllers.push(controller); installed = true; }
+          else installed = installFrame(iframe.contentWindow,
+            () => orderVariables(state, clientId, original.searchParams.get('tariff'), Date.now()), loadingFrame);
+        } catch (_) {}
         if (!installed) { fallback(); return; }
-        root.clearTimeout(fallbackTimer); loading.remove(); iframe.style.visibility = 'visible';
-      }, { once: true });
+        root.clearTimeout(fallbackTimer); loading.hidden = true; iframe.style.visibility = 'visible';
+      });
       iframe.src = url.href;
       dialog.append(close, loading, iframe); root.document.body.append(dialog); dialog.showModal();
       fallbackTimer = root.setTimeout(fallback, 15000);
@@ -199,7 +356,8 @@
     });
   }
 
-  const api = { capture, touch, orderVariables, enrichData, installFrame,
+  const api = { capture, touch, orderVariables, enrichData, installFrame, installPaymentFrame,
+    prodamusDestination, retryableLinkFailure,
     nativeCheckout, wrappedCheckout, checkoutFromHash, install };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CAAttribution = api;
