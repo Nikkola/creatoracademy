@@ -78,10 +78,214 @@
     return { ...data, order: { ...data.order, variables: enriched } };
   }
 
+  function checkoutPhone(frameWindow, input) {
+    const raw = input.value.trim(), digits = raw.replace(/\D/g, '');
+    const container = input.closest('.phone_input_container, .payment_information__wrapper');
+    const code = container?.querySelector('.select_mask_code')?.textContent.replace(/\D/g, '') || '';
+    const country = frameWindow.countries?.[code];
+    const lengths = country?.[8];
+    let national = digits;
+    if (raw.startsWith('+') && digits.startsWith(code)) national = digits.slice(code.length);
+    else if (lengths && !lengths.includes(digits.length)) {
+      if (digits.startsWith(code) && lengths.includes(digits.length - code.length)) national = digits.slice(code.length);
+      else if (code === '7' && digits.length === 11 && digits.startsWith('8')) national = digits.slice(1);
+    }
+    const full = '+' + code + national;
+    const valid = !!code && !!national && /^[+\d\s().-]+$/.test(raw) &&
+      /^\+[1-9]\d{7,14}$/.test(full) && (!lengths || lengths.includes(national.length));
+    return { full, national, valid };
+  }
+
+  function installCheckoutFields(frameWindow) {
+    const doc = frameWindow.document, jq = frameWindow.jQuery;
+    if (!jq || frameWindow.__caCheckoutFields) return;
+    frameWindow.__caCheckoutFields = true;
+    const form = doc.querySelector('form.input_custom_data');
+    const widget = doc.querySelector('.payment_information');
+    const emailValid = value => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
+    const snapshots = new Map(), pending = new Map();
+    let firstPromoPending = false, activeRow = null;
+    const fieldStatus = widget ? doc.createElement('p') : null;
+    if (fieldStatus) {
+      fieldStatus.className = 'ca-checkout-field-status'; fieldStatus.setAttribute('aria-live', 'polite');
+      widget.querySelector('.payment_information__btn').before(fieldStatus);
+    }
+    function notice(text, error = false) {
+      if (!fieldStatus) return;
+      fieldStatus.textContent = text; fieldStatus.setAttribute('role', error ? 'alert' : 'status');
+    }
+    function clearField(input) {
+      if (!input) return;
+      input.removeAttribute('aria-invalid');
+      const anchor = input.closest('.phone_input_container, .salebot-checkbox-field') || input;
+      if (anchor.nextElementSibling?.classList.contains('ca-checkout-field-error')) anchor.nextElementSibling.remove();
+    }
+    function invalid(input, text) {
+      clearField(input); input.setAttribute('aria-invalid', 'true');
+      const error = doc.createElement('p'); error.className = 'ca-checkout-field-error';
+      error.setAttribute('role', 'alert'); error.textContent = text;
+      (input.closest('.phone_input_container, .salebot-checkbox-field') || input).after(error);
+    }
+    function placeCountryMenu(trigger) {
+      const menu = trigger.closest('.select-mask')?.querySelector('.select-mask__select');
+      if (!menu || frameWindow.getComputedStyle(menu).display === 'none') return;
+      const rect = trigger.getBoundingClientRect(), height = frameWindow.innerHeight;
+      const below = height - rect.bottom - 8, above = rect.top - 8;
+      const upwards = below < 220 && above > below;
+      const available = Math.max(80, Math.min(300, upwards ? above : below));
+      const width = Math.min(320, frameWindow.innerWidth - 16);
+      Object.assign(menu.style, {position:'fixed', width:width+'px', maxWidth:width+'px', maxHeight:available+'px',
+        left:Math.max(8,Math.min(rect.left,frameWindow.innerWidth-width-8))+'px'});
+      const search = menu.querySelector('.select-mask__search'); if (search) search.style.display = 'block';
+      menu.style.top = (upwards ? Math.max(8,rect.top-Math.min(menu.scrollHeight,available)-8) : rect.bottom+8)+'px';
+    }
+    doc.addEventListener('click', event => {
+      const trigger = event.target.closest('.select-mask__trigger');
+      if (trigger) frameWindow.requestAnimationFrame(() => placeCountryMenu(trigger));
+    });
+    function validateContact() {
+      const name = form.querySelector('#input_custom_data_custom_name'), email = form.querySelector('#input_custom_data_custom_email');
+      const phone = form.querySelector('.phone_input'), errors = [];
+      for (const field of [name, email, phone]) if (field) clearField(field);
+      if (name) { name.value = name.value.trim(); if (!name.value) errors.push([name, 'Укажи имя.']); }
+      if (email) { email.value = email.value.trim(); if (!emailValid(email.value)) errors.push([email, 'Укажи корректный адрес почты.']); }
+      if (phone) {
+        const value = checkoutPhone(frameWindow, phone);
+        if (!value.valid) errors.push([phone, 'Введи номер полностью с выбранным кодом страны. Для +7 нужно 10 цифр после кода.']);
+        else { phone.value = value.national; form.querySelector('#input_custom_data_custom_phone').value = value.full; }
+      }
+      for (const field of form.querySelectorAll('input[type=checkbox][required]')) {
+        clearField(field); if (!field.checked) errors.push([field, 'Подтверди согласие, чтобы продолжить.']);
+      }
+      for (const [field, text] of errors) invalid(field, text);
+      if (errors.length) { errors[0][0].focus({preventScroll:true}); errors[0][0].scrollIntoView({block:'center'}); }
+      return errors.length === 0;
+    }
+    if (form) {
+      for (const [selector, autocomplete, mode] of [['#input_custom_data_custom_name','name','text'],['#input_custom_data_custom_email','email','email'],['.phone_input','tel-national','tel']]) {
+        const field = form.querySelector(selector); if (field) { field.autocomplete = autocomplete; field.inputMode = mode; }
+      }
+      form.addEventListener('click', event => {
+        if (event.target.closest('.students-sessions__button') && !validateContact()) { event.preventDefault(); event.stopImmediatePropagation(); }
+        if (event.target.closest('.promocode-button')) {
+          const input = form.querySelector('#promocode'); input.value = input.value.trim().toUpperCase();
+          if (firstPromoPending) { event.preventDefault(); event.stopImmediatePropagation(); }
+        }
+      }, true);
+      form.addEventListener('submit', event => { if (!validateContact()) { event.preventDefault(); event.stopImmediatePropagation(); } }, true);
+      form.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && event.target.matches('#input_custom_data_custom_name,#input_custom_data_custom_email,.phone_input')) {
+          event.preventDefault(); form.querySelector('.students-sessions__button').click();
+        }
+      });
+      form.addEventListener('input', event => clearField(event.target));
+      form.addEventListener('change', event => clearField(event.target));
+    }
+    function snapshot(row) {
+      const input = row.querySelector('.payment-information--input'), span = row.querySelector('.payment_information__text > span');
+      const amount = widget.querySelector('.payment_amount');
+      return { input: input.value, text: span.textContent, price: amount.innerHTML,
+        current: amount.getAttribute('data-current-price'), widgetPrice: widget.getAttribute('data-price') };
+    }
+    function restore(row) {
+      const previous = snapshots.get(row); if (!previous) return;
+      row.querySelector('.payment_information__text > span').textContent = previous.text;
+      if (row.querySelector('.payment_promocode_input')) {
+        const amount = widget.querySelector('.payment_amount'); amount.innerHTML = previous.price;
+        amount.setAttribute('data-current-price', previous.current); jq(amount).data('current-price', Number(previous.current));
+        widget.setAttribute('data-price', previous.widgetPrice); jq(widget).data('price', Number(previous.widgetPrice));
+      }
+      row.querySelector('.payment-information--edit-wrapper').classList.remove('hidden');
+      row.querySelector('.payment_information__text > span').classList.add('hidden');
+      row.querySelector('.payment-information--edit').classList.add('hidden');
+    }
+    function busy(row, delta) {
+      const count = (pending.get(row) || 0) + delta;
+      if (count > 0) pending.set(row, count); else pending.delete(row);
+      row.setAttribute('aria-busy', String(count > 0));
+      row.querySelector('.payment-information--input').readOnly = count > 0;
+    }
+    if (widget) {
+      for (const control of widget.querySelectorAll('.payment-information--edit,.payment-information--save,.payment-information--close')) {
+        control.setAttribute('role','button'); control.tabIndex = 0;
+        control.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); control.click(); } });
+      }
+      widget.addEventListener('click', event => {
+        const action = event.target.closest('.payment-information--edit,.payment-information--save,.payment-information--close,.payment_information__btn');
+        if (!action) return;
+        if (pending.size) { event.preventDefault(); event.stopImmediatePropagation(); notice('Сохраняем изменения. Дождись завершения.'); return; }
+        if (action.matches('.payment_information__btn')) {
+          if (widget.querySelector('.payment-information--edit-wrapper:not(.hidden)')) {
+            event.preventDefault(); event.stopImmediatePropagation(); notice('Сначала сохрани изменения галочкой или отмени их крестиком.', true);
+          }
+          return;
+        }
+        const row = action.closest('.payment_information__wrapper'), input = row.querySelector('.payment-information--input');
+        if (action.matches('.payment-information--edit')) { snapshots.set(row, snapshot(row)); notice(''); return; }
+        if (action.matches('.payment-information--close')) { const old = snapshots.get(row); if (old) input.value = old.input; clearField(input); notice(''); return; }
+        clearField(input); input.value = input.value.trim();
+        let message = '';
+        if (input.matches('.payment_name_input') && !input.value) message = 'Укажи имя.';
+        if (input.matches('.payment_email_input') && !emailValid(input.value)) message = 'Укажи корректный адрес почты.';
+        if (input.matches('.payment_phone_input')) {
+          const value = checkoutPhone(frameWindow, input);
+          if (!value.valid) message = 'Введи номер полностью с выбранным кодом страны. Для +7 нужно 10 цифр после кода.';
+          else input.value = value.national;
+        }
+        if (input.matches('.payment_promocode_input')) input.value = input.value.toUpperCase();
+        if (message) { event.preventDefault(); event.stopImmediatePropagation(); invalid(input, message); input.focus({preventScroll:true}); notice(message, true); }
+        else { activeRow = row; notice(''); }
+      }, true);
+      widget.addEventListener('input', event => clearField(event.target));
+    }
+    jq.ajaxPrefilter(options => {
+      const url = new URL(options.url, frameWindow.location.href);
+      if (String(options.type || options.method).toUpperCase() !== 'POST' || url.origin !== frameWindow.location.origin) return;
+      const isPromo = url.pathname === '/courses/18784/check_promocode', isSave = /^\/cs\/[a-f0-9]{32}\/edit_proxy_data\//.test(url.pathname);
+      if (!isPromo && !isSave) return;
+      options.timeout = 10000;
+      const data = new URLSearchParams(options.data), row = isSave ? activeRow :
+        widget?.querySelector('.payment-information--edit-wrapper:not(.hidden)')?.closest('.payment_information__wrapper');
+      if (isPromo) { data.set('code', (data.get('code') || '').trim().toUpperCase()); options.data = data.toString(); options.dataType = 'json'; }
+      if (form && isPromo) {
+        firstPromoPending = true;
+        const button = form.querySelector('#apply-promocode'), input = form.querySelector('#promocode'); button.disabled = true; input.readOnly = true;
+        const complete = options.complete;
+        options.complete = function(...args) { firstPromoPending = false; input.readOnly = false; if (!input.disabled) button.disabled = false; complete?.apply(this,args); };
+        const error = options.error;
+        options.error = function(...args) { error?.apply(this,args); const message = form.querySelector('.promocode-message'); message.textContent = 'Не удалось проверить промокод. Попробуй ещё раз.'; message.style.display = 'block'; };
+        return;
+      }
+      if (!row) return;
+      // Native save hides its editor before sending; keep the row captured by its action.
+      if (isSave) {
+        const input = row.querySelector('.payment-information--input');
+        const key = input.matches('.payment_phone_input') ? 'payment_phone' : input.matches('.payment_email_input') ? 'payment_email' : input.matches('.payment_name_input') ? 'payment_name' : null;
+        if (key) {
+          for (const name of ['payment_phone','payment_email','payment_name']) if (name !== key) data.delete(name);
+          data.set(key, key === 'payment_phone' ? checkoutPhone(frameWindow,input).full : input.value.trim()); options.data = data.toString();
+        }
+      }
+      busy(row, 1); notice(isPromo ? 'Проверяем промокод…' : 'Сохраняем изменения…');
+      const success = options.success, error = options.error, complete = options.complete;
+      let failed = false;
+      const fail = message => { failed = true; if (isSave) restore(row); notice(message, true); };
+      options.success = function(data,...args) {
+        if (isPromo && !data?.success) { fail(data?.message || 'Промокод не действует. Прежняя скидка сохранена.'); return; }
+        if (isSave && (data?.success === false || data?.error === true)) { fail('Не удалось сохранить изменения. Повтори сохранение.'); return; }
+        success?.call(this,data,...args);
+        if (isSave) { doc.dispatchEvent(new frameWindow.CustomEvent('ca:checkout-fields-saved')); }
+      };
+      options.error = function(...args) { fail(isPromo ? 'Не удалось проверить промокод. Прежняя скидка сохранена.' : 'Не удалось сохранить изменения. Повтори сохранение.'); if (!isPromo) error?.apply(this,args); };
+      options.complete = function(...args) { busy(row,-1); if (!failed && !pending.size && fieldStatus.getAttribute('role') !== 'alert') notice(''); complete?.apply(this,args); };
+    });
+  }
+
   function installFrame(frameWindow, metadata, onSubmit) {
     if (!frameWindow.jQuery || frameWindow.__caOrderAttribution) return false;
     const form = frameWindow.document.querySelector('form.input_custom_data');
     if (!form) return false;
+    installCheckoutFields(frameWindow);
     frameWindow.jQuery.ajaxPrefilter(function (options) {
       const url = new URL(options.url, frameWindow.location.href);
       if (url.origin === frameWindow.location.origin &&
@@ -136,6 +340,7 @@
     const button = doc.querySelector('.payment_information__btn');
     if (!jq || !button) return null;
     if (frameWindow.__caPaymentLinkController) return frameWindow.__caPaymentLinkController;
+    installCheckoutFields(frameWindow);
     const widget = button.closest('.payment_information') || button.parentElement;
     const status = doc.createElement('p');
     status.className = 'ca-payment-link-status';
@@ -191,6 +396,8 @@
       }
       button.scrollIntoView({block:'nearest'});
     }
+    const fieldsSaved = () => { if (!operation?.running) { clearIssues(); status.textContent = ''; } };
+    doc.addEventListener('ca:checkout-fields-saved', fieldsSaved);
     function failed(job, kind) {
       if (!active() || operation !== job) return;
       job.running = false; job.issue = kind || null; busy(false);
@@ -274,7 +481,7 @@
     }
     frameWindow.addEventListener('pagehide', cancel);
     frameWindow.addEventListener('pageshow', event => { if (event.persisted) cancel(); });
-    const controller = { dispose() { disposed = true; cancel(); } };
+    const controller = { dispose() { disposed = true; doc.removeEventListener('ca:checkout-fields-saved', fieldsSaved); cancel(); } };
     frameWindow.__caPaymentLinkController = controller;
     return controller;
   }
@@ -304,6 +511,11 @@ let checkoutFontFaces;
 function applyCheckoutTheme(dialog, frame){
  const owner=dialog.ownerDocument,doc=frame.contentDocument;
  dialog.style.background='#171715';dialog.style.color='#f5f2ec';dialog.style.borderRadius='5px';dialog.style.boxShadow='0 0 0 1px #373632';dialog.querySelector('button').style.color='#f5f2ec';
+ const footer=doc.querySelector('footer.footer');
+ if(footer&&!footer.querySelector('.ca-checkout-footer-brand')){
+  const brand=doc.createElement('div'),love=doc.createElement('p');
+  brand.className='ca-checkout-footer-brand';brand.textContent='Академия Авторов';love.textContent='Сделано с любовью';footer.replaceChildren(brand,love);
+ }
  doc.documentElement.classList.add('ca-checkout-brand');doc.documentElement.style.setProperty('background','#171715','important');doc.body.style.setProperty('background','#171715','important');
  const faces=checkoutFontFaces??=Array.from(owner.querySelectorAll('style')).flatMap(e=>e.textContent.match(/@font-face\s*\{[^}]+\}/g)||[]).filter(s=>/font-family\s*:\s*Mont[;\s]/.test(s)).join('\n');
  const style=doc.getElementById('ca-checkout-brand')||doc.createElement('style');style.id='ca-checkout-brand';
@@ -327,7 +539,10 @@ function applyCheckoutTheme(dialog, frame){
  .select-mask__item:hover{background:#292820!important}
  .select_mask_code,.select_mask_country{color:#f5f2ec!important}
  .promocode-button{background:transparent!important;color:#e8cc94!important;border:1px solid #373632!important;border-radius:4px!important;box-shadow:none!important}
- input[type=checkbox]{appearance:auto!important;accent-color:#e8cc94!important;background:transparent!important}
+ .ca-checkout-brand .salebot-checkbox input[type=checkbox]{appearance:none!important;-webkit-appearance:none!important;flex:0 0 20px!important;width:20px!important;height:20px!important;margin:2px 8px 2px 0!important;border:1px solid #8f8e86!important;border-radius:4px!important;background:#10100f!important;box-shadow:none!important;cursor:pointer}
+ .ca-checkout-brand .salebot-checkbox input[type=checkbox]:checked{border-color:#e8cc94!important;background:#e8cc94 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 10 3.2 3.2L15 6.5' fill='none' stroke='%2317150f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px 20px no-repeat!important}
+ .ca-checkout-brand .salebot-checkbox input[type=checkbox]:focus-visible{outline:2px solid #e8cc94!important;outline-offset:3px!important}
+ .ca-checkout-brand .salebot-checkbox input[type=checkbox]::before,.ca-checkout-brand .salebot-checkbox input[type=checkbox]::after{content:none!important;display:none!important}
  .salebot-privacy__label-text,.salebot-checkbox{color:#aaa79e!important;font-size:13px!important;line-height:19px!important}
  .salebot-checkbox *{color:inherit!important}
  .salebot-checkbox a{color:#e8cc94!important}
@@ -349,17 +564,25 @@ function applyCheckoutTheme(dialog, frame){
  .payment_information__text{font-size:15px!important;color:#f5f2ec!important}
  .payment-information--edit,.payment-information--save,.payment-information--close{color:#e8cc94!important}
  .payment-information--edit *,.payment-information--save *,.payment-information--close *{color:#e8cc94!important}
+ .label-help-description{pointer-events:none!important}
  .ca-checkout-brand .payment_promocode_data,.ca-checkout-brand .payment_promocode_data *{color:#e8cc94!important}
  .ca-checkout-brand .payment_information__payer ::after{color:#e8cc94!important;-webkit-text-fill-color:#e8cc94!important}
  .payment-information--edit svg [stroke],.payment-information--save svg [stroke],.payment-information--close svg [stroke]{stroke:#e8cc94!important}
  .payment-information--edit svg [fill]:not([fill=none]),.payment-information--save svg [fill]:not([fill=none]),.payment-information--close svg [fill]:not([fill=none]){fill:#e8cc94!important}
  .ca-payment-link-status{color:#aaa79e!important;font-size:14px!important}
  .ca-payment-link-status[role=alert]{color:#efb29b!important}
+ .ca-checkout-field-status,.ca-checkout-field-error{font:14px/1.45 Mont,Arial,sans-serif!important;color:#efb29b!important;margin:8px 0!important}
+ .ca-checkout-field-status[role=status]{color:#aaa79e!important}
+ .ca-checkout-field-status:empty{display:none}
+ [aria-invalid=true]{outline:1px solid #efb29b!important;outline-offset:1px}
  footer.footer{background:#171715!important;color:#8f8e86!important;padding:14px 24px!important}
  footer.footer p,footer.footer a{color:#8f8e86!important}
  footer.footer *{color:#8f8e86!important}
  footer.footer svg [fill]:not([fill=none]){fill:#8f8e86!important}
  footer.footer img,footer.footer svg{opacity:.55;max-height:22px}
+ footer.footer{text-align:center!important}
+ footer.footer .ca-checkout-footer-brand{font:500 14px/1.5 Mont,Arial,sans-serif!important;letter-spacing:.02em}
+ footer.footer p{font:12px/1.5 Mont,Arial,sans-serif!important;margin:2px 0 0!important}
  @media(max-width:500px){h1,.payment_information__header{font-size:22px!important}.students-sessions__info__price{font-size:20px!important}.payment_information__text{font-size:14px!important}.payment_information__title{font-size:13px!important}}
  `;
  if(!style.parentNode)doc.head.append(style);
