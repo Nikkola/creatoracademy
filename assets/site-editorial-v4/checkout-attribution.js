@@ -300,6 +300,55 @@
     return nativeCheckout(new URLSearchParams(hash.replace(/^#/, '')).get('ca-checkout') || '', base);
   }
 
+function applyCheckoutLayout(dialog, frame){
+ const owner=dialog.ownerDocument,doc=frame.contentDocument;
+ dialog.style.height='calc(100dvh - 16px)';dialog.style.maxHeight='calc(100dvh - 16px)';dialog.style.maxWidth='calc(100vw - 16px)';
+ const close=dialog.querySelector('button');
+ close.setAttribute('aria-label','Закрыть');close.title='Закрыть';
+ close.style.cssText='position:absolute;right:8px;top:8px;z-index:2;display:grid;place-items:center;width:44px;height:44px;padding:0;color:#30343b;background:transparent;border:0;border-radius:50%;cursor:pointer;box-sizing:border-box;touch-action:manipulation';
+ const icon=owner.createElementNS('http://www.w3.org/2000/svg','svg');
+ icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('width','20');icon.setAttribute('height','20');icon.setAttribute('aria-hidden','true');icon.setAttribute('focusable','false');
+ const strokes=owner.createElementNS('http://www.w3.org/2000/svg','path');
+ strokes.setAttribute('d','M6 6l12 12M18 6L6 18');strokes.setAttribute('fill','none');strokes.setAttribute('stroke','currentColor');strokes.setAttribute('stroke-width','1.8');strokes.setAttribute('stroke-linecap','round');
+ icon.append(strokes);close.replaceChildren(icon);
+ if(!doc?.head)return;
+ const style=doc.getElementById('ca-checkout-compact-layout')||doc.createElement('style');style.id='ca-checkout-compact-layout';
+ style.textContent=`
+ html{scroll-padding-block:12px}
+ body{margin:0!important}
+ .students-sessions{box-sizing:border-box!important;width:auto!important;max-width:620px!important;margin:16px auto!important;padding:0 16px!important}
+ .students-sessions__title{margin-bottom:12px!important;padding-right:44px!important}
+ .students-sessions__info{padding:12px!important}
+ form.input_custom_data{margin-top:12px!important}
+ .students-sessions__input{min-height:44px!important;height:44px!important;padding:12px 14px!important;font-size:16px!important;margin-bottom:8px!important}
+ .input_custom_data_custom_email{margin-bottom:8px!important}
+ .custom-tel{margin-bottom:8px!important}
+ .promocode-field{margin-bottom:8px!important}
+ .salebot-checkbox-field{margin-top:4px!important;margin-bottom:4px!important}
+ .salebot-checkbox{min-height:44px!important}
+ .form-actions p{margin:8px 0!important;font-size:14px!important;line-height:20px!important}
+ .students-sessions__button{min-height:48px!important;margin-bottom:8px!important}
+ .payment_information{box-sizing:border-box!important;margin:0 auto!important;width:100%!important;max-width:680px!important;padding:16px!important}
+ .payment_information__header{padding-right:44px!important;margin-bottom:12px!important}
+ .payment_information__container{padding:0!important}
+ .payment_information__body{display:block!important;padding:0!important}
+ .payment_information__block{margin-top:0!important}
+ .payment_information__order,.payment_information__payer{display:flex!important;flex-direction:column;gap:8px!important;box-sizing:border-box!important;width:100%!important;padding:0!important;margin:0 0 16px!important}
+ .payment_information__order-header,.payment_information__payer-header{margin:0!important}
+ .payment_information__wrapper{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);align-items:start;gap:6px 12px;margin:0!important}
+ .payment_information__title{grid-column:1;margin:0!important}
+ .payment_information__text{grid-column:2;min-width:0;margin:0!important;overflow-wrap:anywhere;white-space:normal!important}
+ .payment-information--edit-wrapper{grid-column:1/-1}
+ .payment_information__btn-container{margin-top:12px!important;padding:0!important}
+ .payment_information__btn{min-height:48px!important}
+ .ca-payment-link-status:empty{display:none}
+ `;
+ if(!style.parentNode)doc.head.append(style);
+ // Start at the form heading instead of drawing the close button's focus ring on open.
+ const heading=doc.querySelector('h1,.payment_information__header');
+ if(owner.activeElement===close&&heading){heading.tabIndex=-1;heading.style.outline='none';heading.focus({preventScroll:true});}
+}
+
   function install() {
     if (root.__caCheckoutAttribution || root.location.hostname !== 'creatoracademy.ru') return;
     root.__caCheckoutAttribution = true;
@@ -391,9 +440,10 @@
         } catch (_) {}
         if (!installed) { fallback(); return; }
         root.clearTimeout(fallbackTimer); loading.hidden = true; iframe.style.visibility = 'visible';
+        applyCheckoutLayout(dialog, iframe);
       });
       iframe.src = url.href;
-      dialog.append(close, loading, iframe); root.document.body.append(dialog); dialog.showModal();
+      dialog.append(close, loading, iframe); root.document.body.append(dialog); applyCheckoutLayout(dialog, iframe); dialog.showModal();
       currentCheckout = { href: original.href, close: cleanup };
       root.addEventListener('pagehide', leavePage);
       root.addEventListener('pageshow', restorePage);
