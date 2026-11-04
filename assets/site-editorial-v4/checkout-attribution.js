@@ -204,7 +204,8 @@
       if (!active() || operation !== job) return;
       const destination = data && data.error !== true && prodamusDestination(data.payment_link);
       if (destination) {
-        job.running = false;
+        // Link generation is complete even if browser navigation is interrupted.
+        job.running = false; busy(false); button.textContent = 'Оплатить';
         status.textContent = 'Открываем страницу оплаты…';
         announce('redirecting', job.attempt);
         controls.redirect(destination);
@@ -272,6 +273,7 @@
       if (job?.xhr?.readyState !== 4) job?.xhr?.abort('checkout_left');
     }
     frameWindow.addEventListener('pagehide', cancel);
+    frameWindow.addEventListener('pageshow', event => { if (event.persisted) cancel(); });
     const controller = { dispose() { disposed = true; cancel(); } };
     frameWindow.__caPaymentLinkController = controller;
     return controller;
