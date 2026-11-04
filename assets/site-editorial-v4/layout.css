@@ -1,6 +1,11 @@
 /* Reading, comparison and media use distinct widths; navigation stays contained. */
 :root{--content-width:1320px;--media-width:1600px;--quote-size:80px;--bg:#000}
 html,body,main,#begin,#lessons,#process,#tools,#about,#cases,#learn,#rates{background:#000}
+/* Keep iOS viewport rubber-banding horizontal only inside the actual carousels.
+   Body clipping alone does not constrain the Safari root viewport. */
+@media(max-width:767px),(hover:none) and (pointer:coarse){
+ html{overflow-x:hidden;overflow-x:clip;overscroll-behavior-x:none}
+}
 .nav{background:#000e}
 /* SaleBot's overflow-hidden section prevents sticky navigation from following the viewport. */
 body.salebot-landing header.nav{position:fixed;inset:0 0 auto;width:100%}
