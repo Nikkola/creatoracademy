@@ -1,0 +1,98 @@
+[
+  {
+    "engine": "chromium",
+    "width": 320,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "engine": "chromium",
+    "width": 390,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "engine": "chromium",
+    "width": 1440,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "engine": "webkit",
+    "width": 320,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "engine": "webkit",
+    "width": 390,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1440,
+    "cards": 23,
+    "oldOrderPreserved": true,
+    "newOrder": [
+      0,
+      20,
+      21,
+      22
+    ],
+    "posters": "loaded",
+    "modalOpenClose": "4/4",
+    "overflow": 0,
+    "errors": []
+  }
+]
